@@ -16,6 +16,7 @@ module.exports = {
       type: 'string',
       description:'numero de telefono',
       unique:true,
+      required:true,
       columnName: 'Numero',
       example:'15-3555-1231',
       allowNull: false

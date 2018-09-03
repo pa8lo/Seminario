@@ -63,6 +63,26 @@ module.exports = {
     expenses: {
       collection:'gasto',
       via:'User'
+    },
+    Rols :{
+      collection:'rol',
+      via:"Users"
+    },
+    Authorizations:{
+      collection:'permiso',
+      via:"Users"
+    },
+    Turns:{
+      collection:'turno',
+      via:'User'
+    },
+    Assistance:{
+      collection:'asistencia',
+      via:'User'
+    },
+    Orders:{
+      collection:'pedido',
+      via:'Users'
     }
   },
 

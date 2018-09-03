@@ -12,7 +12,24 @@ module.exports = {
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
-
+    Date:{
+      type:'string',
+      columnType:'datetime',
+      columnName:'Fecha',
+      required:true
+    },
+    OutTime:{
+      type:'number',
+      columnType:'double',
+      columnName:'Horario Salida',
+      required:true
+    },
+    InTime:{
+      type:'number',
+      columnType:'double',
+      columnName:'Horario Entrada',
+      required:true
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
@@ -22,7 +39,10 @@ module.exports = {
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
-
+    User: {
+      model:'user',
+      via:'Turns' 
+    }
   },
 
 };

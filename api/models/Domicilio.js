@@ -45,7 +45,10 @@ module.exports = {
       model:'user',
       description:'Usuario relacionado con la dirección',
       via:'Adress'
-
+    },
+    Orders:{
+      collection:'pedido',
+      via:'Adress'
     }
   },
 

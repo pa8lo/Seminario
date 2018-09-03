@@ -13,9 +13,14 @@ module.exports = {
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
 
-    producto: { type: 'string' },
-
-    combo: { type: 'string' }
+    Date: {
+      type:'string',
+      columnType:'datetime'
+    },
+    Amount:{
+      type:'number',
+      columnType:'double'
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
@@ -25,7 +30,22 @@ module.exports = {
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
-
+    Users:{
+      collection:'user',
+      via:'Orders'
+    },
+    Adress:{
+      model:'domicilio',
+      via:'Orders'
+    },
+    Products:{
+      collection:'producto',
+      via:'Orders'
+    },
+    Offers:{
+      collection:'combo',
+      via:'Orders'
+    }
   },
 
 };
