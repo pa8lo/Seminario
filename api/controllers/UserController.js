@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-    get :   function (req,res) {
+    users :   function (req,res) {
         User.find() 
             .then(function(user){
                  if(!user || user.length ==0){
@@ -28,13 +28,21 @@ module.exports = {
                 })
             })
     },
+    user:function(req,res){
+        return res.send({
+            'sucess': false,
+            'message': "asd"
+        })
+    },
 
     createUser: function(req,res){
+        var user = req.body;
         User.create(req.allParams())
             .then(function(user){
                 return res.send({
                     'sucess':true,
-                    'message': 'se creo el usuario'
+                    'message': 'se creo el usuario',
+                    'user': req.body
                 })
             })
             .catch(function(err){
