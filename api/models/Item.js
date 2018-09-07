@@ -1,12 +1,12 @@
 /**
- * Producto.js
+ * Item.js
  *
  * @description :: A model definition.  Represents a database table/collection/etc.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
 module.exports = {
-
+  tableName: 'Items',
   attributes: {
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
@@ -16,14 +16,8 @@ module.exports = {
       type:'string',
       required:true
     },
-    Name:{
-      type:'string',
-      required:true
-    },
-    Amount:{
-      type:'string',
-      required:true
-    },
+
+
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
@@ -33,21 +27,13 @@ module.exports = {
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
-    Orders:{
-      model:'pedido',
-      via:'Products'
-    },
-    Offers:{
-      collection:'combo',
-      via:'Products'
-    },
-    Items:{
-      collection:'item',
-      via:'Products'
+    Products:{
+      collection:'producto',
+      via: 'Items'
     },
     Category:{
       model:'categoria',
-      via:'Products'
+      via:'Items'
     }
   },
 

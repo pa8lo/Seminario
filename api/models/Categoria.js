@@ -1,5 +1,5 @@
 /**
- * Producto.js
+ * Categoria.js
  *
  * @description :: A model definition.  Represents a database table/collection/etc.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
@@ -12,17 +12,13 @@ module.exports = {
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
-    Description:{
-      type:'string',
-      required:true
-    },
     Name:{
       type:'string',
-      required:true
+      required:true      
     },
-    Amount:{
+    Description:{
       type:'string',
-      required:true
+      required:false
     },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
@@ -33,21 +29,13 @@ module.exports = {
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
-    Orders:{
-      model:'pedido',
-      via:'Products'
-    },
-    Offers:{
-      collection:'combo',
-      via:'Products'
-    },
     Items:{
       collection:'item',
-      via:'Products'
+      via:'Category'
     },
-    Category:{
-      model:'categoria',
-      via:'Products'
+    Products:{
+      collection:'producto',
+      via:'Category'
     }
   },
 
