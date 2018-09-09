@@ -45,7 +45,7 @@ module.exports.routes = {
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
 'GET /api/users': 'UserController.users',
 
-'GET /api/users/{id}': 'UserController.user',
+'GET /api/user/': 'UserController.user',
 
 'POST /api/user': 'UserController.createUser'
 

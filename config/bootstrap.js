@@ -16,16 +16,18 @@ module.exports.bootstrap = async function(done) {
   // For example:
   // ```
   // // Set up fake development data (or if we already have some, avast)
-  // if (await User.count() > 0) {
-  //   return done();
-  // }
+   if (await User.count() > 0) {
+     return done();
+   }
   //
-  // await User.createEach([
-  //   { emailAddress: 'ry@example.com', fullName: 'Ryan Dahl', },
-  //   { emailAddress: 'rachael@example.com', fullName: 'Rachael Shaw', },
-  //   // etc.
-  // ]);
-  // ```
+   await Rol.create({
+      Name:'Admin',Description:'Administrador de usuarios de la aplicación'
+   });
+
+   await User.create(
+     { Dni: '35111111', Name: 'Admin',LastName:'Test',Password:'123456',Rols: 1  },
+   );
+  // 
 
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.
   // (otherwise your server will never lift, since it's waiting on the bootstrap)
