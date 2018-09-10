@@ -49,9 +49,9 @@ module.exports.datastores = {
     *                                                                          *
     ***************************************************************************/
      adapter: 'sails-mysql',
-     //url: 'mysql://sql10254732:I3SeRawNqU@sql10.freemysqlhosting.net:3306/sql10254732',
-     //url: 'mysql://root@127.0.0.1:3308/seminario',14864
-     url: 'mysql://root@127.0.0.1:14864/seminario',
+     //url: 'mysql://sql10254732:I3SeRawNqU@sql10.freemysqlhosting.net:3306/sql10254732', //Online
+     url: 'mysql://root@127.0.0.1:3308/seminario',//Facultad
+     //url: 'mysql://root@127.0.0.1:14864/seminario',//Casa
   },
 
 
