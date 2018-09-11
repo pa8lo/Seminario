@@ -9,31 +9,59 @@ const secretMessage = require('../Secret');
 
 
 module.exports = {
+    //traigo todos los usuarios.
     users :   function (req,res) {
-        User.find() 
-            .then(function(user){
-                 if(!user || user.length ==0){
-                        return res.send({
-                            'sucess': false,
-                            'message':' no existen usuarios'
-                        })
-                 }
-                 return res.send({
-                     'sucess':true,
-                     'message': user
-                 })
-            })
-            .catch(function(err){
-                 sails.log.debug(err)
-                 return res.send({
-                    'sucess': false,
-                    'message':' no existe usuario'
+        if(req.headers['access-token']){
+        var accessToken = req.headers['access-token'];
+        const currentUser = token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
+            if (err) {
+            return null;
+            }
+            else {
+            req.user = decoded;
+            
+            return req.user;
+            }
+        });
+        if(currentUser){
+            try {
+                if(currentUser.Acceso =='VerUsuarios'){
+                User.find() 
+                .then(function(user){
+                     if(!user || user.length ==0){
+                            return res.send({
+                                'sucess': false,
+                                'message':' no existen usuarios'
+                            })
+                     }
+                     return res.send({
+                         'sucess':true,
+                         'message': user
+                     })
                 })
-            })
+                .catch(function(err){
+                     sails.log.debug(err)
+                     return res.send({
+                        'sucess': false,
+                        'message':' no existe usuario'
+                    })
+                })
+              }           
+            } catch (error) {
+                res.status(500).json({error: "Acceso denegado"})
+            }
+        }else{
+            return res.status(400).json({ error: 'no entro el currents.' });
+        }    
+        }else{
+            return res.status(400).json({ error: 'Medidas de seguridad no ingresadas.' });
+        }
     },
     //Devuelvo Los datos del usuario decodificados del token
           currentUser: async function(req,res){
-                const tokenDecode = token.verify('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJOYW1lIjoiQWRtaW4iLCJJZCI6MSwiaWF0IjoxNTM2NTA5MDkxfQ.tVKHoTLoRq7rgk2EGWI_iPWj-ml4qO_cpN9QVTp6aoY',secretMessage.jwtSecret,(err, decoded) => {
+           try {    
+                var accessToken = req.headers['access-token'];
+                const tokenDecode = token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
                     if (err) {
                     return res.json(null);
                     }
@@ -48,6 +76,9 @@ module.exports = {
                     'message': user.Name,
                     'token':tokenDecode,
                 })
+            } catch (error) {
+                res.status(500).json({error: "Falta ingresar token de seguridad"})
+            }
             },
 
             createUser: function(req,res){
@@ -96,9 +127,7 @@ module.exports = {
             }
         }catch(err){
             console.log(err)
-        }
-        
-       
+        }    
        } catch (error) {
            res.status(500).json({error:'Hubo un problema con el logueo, revisar parametros'});
         }
