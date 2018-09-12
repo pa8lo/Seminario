@@ -26,7 +26,7 @@ module.exports = {
         if(currentUser){
             try {
                 currentUser.Authorizations.forEach(Authorization => {
-                    if(Authorization.Name =='Usuario'){
+                    if(Authorization.Name =='Usuario_Visualizar'){
                         User.find() 
                         .then(function(user){
                              if(!user || user.length ==0){
@@ -104,12 +104,12 @@ module.exports = {
         try {
             //Traigo todos los datos del request y controlo que existan los necesarios
         const data = req.allParams();
-        if(!data.Name || !data.Password){
+        if(!data.Dni || !data.Password){
            return res.status(400).json({ error: 'Faltan ingresar Parametros' });
         }
         try{
             //Busco un usuario que coincida y Inflo el atributo rols
-            const user = await User.findOne({Name: data.Name.trim()}).decrypt().populate('Rols').populate('Authorizations');
+            const user = await User.findOne({Dni: data.Dni.trim()}).decrypt().populate('Rols').populate('Authorizations');
             try{
                 if(user.Password == data.Password){
                     const userToken = token.sign({Name: user.Name, Id: user.id, Authorizations: user.Authorizations}, secretMessage.jwtSecret);
