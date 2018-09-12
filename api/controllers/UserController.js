@@ -25,28 +25,30 @@ module.exports = {
         });
         if(currentUser){
             try {
-                if(currentUser.Acceso =='VerUsuarios'){
-                User.find() 
-                .then(function(user){
-                     if(!user || user.length ==0){
-                            return res.send({
+                currentUser.Authorizations.forEach(Authorization => {
+                    if(Authorization.Name =='Usuario'){
+                        User.find() 
+                        .then(function(user){
+                             if(!user || user.length ==0){
+                                    return res.send({
+                                        'sucess': false,
+                                        'message':' no existen usuarios'
+                                    })
+                             }
+                             return res.send({
+                                 'sucess':true,
+                                 'message': user
+                             })
+                        })
+                        .catch(function(err){
+                             sails.log.debug(err)
+                             return res.send({
                                 'sucess': false,
-                                'message':' no existen usuarios'
+                                'message':' no existe usuario'
                             })
-                     }
-                     return res.send({
-                         'sucess':true,
-                         'message': user
-                     })
-                })
-                .catch(function(err){
-                     sails.log.debug(err)
-                     return res.send({
-                        'sucess': false,
-                        'message':' no existe usuario'
-                    })
-                })
-              }           
+                        })
+                      }           
+                });               
             } catch (error) {
                 res.status(500).json({error: "Acceso denegado"})
             }
@@ -72,9 +74,8 @@ module.exports = {
                     }
                 });
                 return res.send({
-                    'sucess': false,
-                    'message': user.Name,
-                    'token':tokenDecode,
+                    'sucess': true,
+                    'User':tokenDecode,
                 })
             } catch (error) {
                 res.status(500).json({error: "Falta ingresar token de seguridad"})
@@ -108,14 +109,14 @@ module.exports = {
         }
         try{
             //Busco un usuario que coincida y Inflo el atributo rols
-            const user = await User.findOne({Name: data.Name.trim()}).decrypt().populate('Rols');
+            const user = await User.findOne({Name: data.Name.trim()}).decrypt().populate('Rols').populate('Authorizations');
             try{
                 if(user.Password == data.Password){
-                    const userToken = token.sign({Name: user.Name, Id: user.id, Rol: user.Rols}, secretMessage.jwtSecret);
+                    const userToken = token.sign({Name: user.Name, Id: user.id, Authorizations: user.Authorizations}, secretMessage.jwtSecret);
                     return res.status(200).json({
                         user:{
                             Name:user.Name,
-                            Rol:user
+                            Rol:user.Rol
                         }, 
                         token: userToken
                 })

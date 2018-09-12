@@ -43,11 +43,17 @@ module.exports.routes = {
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
-'GET /api/users': 'UserController.users',
+'GET /User/users': 'UserController.users',
 
-'GET /api/user/': 'UserController.user',
+'GET /User/user/': 'UserController.user',
 
-'POST /api/user': 'UserController.createUser'
+'GET /User/CurrentUser' : 'UserController.CurrentUser',
+
+'GET /Rol/rols' : 'RolController.Rols',
+
+'POST /User/user': 'UserController.createUser',
+
+'POST /User/login': 'UserController.Login'
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗

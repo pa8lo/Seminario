@@ -16,17 +16,21 @@ module.exports.bootstrap = async function(done) {
   // For example:
   // ```
   // // Set up fake development data (or if we already have some, avast)
+     //await Permiso.create({Name:'Usuario',Description:'Permite la creacion de ver , crear,editar y eliminar usuario',User:1})
+    
+
    if (await User.count() > 0) {
      return done();
    }
   //
    await Rol.create({
-      Name:'Admin',Description:'Administrador de usuarios de la aplicación',User:1
+    id:1, Name:'Admin',Description:'Administrador de usuarios de la aplicación',User:1
    });
 
    await User.create(
-     { Dni: '35111111', Name: 'Admin',LastName:'Test',Password:'123456',Rols: 1  },
+     {id:1 ,Dni: '35111111', Name: 'Admin',LastName:'Test',Password:'123456',Rols: 1,Authorizations:1},
    );
+   await Permiso.create({id:1 ,Name:'Usuario',Description:'Permite la creacion de ver , crear,editar y eliminar usuario',User:1})
   // 
 
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.
