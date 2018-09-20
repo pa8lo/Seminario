@@ -4,19 +4,21 @@
  * @description :: Server-side actions for handling incoming requests.
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
-
+const token = require('jsonwebtoken');
+const secretMessage = require('../Secret');
 module.exports = {
     rols :   function (req,res) {
         if(req.headers['access-token']){
         var accessToken = req.headers['access-token'];
         const currentUser = token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
             if (err) {
+                console.log(err)
             return null;
             }
             else {
             req.user = decoded;
-            
-            return req.user;
+            console.log(req.user)
+            return req.user.Authorizations;
             }
         });
         if(currentUser){
@@ -30,8 +32,7 @@ module.exports = {
                             })
                      }
                      return res.send({
-                         'sucess':true,
-                         'message': rol
+                         'roles': rol
                      })
                 })
                 .catch(function(err){

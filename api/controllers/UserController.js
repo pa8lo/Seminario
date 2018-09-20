@@ -15,8 +15,8 @@ module.exports = {
         var accessToken = req.headers['access-token'];
         const currentUser = token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
             if (err) {
-            return null;
-            }
+           return null;
+           }
             else {
             req.user = decoded;
             
@@ -26,7 +26,7 @@ module.exports = {
         if(currentUser){
             try {
                 currentUser.Authorizations.forEach(Authorization => {
-                    if(Authorization.Name =='Usuario_Visualizar'){
+                    if(Authorization.Name =='Usuario'){
                         User.find() 
                         .then(function(user){
                              if(!user || user.length ==0){
@@ -35,10 +35,7 @@ module.exports = {
                                         'message':' no existen usuarios'
                                     })
                              }
-                             return res.send({
-                                 'sucess':true,
-                                 'message': user
-                             })
+                             return  res.json(user)
                         })
                         .catch(function(err){
                              sails.log.debug(err)
@@ -47,7 +44,7 @@ module.exports = {
                                 'message':' no existe usuario'
                             })
                         })
-                      }           
+                    }             
                 });               
             } catch (error) {
                 res.status(500).json({error: "Acceso denegado"})
@@ -63,7 +60,7 @@ module.exports = {
           currentUser: async function(req,res){
            try {    
                 var accessToken = req.headers['access-token'];
-                const tokenDecode = token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
+                const tokenDecode = await token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
                     if (err) {
                     return res.json(null);
                     }
@@ -83,33 +80,62 @@ module.exports = {
             },
 
             createUser: function(req,res){
-                var user = req.body;
-                User.create(req.allParams())
-                    .then(function(user){
-                        return res.send({
-                            'sucess':true,
-                            'message': 'se creo el usuario',
-                            'user': req.body
-                        })
-                    })
-                    .catch(function(err){
-                        sails.log.debug(err)
-                        return res.send({
-                        'sucess': false,
-                        'message':' no se pudo crear el nuevo usuario'
-                    })
-                })
+                if(req.headers['access-token']){
+                    var accessToken = req.headers['access-token'];
+                    var tokenDecode = token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
+                        if (err) {
+                            console.log(err)
+                            return res.json(null);
+                            
+                            }
+                            else {
+                            var user = decoded;
+                            console.log(decoded)
+                            return user;
+                            }
+                        });
+                    }
+                    if(tokenDecode){
+                        var user = req.body;
+                       console.log("Usuario"+ JSON.stringify(user));
+                        Domicilio.create(user.Adress)
+                                .then(function(Domicilio){
+                                    Telefono.create(user.Number)
+                                            .then(function(){
+                                                    User.create(user.user)
+                                                    .then(function(user){
+                                                        console.log(req.allParams())
+                                                        return res.send({
+                                                            'sucess':true,
+                                                            'message': 'se creo el usuario',
+                                                            'user': req.body
+                                                        })
+                                                    })
+                                                    .catch(function(err){
+                                                        sails.log.debug(err)
+                                                        return res.send({
+                                                        'sucess': false,
+                                                        'message':' no se pudo crear el nuevo usuario'
+                                                    })
+                                                 })             
+                                            })                                                      
+                                     })
+                    }
             },
+        
     login : async function(req,res){
         try {
             //Traigo todos los datos del request y controlo que existan los necesarios
         const data = req.allParams();
         if(!data.Dni || !data.Password){
-           return res.status(400).json({ error: 'Faltan ingresar Parametros' });
+           return res.status(400).json({ error: 'Faltan ingresar parametros' });
         }
         try{
             //Busco un usuario que coincida y Inflo el atributo rols
             const user = await User.findOne({Dni: data.Dni.trim()}).decrypt().populate('Rols').populate('Authorizations');
+            if(!user){
+                return res.status(400).json({ error: 'Ha ingresado datos erroneos' });
+            }
             try{
                 if(user.Password == data.Password){
                     const userToken = token.sign({Name: user.Name, Id: user.id, Authorizations: user.Authorizations}, secretMessage.jwtSecret);
@@ -121,7 +147,7 @@ module.exports = {
                         token: userToken
                 })
                 }else{
-                    return res.status(400).json({ error: 'Usuario y/o contraseña incorrecta' });
+                    return res.status(400).json({ error: 'Ha ingresado datos erroneos' });
                 }
             }catch(err){
                 console.log(err)
