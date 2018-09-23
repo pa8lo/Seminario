@@ -79,50 +79,41 @@ module.exports = {
             }
             },
 
-            createUser: function(req,res){
-                if(req.headers['access-token']){
-                    var accessToken = req.headers['access-token'];
-                    var tokenDecode = token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
-                        if (err) {
-                            console.log(err)
-                            return res.json(null);
-                            
-                            }
-                            else {
-                            var user = decoded;
-                            console.log(decoded)
-                            return user;
-                            }
-                        });
-                    }
-                    if(tokenDecode){
-                        var user = req.body;
-                       console.log("Usuario"+ JSON.stringify(user));
-                        Domicilio.create(user.Adress)
-                                .then(function(Domicilio){
-                                    Telefono.create(user.Number)
-                                            .then(function(){
-                                                    User.create(user.user)
-                                                    .then(function(user){
-                                                        console.log(req.allParams())
-                                                        return res.send({
-                                                            'sucess':true,
-                                                            'message': 'se creo el usuario',
-                                                            'user': req.body
-                                                        })
-                                                    })
-                                                    .catch(function(err){
-                                                        sails.log.debug(err)
-                                                        return res.send({
-                                                        'sucess': false,
-                                                        'message':' no se pudo crear el nuevo usuario'
-                                                    })
-                                                 })             
-                                            })                                                      
-                                     })
-                    }
-            },
-        
+            createUser: async function(req,res){
+                
+                                if(req.headers['access-token']){                
+                                    var accessToken = req.headers['access-token'];            
+                                    var tokenDecode = token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
+                
+                                        if (err) {                
+                                            console.log(err)                
+                                            return res.json(null);                                                                            
+                                            }
+                
+                                            else {                
+                                            var user = decoded;                                                                           
+                                            return user;                
+                                            }
+                
+                                        });
+                
+                                    }                
+                                    if(tokenDecode){                
+                                        var user = req.body;
+                                        
+                                        try {
+                                            var domicilio = await Domicilio.create(user.Adress)                              
+                                            var telefono = await Telefono.create(user.Number)                              
+                                            var usuario  = await  User.create(user.user) 
+
+                                        } catch (error) {
+                                            sails.log.debug(err)
+                                        }                                                                       
+
+                                    }
+                
+                            },                
+                        
     login : async function(req,res){
         try {
             //Traigo todos los datos del request y controlo que existan los necesarios

@@ -14,6 +14,10 @@ module.exports = {
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
 
+    Email:{
+      type: 'string',
+      description:'Dirección de correo electronico',
+    },
 
     Dni: {
       type: 'string',

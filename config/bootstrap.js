@@ -26,7 +26,6 @@ module.exports.bootstrap = async function(done) {
    await Rol.create({
     id:1, Name:'Admin',Description:'Administrador de usuarios de la aplicación',User:1
    });
-
    await User.create(
      {id:1 ,Dni: '35111111', Name: 'Admin',LastName:'Test',Password:'123456',Rols: 1,Authorizations:1},
    );
