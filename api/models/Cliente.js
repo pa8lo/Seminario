@@ -1,5 +1,5 @@
 /**
- * Pedido.js
+ * Cliente.js
  *
  * @description :: A model definition.  Represents a database table/collection/etc.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
@@ -9,18 +9,32 @@ module.exports = {
 
   attributes: {
 
+    Name:{
+      type:'string',
+      description:'Nombre del cliente',
+    },
+
+    LastName:{
+      type:'string',
+      description:'Apellido del cliente'
+    },
+
+    email:{
+      type:'string',
+      description:'Email del usuario'
+    },
+
+    Phone:{
+      type:'string',
+      description:'Numero de telefono del usuario',
+      unique:true,
+      required:true
+    },
+
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
 
-    Date: {
-      type:'string',
-      columnType:'datetime'
-    },
-    Amount:{
-      type:'number',
-      columnType:'double'
-    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
@@ -30,30 +44,17 @@ module.exports = {
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
-    Users:{
-      collection:'user',
-      via:'Orders'
+    Adress: {
+      collection:'domicilio',
+      via:'Client'
     },
 
-    Clients:{
-      collection:'cliente',
-      via:'Orders'
-    },
-
-    Adress:{
-      model:'domicilio',
-      via:'Orders'
-    },
-
-    Products:{
-      collection:'producto',
-      via:'Orders'
-    },
-
-    Offers:{
-      collection:'combo',
-      via:'Orders'
+    Orders:{
+      collection:'pedido',
+      via:'Clients'
     }
+
+
   },
 
 };

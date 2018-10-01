@@ -46,6 +46,18 @@ module.exports = {
       allowNull:false,
       encrypt: true
     },
+    
+    PhonePrincipal: {
+      type:'string',
+      description:'Telefono principal del usuario',
+      encrypt:true
+    },
+
+    SecondaryPhone: {
+      type:'string',
+      description:'Telefono secundario del usuario',
+      encrypt:true
+    },
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝
@@ -54,10 +66,6 @@ module.exports = {
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
-    Phones :{
-      collection : 'telefono',
-      via: 'User',
-    },
 
     Adress: {
       collection:'domicilio',

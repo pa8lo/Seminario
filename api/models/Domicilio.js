@@ -49,7 +49,12 @@ module.exports = {
     Orders:{
       collection:'pedido',
       via:'Adress'
-    }
+    },
+    Client: {
+      model:'cliente',
+      description:'cliente relacionado con la dirección',
+      via:'Adress'
+    },
   },
 
 };
