@@ -11,8 +11,11 @@ module.exports = {
 
     Date:{
       type:'string',
-      
-    }
+      columnType: 'datetime',
+      required:true
+    },
+
+
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
@@ -27,7 +30,14 @@ module.exports = {
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
-
+    Users:{
+      collection:'user',
+      via:'AsignedTurns'
+    },
+    Turn:{
+      model:'turno',
+      via:'Asigneds'
+    }
   },
 
 };

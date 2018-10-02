@@ -84,16 +84,16 @@ module.exports = {
       collection:'permiso',
       via:"Users"
     },
-    Turns:{
-      collection:'turno',
-      via:'User'
-    },
     Assistance:{
       collection:'asistencia',
       via:'User'
     },
     Orders:{
       collection:'pedido',
+      via:'Users'
+    },
+    AsignedTurns:{
+      collection:'turnosAsignados',
       via:'Users'
     }
   },
