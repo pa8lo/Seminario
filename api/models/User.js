@@ -68,7 +68,7 @@ module.exports = {
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
 
     Adress: {
-      collection:'domicilio',
+      collection:'Domicilio',
       via:'User'
     },
 

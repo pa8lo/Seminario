@@ -26,7 +26,7 @@ module.exports = {
       columnName: 'Departamento',
     },
 
-    floor:{
+    Floor:{
       type:'number',
       description:'piso del departamento',
       allowNull:true,
@@ -42,7 +42,7 @@ module.exports = {
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
     User: {
-      model:'user',
+      collection:'User',
       description:'Usuario relacionado con la dirección',
       via:'Adress'
     },

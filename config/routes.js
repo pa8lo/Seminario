@@ -55,8 +55,9 @@ module.exports.routes = {
 
 'POST /User/login': 'UserController.Login',
 
-'POST /User/SingUp': 'UserController.CreateUser'
+'POST /User/SingUp': 'UserController.CreateUser',
 
+'DELETE /User/DeleteUser' : 'UserController.DeleteUser',
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
   //  ╚╩╝╚═╝╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝
