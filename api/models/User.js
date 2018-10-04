@@ -58,6 +58,11 @@ module.exports = {
       description:'Telefono secundario del usuario',
       encrypt:true
     },
+
+    Eliminated:{
+      type: 'boolean',
+      defaultsTo: false, 
+    },
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝

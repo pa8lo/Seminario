@@ -75,13 +75,16 @@ module.exports = {
                         var data = req.body;
                         try{
                             console.log(data.id);
-                            var destruido = await User.destroy({id : data.id}).fetch();                                                        
+                            var destruido = await User.update({id:data.id})
+                                                      .set({Eliminated:true}).fetch();                                               
                             if (destruido.length === 0) {
                                // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
-                                res.status(200).json({ message: 'No existe usuario.' });
+                                res.status(204).json({ error: 'No existe usuario.' });
                             } else {
-                                sails.log.Info('Se elimino usuario con id:'+data.id, destruido[0]);
-                                res.status(204).json({ message: 'Usuario eliminado.' });
+                              // sails.log.Info('Se elimino usuario con id:'+data.id, destruido[0]);
+                                console.log("exito");
+                                res.status(200).json({ message: 'Usuario eliminado.' });
+                                
                             }
 
                         }catch(error){
@@ -160,7 +163,9 @@ module.exports = {
                                             }).fetch();
                                             var usuario = await  User.create(user.User).fetch();
                                             await Domicilio.addToCollection( usuario.id, 'User')
-                                            .members(domicilio.id);             
+                                            .members(domicilio.id);
+                                            await User.addToCollection(rol,'Rols')
+                                            .members(usuario.id);             
                                         } catch (error) {
                                             sails.log.debug(error)
                                         }                                                                       
