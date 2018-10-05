@@ -82,8 +82,7 @@ module.exports = {
       via:'User'
     },
     Rols :{
-      collection:'rol',
-      via:"Users"
+      model:'rol',
     },
     Authorizations:{
       collection:'permiso',

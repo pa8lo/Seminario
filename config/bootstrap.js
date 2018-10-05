@@ -23,13 +23,16 @@ module.exports.bootstrap = async function(done) {
      return done();
    }
   //
-   await Rol.create({
-    id:1, Name:'Admin',Description:'Administrador de usuarios de la aplicación',User:1
-   });
+  await Rol.create({
+    id:1, Name:'Admin',Description:'Administrador de usuarios de la aplicación'});
+    await Rol.create({
+      id:2, Name:'Usuario',Description:'Administrador de usuarios de la aplicación'});
    await User.create(
-     {id:1 ,Dni: '35111111', Name: 'Admin',LastName:'Test',Password:'123456',Rols: 1,Authorizations:1},
+     {id:1 ,Dni: '35111111', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:1,Rols:1,}
    );
+
    await Permiso.create({id:1 ,Name:'Usuario',Description:'Permite la creacion de ver , crear,editar y eliminar usuario',User:1})
+
   // 
 
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.

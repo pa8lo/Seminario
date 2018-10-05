@@ -163,9 +163,7 @@ module.exports = {
                                             }).fetch();
                                             var usuario = await  User.create(user.User).fetch();
                                             await Domicilio.addToCollection( usuario.id, 'User')
-                                            .members(domicilio.id);
-                                            await User.addToCollection(rol,'Rols')
-                                            .members(usuario.id);             
+                                            .members(domicilio.id);                   
                                         } catch (error) {
                                             sails.log.debug(error)
                                         }                                                                       

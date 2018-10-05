@@ -53,7 +53,6 @@ module.exports = {
     Client: {
       model:'cliente',
       description:'cliente relacionado con la dirección',
-      via:'Adress'
     },
   },
 
