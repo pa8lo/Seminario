@@ -43,13 +43,15 @@ module.exports.routes = {
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
+
+//
+// ENDPOINTS USUARIO
+//
 'GET /User/users': 'UserController.users',
 
 'GET /User/user/': 'UserController.user',
 
 'GET /User/CurrentUser' : 'UserController.CurrentUser',
-
-'GET /Rol/rols' : 'RolController.Rols',
 
 'POST /User/user': 'UserController.createUser',
 
@@ -58,8 +60,18 @@ module.exports.routes = {
 'POST /User/SingUp': 'UserController.CreateUser',
 
 'PATCH /User/DeleteUser' : 'UserController.DeleteUser',
-
+//
+// ENDPOINTS CLIENTE
+//
 'POST /Client/CreateCLient' : 'ClienteController.CreateClient',
+//
+// ENDPOINSTS ROLES
+//
+'GET /Rol/rols' : 'RolController.Rols',
+//
+// ENDPOINTS PERMISOS
+//
+'GET /Auth/Authorizations': 'AuthController.Authorizations'
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
   //  ╚╩╝╚═╝╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝

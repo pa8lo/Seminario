@@ -6,23 +6,14 @@
  */
 const token = require('jsonwebtoken');
 const secretMessage = require('../Secret');
+var base = require('./BaseController.js');
 
 
 module.exports = {
     //traigo todos los usuarios.
     users :   function (req,res) {
         if(req.headers['access-token']){
-        var accessToken = req.headers['access-token'];
-        const currentUser = token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
-            if (err) {
-           return null;
-           }
-            else {
-            req.user = decoded;
-            
-            return req.user;
-            }
-        });
+        var currentUser = base.CheckToken(req.headers['access-token']);
         if(currentUser){
             try {
                 currentUser.Authorizations.forEach(Authorization => {
@@ -59,17 +50,7 @@ module.exports = {
 
     DeleteUser :  async function (req,res) {
             if(req.headers['access-token']){
-            var accessToken = req.headers['access-token'];
-            const currentUser = token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
-                if (err) {
-                    return res.status(401).json({ error: 'Medidas de seguridad denegadas.' });
-               }
-                else {
-                var user = decoded;
-                
-                return user;
-                }
-            });
+            const currentUser = base.CheckToken(req.headers['access-token']);
                 if(currentUser){
                     if(currentUser.Ip == req.ip){
                         var data = req.body;
@@ -108,17 +89,8 @@ module.exports = {
     //Devuelvo Los datos del usuario decodificados del token
           currentUser: async function(req,res){
            try {    
-                var accessToken = req.headers['access-token'];
-                const tokenDecode = await token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
-                    if (err) {
-                    return res.json(null);
-                    }
-                    else {
-                    req.user = decoded;
-                    
-                    return req.user;
-                    }
-                });
+
+                const tokenDecode = base.CheckToken(req.headers['access-token']);
                 return res.send({
                     'sucess': true,
                     'User':tokenDecode,
@@ -130,23 +102,8 @@ module.exports = {
 
             createUser: async function(req,res){
                 
-                                if(req.headers['access-token']){                
-                                    var accessToken = req.headers['access-token'];            
-                                    var tokenDecode = token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
-                
-                                        if (err) {                
-                                            console.log(err)                
-                                            return res.json(null);                                                                            
-                                            }
-                
-                                            else {                
-                                            var user = decoded;                                                                           
-                                            return user;                
-                                            }
-                
-                                        });
-                
-                                    }                
+                                if(req.headers['access-token']){                       
+                                    var tokenDecode = base.CheckToken(req.headers['access-token']);               
                                     if(tokenDecode){       
                                         if(tokenDecode.Ip === req.ip){
                                             console.log("token Correcto")
@@ -173,7 +130,7 @@ module.exports = {
                                     }
                                        
                                     }
-                
+                                }
                             },                
                         
     login : async function(req,res){

@@ -19,7 +19,7 @@ module.exports = {
       description:'Apellido del cliente'
     },
 
-    email:{
+    Email:{
       type:'string',
       description:'Email del usuario'
     },

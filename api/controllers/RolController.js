@@ -6,24 +6,14 @@
  */
 const token = require('jsonwebtoken');
 const secretMessage = require('../Secret');
+var base = require('./BaseController.js');
 module.exports = {
     rols :   function (req,res) {
         if(req.headers['access-token']){
-            var accessToken = req.headers['access-token'];
-            const currentUser = token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
-                if (err) {
-                    console.log(err)
-                return null;
-                }
-                else {
-                req.user = decoded;
-                console.log(req.user)
-                return req.user.Authorizations;
-                }
-            });
-            if(currentUser){
-                if(currentUser.Ip == req.ip){
-                    if(currentUser.roles.Name === 'Admin'){
+            var accessToken = base.CheckToken(req.headers['access-token']);
+            if(accessToken){
+                if(accessToken.Ip == req.ip){
+                    if(accessToken.roles.Name === 'Admin'){
                         try {
                             Rol.find() 
                             .then(function(rol){

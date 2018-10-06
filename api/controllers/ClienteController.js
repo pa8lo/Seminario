@@ -4,29 +4,14 @@
  * @description :: Server-side actions for handling incoming requests.
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
-
+var base = require('./BaseController.js')
 module.exports = {
   
     CreateClient :async function (req,res) {
-               
-            if(req.headers['access-token']){                
-                var accessToken = req.headers['access-token'];            
-                var tokenDecode = token.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
-
-                    if (err) {                
-                        console.log(err)                
-                        return res.json(null);                                                                            
-                        }
-
-                        else {                
-                        var user = decoded;                                                                           
-                        return user;                
-                        }
-
-                    });
-
-                }                
+        console.log("Ingreso");
+            var tokenDecode =  base.CheckToken(req.headers['access-token']);              
                 if(tokenDecode){       
+                    console.log("funciono");
                     if(tokenDecode.Ip === req.ip){                          
                     var data = req.body;
                     console.log("LOS DATOS  "+JSON.stringify(data));
@@ -39,9 +24,10 @@ module.exports = {
                             Floor:data.Adress.Floor,
                             Client:usuario.id
                         }).fetch();
-
+                        res.status(200);
                     } catch (error) {
                         sails.log.debug(error)
+                        res.status(402);
                     }       
 
                 }else{
@@ -52,6 +38,11 @@ module.exports = {
                 }
 
         }, 
+
+        Clients:async function (req,res) {
+
+            
+        }
             
         
 
