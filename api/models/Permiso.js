@@ -21,6 +21,10 @@ module.exports = {
       type:'string',
       required:true
     },
+    Type:{
+      type:'string',
+      required:true
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗

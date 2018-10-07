@@ -88,16 +88,17 @@ module.exports = {
     },
     //Devuelvo Los datos del usuario decodificados del token
           currentUser: async function(req,res){
-           try {    
+            try {    
+                    const tokenDecode = base.CheckToken(req.headers['access-token']);
+                    return res.send({
+                        'sucess': true,
+                        'User':tokenDecode,
+                    })
 
-                const tokenDecode = base.CheckToken(req.headers['access-token']);
-                return res.send({
-                    'sucess': true,
-                    'User':tokenDecode,
-                })
-            } catch (error) {
-                res.status(401).json({error: "Falta ingresar token de seguridad"})
-            }
+                } catch (error) {
+                    res.status(401).json({error: "Falta ingresar token de seguridad"})
+                }
+                
             },
 
             createUser: async function(req,res){
@@ -127,8 +128,7 @@ module.exports = {
                                     }else{
                                         sails.log.Info("El usuario  de id : "+ tokenDecode.Id + "quiso acceder desde un ip erroneo.");
                                         res.status(403).json({error: "Acceso denegado"})
-                                    }
-                                       
+                                    }                                      
                                     }
                                 }
                             },                
@@ -168,9 +168,43 @@ module.exports = {
        } catch (error) {
            res.status(500).json({error:'Hubo un problema con el logueo, revisar parametros'});
         }
+    },
 
+    UserAuthorizations: async function (req,res) {
+        var parametros = req.allParams();
+        if(req.headers['access-token']){  
+                var currentUser = base.CheckToken(req.headers['access-token']);
+            if(currentUser){
+                try {
+                    var usuario = await User.findOne({id:parametros.id}).populate('Authorizations');
+                    res.status(200).json({Authorizations : usuario.Authorizations});
+                }catch(error){
+                    console.log(error);
+                    res.status(500).json({error: "existio un problema para mostrar los permisos"})
+                }               
+            }else{
+                return res.status(401).json({ error: 'Medidas de seguridad no ingresadas.' });
+            }
+            
+        }
+    },
 
+    RemoveAuthorization: function (req,res) {
+        if(req.headers['access-token']){ 
+            await User.removeFromCollection(data.User.id, 'pets')
+            .members(data.Authorizations);
+        }else{
+            return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
+        }
+    },
 
+    AssignAuthorization: function (req,res) {
+        if(req.headers['access-token']){ 
+            await User.addToCollection( data.Authorization.id, 'Authorizations')
+            .members(data.User.id);    
+        }else{
+            return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
+        }
     }
 
 };

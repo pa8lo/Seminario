@@ -8,6 +8,7 @@
  * https://sailsjs.com/anatomy/config/routes-js
  */
 
+
 module.exports.routes = {
 
 
@@ -53,11 +54,15 @@ module.exports.routes = {
 
 'GET /User/CurrentUser' : 'UserController.CurrentUser',
 
+'GET /User/Authorizations' : 'UserController.UserAuthorizations',
+
 'POST /User/user': 'UserController.createUser',
 
 'POST /User/login': 'UserController.Login',
 
 'POST /User/SingUp': 'UserController.CreateUser',
+
+'PUT /User/RemoveAuthorization' : 'UserController.RemoveAuthorization',
 
 'PATCH /User/DeleteUser' : 'UserController.DeleteUser',
 //
