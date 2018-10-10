@@ -47,7 +47,7 @@ module.exports = {
       encrypt: true
     },
     
-    PhonePrincipal: {
+    PrimaryPhone: {
       type:'string',
       description:'Telefono principal del usuario',
       encrypt:true

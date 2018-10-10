@@ -56,24 +56,41 @@ module.exports.routes = {
 
 'GET /User/Authorizations' : 'UserController.UserAuthorizations',
 
-'POST /User/user': 'UserController.createUser',
+'POST /User/CreateUser': 'UserController.createUser',
 
-'POST /User/login': 'UserController.Login',
+'POST /User/Login': 'UserController.Login',
 
-'POST /User/SingUp': 'UserController.CreateUser',
+'PUT /User/UpdateUser' : 'UserController.UpdateUser',
 
 'PUT /User/RemoveAuthorization' : 'UserController.RemoveAuthorization',
+
+'PUT /User/AssignAuthorization' : 'UserController.AssignAuthorization',
+
+'GET /User/User' : 'UserController.User',
 
 'PATCH /User/DeleteUser' : 'UserController.DeleteUser',
 //
 // ENDPOINTS CLIENTE
 //
+'GET /Client/Clients': 'ClienteController.Clientes',
+
 'POST /Client/CreateCLient' : 'ClienteController.CreateClient',
+
+'PUT /Client/UpdateUser' : 'ClienteController.UpdateClient',
+
+'PATCH /Client/DeleteClient' : 'ClienteController.DeleteClient',
+
 //
 // ENDPOINSTS ROLES
 //
-'GET /Rol/rols' : 'RolController.Rols',
-//
+'GET /Rol/Rols' : 'RolController.Rols',
+
+'PUT /Rol/RemoveAuthorization' : 'RolController.RemoveAuthorization',
+
+//'POST /Rol/CreateRol': 'RolController.CreateRol',
+//'PUT /User/AssignAuthorization' : 'UserController.AssignAuthorization',
+//'PATCH /User/DeleteUser' : 'UserController.DeleteUser',
+//'PUT /User/UpdateUser' : 'UserController.UpdateUser',
 // ENDPOINTS PERMISOS
 //
 'GET /Auth/Authorizations': 'AuthController.Authorizations'

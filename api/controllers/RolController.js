@@ -56,5 +56,46 @@ module.exports = {
         }
     },
 
+    RemoveAuthorization:async function (req,res){
+        if(req.headers['access-token']){ 
+            var currentUser = base.CheckToken(req.headers['access-token']);
+            if(currentUser){
+            await Rol.removeFromCollection(data.Rol.id, 'Authorizations')
+            .members(data.Authorizations.id);
+            }
+        }else{
+            return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
+        }
+    },
+
+    CreateRol: function (req,res){
+        if(req.headers['access-token']){                       
+            var tokenDecode = base.CheckToken(req.headers['access-token']);               
+            if(tokenDecode){       
+                if(tokenDecode.Ip === req.ip){
+                var rol = req.body;
+                try {
+
+                /*    var domicilio = await Domicilio.create({
+                        id:user.Adress.id,
+                        Adress:user.Adress.Adress,
+                        Department:user.Adress.Department,
+                        Floor:user.Adress.Floor,
+                    }).fetch();
+                    var usuario = await  User.create(user.User).fetch();
+                    await Domicilio.addToCollection( usuario.id, 'User')
+                    .members(domicilio.id);*/               
+                } catch (error) {
+                    sails.log.debug(error)
+                }                                                                       
+            }else{
+                sails.log.Info("El usuario  de id : "+ tokenDecode.Id + "quiso acceder desde un ip erroneo.");
+                res.status(403).json({error: "Acceso denegado"})
+            }                                      
+            }
+        }
+    },       
+    
+
 };
 

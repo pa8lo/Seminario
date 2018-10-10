@@ -55,7 +55,6 @@ module.exports = {
                     if(currentUser.Ip == req.ip){
                         var data = req.body;
                         try{
-                            console.log(data.id);
                             var destruido = await User.update({id:data.id})
                                                       .set({Eliminated:true}).fetch();                                               
                             if (destruido.length === 0) {
@@ -189,22 +188,61 @@ module.exports = {
         }
     },
 
-    RemoveAuthorization: function (req,res) {
+    RemoveAuthorization: async function (req,res) {
         if(req.headers['access-token']){ 
-            await User.removeFromCollection(data.User.id, 'pets')
-            .members(data.Authorizations);
+            var currentUser = base.CheckToken(req.headers['access-token']);
+            if(currentUser){
+            await User.removeFromCollection(data.User.id, 'Authorizations')
+            .members(data.Authorizations.id);
+            }
         }else{
             return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
         }
     },
 
-    AssignAuthorization: function (req,res) {
+    AssignAuthorization:async  function (req,res) {
         if(req.headers['access-token']){ 
+            var currentUser = base.CheckToken(req.headers['access-token']);
+            if(currentUser){
             await User.addToCollection( data.Authorization.id, 'Authorizations')
-            .members(data.User.id);    
+            .members(data.User.id);  
+            }  
         }else{
             return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
         }
+    },
+
+    UpdateUser: async function (req,res) {
+        if(req.headers['access-token']){ 
+        var currentUser = base.CheckToken(req.headers['access-token']);
+            if(currentUser){
+                var usuario = await User.update({id:data.User.id})
+                .set(data.User).fetch();                                               
+                if (usuario.length === 0) {
+                // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
+                res.status(204).json({ error: 'No existe usuario.' });
+                } else {
+                // sails.log.Info('Se elimino usuario con id:'+data.id, usuario[0]);
+                console.log("exito");
+                res.status(200).json({ message: 'Usuario eliminado.' });
+                }
+            }
+        }else{
+            return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
+        }
+    },
+
+    User: async function (req,res) {
+        var data = req.allParams();
+        if(req.headers['access-token']){ 
+            var currentUser = base.CheckToken(req.headers['access-token']);
+                if(currentUser){
+                var usuario =await User.findOne({id: data.id}).populate('Adress');   2
+                res.status(200).json({user:usuario})             
+                }
+            }else{
+                return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
+            }
     }
 
 };
