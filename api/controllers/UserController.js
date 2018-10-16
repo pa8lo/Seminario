@@ -106,7 +106,7 @@ module.exports = {
                                     var tokenDecode = base.CheckToken(req.headers['access-token']);               
                                     if(tokenDecode){       
                                         if(tokenDecode.Ip === req.ip){
-                                            console.log("token Correcto")
+                                        console.log("token Correcto")
                                               
                                         var user = req.body;
                                         console.log("LOS DATOS  "+JSON.stringify(user));
@@ -217,15 +217,23 @@ module.exports = {
         var currentUser = base.CheckToken(req.headers['access-token']);
             if(currentUser){
                 var usuario = await User.update({id:data.User.id})
-                .set(data.User).fetch();                                               
+                .set(data.User).fetch();                                                             
                 if (usuario.length === 0) {
                 // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
                 res.status(204).json({ error: 'No existe usuario.' });
                 } else {
                 // sails.log.Info('Se elimino usuario con id:'+data.id, usuario[0]);
-                console.log("exito");
-                res.status(200).json({ message: 'Usuario eliminado.' });
+                Data.Adress.forEach(domicilio => {
+                   var address = await Domicilio.update({id:domicilio.id})
+                   .set(domicilio).fetch();
+                   if (address.length === 0) {
+                    // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
+                    res.status(204).json({ error: 'No existe domicilio.' });
+                    }    
+                });
+                res.status(200).json({ message: 'Usuario modificado.' });
                 }
+                
             }
         }else{
             return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})

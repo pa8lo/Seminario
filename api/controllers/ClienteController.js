@@ -8,35 +8,30 @@ var base = require('./BaseController.js')
 module.exports = {
   
     CreateClient :async function (req,res) {
-        console.log("Ingreso");
             var tokenDecode =  base.CheckToken(req.headers['access-token']);              
                 if(tokenDecode){       
-                    console.log("funciono");
                     if(tokenDecode.Ip === req.ip){                          
                     var data = req.body;
-                    console.log("LOS DATOS  "+JSON.stringify(data));
                     try {                        
                         var usuario = await  Cliente.create(data.Client).fetch();
-                        var domicilio = await Domicilio.create({
-                            id:data.Adress.id,
-                            Adress:data.Adress.Adress,
-                            Department:data.Adress.Department,
-                            Floor:data.Adress.Floor,
-                            Client:usuario.id
-                        }).fetch();
+                        data.Adress.forEach(domicilio => {
+                            var address = await Domicilio.create({
+                                Adress:data.Adress.Adress,
+                                Department:data.Adress.Department,
+                                Floor:data.Adress.Floor,
+                                Client:usuario.id
+                            }).fetch();
+                        })
                         res.status(200);
                     } catch (error) {
                         sails.log.debug(error)
                         res.status(402);
                     }       
-
                 }else{
                     sails.log.Info("El usuario  de id : "+ tokenDecode.Id + "quiso acceder desde un ip erroneo.");
                     res.status(403).json({error: "Acceso denegado"})
-                }
-                   
-                }
-
+                }     
+            }
         }, 
 
         Clients:async function (req,res) {
@@ -77,7 +72,8 @@ module.exports = {
         },
 
         UpdateClient: async function (req,res) {
-            if(req.headers['access-token']){ 
+            if(req.headers['access-token']){
+                var data = req.body; 
             var currentUser = base.CheckToken(req.headers['access-token']);
                 if(currentUser){
                     var cliente = await Cliente.update({id:data.Cliente.id})
@@ -87,7 +83,14 @@ module.exports = {
                     res.status(204).json({ error: 'No existe usuario.' });
                     } else {
                     // sails.log.Info('Se elimino usuario con id:'+data.id, cliente[0]);
-                    console.log("exito");
+                    data.Adress.forEach(domicilio => {
+                        var address = await Domicilio.update({id:domicilio.id})
+                        .set(domicilio).fetch();
+                        if (address.length === 0) {
+                         // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
+                         res.status(204).json({ error: 'No existe domicilio.' });
+                         } 
+                        })
                     res.status(200).json({ message: 'Usuario eliminado.' });
                     }
                 }
@@ -109,7 +112,6 @@ module.exports = {
                                     res.status(204).json({ error: 'No existe cliente.' });
                                 } else {
                                   // sails.log.Info('Se elimino usuario con id:'+data.id, destruido[0]);
-                                    console.log("exito");
                                     res.status(200).json({ message: 'cliente eliminado.' });
                                     
                                 }
