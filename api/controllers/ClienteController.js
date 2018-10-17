@@ -7,7 +7,7 @@
 var base = require('./BaseController.js')
 module.exports = {
   
-    CreateClient :async function (req,res) {
+   /* CreateClient :async function (req,res) {
             var tokenDecode =  base.CheckToken(req.headers['access-token']);              
                 if(tokenDecode){       
                     if(tokenDecode.Ip === req.ip){                          
@@ -135,7 +135,7 @@ module.exports = {
                 }
         }
             
-        
+        */
 
 };
 

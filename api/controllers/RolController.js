@@ -13,7 +13,7 @@ module.exports = {
             var accessToken = base.CheckToken(req.headers['access-token']);
             if(accessToken){
                 if(accessToken.Ip == req.ip){
-                    if(accessToken.roles.Name === 'Admin'){
+                //    if(accessToken.roles.Name === 'Admin'){
                         try {
                             Rol.find() 
                             .then(function(rol){
@@ -37,10 +37,10 @@ module.exports = {
                         } catch (error) {
                             res.status(500).json({error: "Acceso denegado"})
                         }
-                    }else{
+                   // }else{
                         //sails.log.Info("el usuario "+currentUser.Name+"no tuvo permisos para ver los role");
-                        res.status(500).json({error: "Acceso denegado"});
-                    }
+                  //      res.status(500).json({error: "Acceso denegado"});
+                  // }
                     
                 }else{
                     //sails.log.error("El usuario "+currentUser.name+"intento ingresar con un ip que no le correspondia");

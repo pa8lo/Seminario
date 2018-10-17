@@ -16,8 +16,8 @@ module.exports = {
         var currentUser = base.CheckToken(req.headers['access-token']);
         if(currentUser){
             try {
-                currentUser.Authorizations.forEach(Authorization => {
-                    if(Authorization.Name =='Usuario'){
+               // currentUser.Authorizations.forEach(Authorization => {
+                   // if(Authorization.Name =='Usuario'){
                         User.find() 
                         .then(function(user){
                              if(!user || user.length ==0){
@@ -35,8 +35,8 @@ module.exports = {
                                 'message':' no existe usuario'
                             })
                         })
-                    }             
-                });               
+                 //   }             
+               // });               
             } catch (error) {
                 res.status(401).json({error: "Acceso denegado"})
             }
@@ -110,6 +110,7 @@ module.exports = {
                                               
                                         var user = req.body;
                                         console.log("LOS DATOS  "+JSON.stringify(user));
+                                        
                                         try {
 
                                             var domicilio = await Domicilio.create({
@@ -120,7 +121,8 @@ module.exports = {
                                             }).fetch();
                                             var usuario = await  User.create(user.User).fetch();
                                             await Domicilio.addToCollection( usuario.id, 'User')
-                                            .members(domicilio.id);                   
+                                            .members(domicilio.id); 
+                                            res.status(200).json({message: "Usuario Registrado"});
                                         } catch (error) {
                                             sails.log.debug(error)
                                         }                                                                       
@@ -224,8 +226,8 @@ module.exports = {
                 } else {
                 // sails.log.Info('Se elimino usuario con id:'+data.id, usuario[0]);
                 Data.Adress.forEach(domicilio => {
-                   var address = await Domicilio.update({id:domicilio.id})
-                   .set(domicilio).fetch();
+                   /*var address = await Domicilio.update({id:domicilio.id})
+                   .set(domicilio).fetch();*/
                    if (address.length === 0) {
                     // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
                     res.status(204).json({ error: 'No existe domicilio.' });
