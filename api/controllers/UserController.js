@@ -16,27 +16,12 @@ module.exports = {
         var currentUser = base.CheckToken(req.headers['access-token']);
         if(currentUser){
             try {
-               // currentUser.Authorizations.forEach(Authorization => {
-                   // if(Authorization.Name =='Usuario'){
-                        User.find() 
-                        .then(function(user){
-                             if(!user || user.length ==0){
-                                    return res.send({
-                                        'sucess': false,
-                                        'message':' no existen usuarios'
-                                    })
-                             }
-                             return  res.json(user)
-                        })
-                        .catch(function(err){
-                             sails.log.debug(err)
-                             return res.send({
-                                'sucess': false,
-                                'message':' no existe usuario'
-                            })
-                        })
-                 //   }             
-               // });               
+                if ( base.CheckAuthorization(currentUser,'Usuario','View',req.ip)){  
+                    console.log(currentUser);             
+                        base.SeeElements(User,"usuario",res);
+                    }else{
+                        console.log("error en permisos")
+                    }                      
             } catch (error) {
                 res.status(401).json({error: "Acceso denegado"})
             }
@@ -100,36 +85,22 @@ module.exports = {
                 
             },
 
-            createUser: async function(req,res){
-                
+            createUser: async function(req,res){                
                                 if(req.headers['access-token']){                       
                                     var tokenDecode = base.CheckToken(req.headers['access-token']);               
                                     if(tokenDecode){       
-                                        if(tokenDecode.Ip === req.ip){
-                                        console.log("token Correcto")
-                                              
-                                        var user = req.body;
-                                        console.log("LOS DATOS  "+JSON.stringify(user));
-                                        
-                                        try {
-
-                                            var domicilio = await Domicilio.create({
-                                                id:user.Adress.id,
-                                                Adress:user.Adress.Adress,
-                                                Department:user.Adress.Department,
-                                                Floor:user.Adress.Floor,
-                                            }).fetch();
-                                            var usuario = await  User.create(user.User).fetch();
-                                            await Domicilio.addToCollection( usuario.id, 'User')
-                                            .members(domicilio.id); 
-                                            res.status(200).json({message: "Usuario Registrado"});
-                                        } catch (error) {
-                                            sails.log.debug(error)
-                                        }                                                                       
-                                    }else{
-                                        sails.log.Info("El usuario  de id : "+ tokenDecode.Id + "quiso acceder desde un ip erroneo.");
-                                        res.status(403).json({error: "Acceso denegado"})
-                                    }                                      
+                                        if (base.CheckAuthorization(currentUser,'Usuario','Create',req.ip)){                                         
+                                            var user = req.body;                                     
+                                            try {
+                                                var domicilio = await Domicilio.create(user.Adress).fetch();
+                                                var usuario = await User.create(user.User).fetch();
+                                                await Domicilio.addToCollection( usuario.id, 'User')
+                                                .members(domicilio.id); 
+                                                res.status(200).json({message: "Usuario Registrado"});
+                                            } catch (error) {
+                                                sails.log.debug(error)
+                                            }      
+                                        }                                                                                                                              
                                     }
                                 }
                             },                
