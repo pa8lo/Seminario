@@ -54,7 +54,29 @@ module.exports = {
                 'message':' no existe '+Mensaje
             })
         })
-    }    
+    },
+    RemoveAuthorization: async function (data,modeloPrincipal,modeloSecundarioString,res) {
+            try{
+                await modeloPrincipal.removeFromCollection(data.User.id, modeloSecundario)
+                .members(data.Authorizations.id);
+                res.status(200).json({message : "ok"})
+            }catch(error){
+                res.status(500).json({error : "Error en el servidor"})
+            } 
+            
+    },
+    CreateElement: async function (EntidadUno,EntidadDos,DataEntidadUno,DataEntidadDos,ViaEntidadUno,res) {
+        try {
+            var entidadUno = await EntidadUno.create(DataEntidadUno).fetch();
+            var entidadDos = await EntidadDos.create(DataEntidadDos).fetch();
+            await EntidadUno.addToCollection( entidadDos.id, ViaEntidadUno)
+            .members(entidadUno.id); 
+            res.status(200).json({message: ViaEntidadUno+"Registrado"});
+        } catch (error) {
+            sails.log.debug(error)
+        }
+    },
+
 
                  
 

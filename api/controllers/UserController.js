@@ -16,11 +16,11 @@ module.exports = {
         var currentUser = base.CheckToken(req.headers['access-token']);
         if(currentUser){
             try {
-                if ( base.CheckAuthorization(currentUser,'Usuario','View',req.ip)){  
+                if (base.CheckAuthorization(currentUser,'Usuario','View',req.ip)){  
                     console.log(currentUser);             
                         base.SeeElements(User,"usuario",res);
                     }else{
-                        console.log("error en permisos")
+                        res.status(401).json({error: "Acceso denegado"})
                     }                      
             } catch (error) {
                 res.status(401).json({error: "Acceso denegado"})
@@ -37,7 +37,7 @@ module.exports = {
             if(req.headers['access-token']){
             const currentUser = base.CheckToken(req.headers['access-token']);
                 if(currentUser){
-                    if(currentUser.Ip == req.ip){
+                    if(base.CheckAuthorization(currentUser,'Usuario','Delete',req.ip)){
                         var data = req.body;
                         try{
                             var destruido = await User.update({id:data.id})
@@ -48,24 +48,18 @@ module.exports = {
                             } else {
                               // sails.log.Info('Se elimino usuario con id:'+data.id, destruido[0]);
                                 console.log("exito");
-                                res.status(200).json({ message: 'Usuario eliminado.' });
-                                
+                                res.status(200).json({ message: 'Usuario eliminado.' });                               
                             }
-
                         }catch(error){
                             //sails.log.Error("El usuario  de id : "+ currentUser.Id + "quiso acceder desde un ip erroneo.");
                             return res.status(500).json({ error: 'Existio un problema al eliminar usuario' +error });
-                        }
-
+                        }                                        
                     }else{
-                        sails.log.Info("El usuario  de id : "+ currentUser.Id + "quiso acceder desde un ip erroneo.");
-                        return res.status(401).json({ error: 'Acceso denegado.' });
-                    } 
-                    
+                        res.status(401).json({error: "Acceso denegado"})
+                    }
                 }else{
                     return res.status(401).json({ error: 'Acceso denegado.' });
                 } 
-
             }else{
                 return res.status(401).json({ error: 'Medidas de seguridad no ingresadas.' });
             }
@@ -78,11 +72,9 @@ module.exports = {
                         'sucess': true,
                         'User':tokenDecode,
                     })
-
                 } catch (error) {
                     res.status(401).json({error: "Falta ingresar token de seguridad"})
-                }
-                
+                }               
             },
 
             createUser: async function(req,res){                
@@ -90,19 +82,18 @@ module.exports = {
                                     var tokenDecode = base.CheckToken(req.headers['access-token']);               
                                     if(tokenDecode){       
                                         if (base.CheckAuthorization(currentUser,'Usuario','Create',req.ip)){                                         
-                                            var user = req.body;                                     
+                                            var data = req.body;                                     
                                             try {
-                                                var domicilio = await Domicilio.create(user.Adress).fetch();
-                                                var usuario = await User.create(user.User).fetch();
-                                                await Domicilio.addToCollection( usuario.id, 'User')
-                                                .members(domicilio.id); 
-                                                res.status(200).json({message: "Usuario Registrado"});
+                                                base.CreateElement(Domicilio,User,data.Adress,data.User,'User',res)
                                             } catch (error) {
                                                 sails.log.debug(error)
                                             }      
+                                        }else{
+                                            res.status(401).json({error: "Acceso denegado"})
                                         }                                                                                                                              
-                                    }
-                                }
+                                    }return res.status(401).json({ error: 'Medidas de seguridad no ingresadas.' });
+                                    
+                                }return res.status(401).json({ error: 'Medidas de seguridad no ingresadas.' });
                             },                
                         
     login : async function(req,res){
@@ -147,39 +138,51 @@ module.exports = {
         if(req.headers['access-token']){  
                 var currentUser = base.CheckToken(req.headers['access-token']);
             if(currentUser){
+                if(base.CheckAuthorization(currentUser,'Usuario','View',req.ip)){
                 try {
                     var usuario = await User.findOne({id:parametros.id}).populate('Authorizations');
                     res.status(200).json({Authorizations : usuario.Authorizations});
                 }catch(error){
                     console.log(error);
                     res.status(500).json({error: "existio un problema para mostrar los permisos"})
-                }               
+                }
+            }else{
+                res.status(401).json({error: "Acceso denegado"})
+            }               
             }else{
                 return res.status(401).json({ error: 'Medidas de seguridad no ingresadas.' });
-            }
-            
+            }          
         }
     },
 
     RemoveAuthorization: async function (req,res) {
-        if(req.headers['access-token']){ 
-            var currentUser = base.CheckToken(req.headers['access-token']);
-            if(currentUser){
-            await User.removeFromCollection(data.User.id, 'Authorizations')
-            .members(data.Authorizations.id);
-            }
-        }else{
-            return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
-        }
+        if(req.headers['access-token']){      
+                var currentUser = base.CheckToken(req.headers['access-token']);
+                if(currentUser){
+                        if(base.CheckAuthorization(currentUser,'Authorization','Delete',req.ip)){   
+                            base.RemoveAuthorization(req.body,User,'Authorizations',res)
+                        }else{
+                            res.status(401).json({error: "Acceso denegado"})
+                        }
+                }else{
+                    return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
+                }
+    }else{
+        return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
+    }
     },
 
     AssignAuthorization:async  function (req,res) {
         if(req.headers['access-token']){ 
-            var currentUser = base.CheckToken(req.headers['access-token']);
-            if(currentUser){
-            await User.addToCollection( data.Authorization.id, 'Authorizations')
-            .members(data.User.id);  
-            }  
+                var currentUser = base.CheckToken(req.headers['access-token']);
+                if(currentUser){
+                    if (base.CheckAuthorization(currentUser,'Authorization','Assign',req.ip)){
+                await User.addToCollection( data.Authorization.id, 'Authorizations')
+                .members(data.User.id);  
+                }else{
+                    res.status(401).json({error: "Acceso denegado"})
+                }
+            }
         }else{
             return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
         }
@@ -189,24 +192,27 @@ module.exports = {
         if(req.headers['access-token']){ 
         var currentUser = base.CheckToken(req.headers['access-token']);
             if(currentUser){
-                var usuario = await User.update({id:data.User.id})
-                .set(data.User).fetch();                                                             
-                if (usuario.length === 0) {
-                // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
-                res.status(204).json({ error: 'No existe usuario.' });
-                } else {
-                // sails.log.Info('Se elimino usuario con id:'+data.id, usuario[0]);
-                Data.Adress.forEach(domicilio => {
-                   /*var address = await Domicilio.update({id:domicilio.id})
-                   .set(domicilio).fetch();*/
-                   if (address.length === 0) {
+                if(base.CheckAuthorization(currentUser,'Usuario','Edit',req.ip)){            
+                    var usuario = await User.update({id:data.User.id})
+                    .set(data.User).fetch();                                                             
+                    if (usuario.length === 0) {
                     // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
-                    res.status(204).json({ error: 'No existe domicilio.' });
-                    }    
-                });
-                res.status(200).json({ message: 'Usuario modificado.' });
-                }
-                
+                    res.status(204).json({ error: 'No existe usuario.' });
+                    } else {
+                    // sails.log.Info('Se elimino usuario con id:'+data.id, usuario[0]);
+                    Data.Adress.forEach(domicilio => {
+                    /*var address = await Domicilio.update({id:domicilio.id})
+                    .set(domicilio).fetch();*/
+                    if (address.length === 0) {
+                        // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
+                        res.status(204).json({ error: 'No existe domicilio.' });
+                        }    
+                    });
+                    res.status(200).json({ message: 'Usuario modificado.' });
+                    }
+                  }else{
+                    res.status(401).json({error: "Acceso denegado"})
+                }  
             }
         }else{
             return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
@@ -218,8 +224,12 @@ module.exports = {
         if(req.headers['access-token']){ 
             var currentUser = base.CheckToken(req.headers['access-token']);
                 if(currentUser){
-                var usuario =await User.findOne({id: data.id}).populate('Adress');   2
-                res.status(200).json({user:usuario})             
+                    if(base.CheckAuthorization(currentUser,'Usuario','View',req.ip)){
+                    var usuario =await User.findOne({id: data.id}).populate('Adress');   
+                    res.status(200).json({user:usuario})             
+                    }else{
+                        res.status(401).json({error: "Acceso denegado"})
+                    }
                 }
             }else{
                 return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
