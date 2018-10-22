@@ -60,8 +60,8 @@ module.exports = {
                 res.status(403).json({error: "Acceso denegado"})
             }                                      
             }
-        }
-    },       
+        },
+           
     
 
 };
