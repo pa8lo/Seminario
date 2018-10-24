@@ -55,8 +55,16 @@ module.exports = {
             }                                      
             }
         },
-        AssignAuthorizations: function (idUser,IdRol){
-            var rol = Rol.findOne({id : IdRol}).populate('Authorizations');
+        AssignAuthorizations: async function (idUser,IdRol){
+            var rol =await Rol.findOne({id : IdRol}).populate('Authorizations');
+            try{
+                await rol.Authorizations.forEach(async Auth => {
+                await User.addToCollection(idUser , 'Authorizations')
+                .members(Auth.id);  
+                })
+            }catch(error){
+                sails.log.debug(error);
+            }
         }   
     
 

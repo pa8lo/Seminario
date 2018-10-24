@@ -99,7 +99,7 @@ module.exports.routes = {
 //'PUT /User/UpdateUser' : 'UserController.UpdateUser',
 // ENDPOINTS PERMISOS
 //
-'GET /Auth/Authorizations': 'AuthController.Authorizations'
+'GET /Auth/Authorizations': 'AuthController.Authorizations',
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
   //  ╚╩╝╚═╝╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝
@@ -108,6 +108,7 @@ module.exports.routes = {
   //  ╔╦╗╦╔═╗╔═╗
   //  ║║║║╚═╗║
   //  ╩ ╩╩╚═╝╚═╝
+  'Post /test/AssignUser': 'RolController.AssignAuthorizations'
 
 
 };

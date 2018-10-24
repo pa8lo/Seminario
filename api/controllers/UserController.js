@@ -7,6 +7,7 @@
 const token = require('jsonwebtoken');
 const secretMessage = require('../Secret');
 var base = require('./BaseController.js');
+var rol = require('./RolController.js');
 
 
 module.exports = {
@@ -226,6 +227,7 @@ module.exports = {
                 return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
             }
     },
+    //Modifica el rol del usuario configurando sus nuevos permisos
     ChangeRol :async function (req,res) {
         if(req.headers['access-token']){ 
             var currentUser = base.CheckToken(req.headers['access-token']);
@@ -246,25 +248,35 @@ module.exports = {
                             base.RemoveAuthorization(data,User,'Authorizations',res);
                             
                         });
+                        try{
+                            await UpdateRol(parametros.Rol.id,parametros.User.id)
+                            res.status(200).json({message:"Usuario midificado correctamente"})
+                        }catch(err)
+                        {
+                            sails.log.debug(err);
+                            res.status(404).json({error:"Existío un error cuando se quiso actualizar el rol"})
+                        }
                         
-                        await UpdateRol(parametros.Rol.id,parametros.User.id)
                     }
                 }
             }else{
                 return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
             }
     },
-    //Permite Actualizar rol a un usuario
+    
      
 
 };
+//Permite Actualizar rol a un usuario
  async function UpdateRol(idNewRol,idUsuario){
     try{
      await User.update({id : idUsuario})
-     .set({Rols:idNewRol}).fetch();   
+     .set({Rols:idNewRol}).fetch();  
+     rol.AssignAuthorizations(idUsuario,idNewRol);
     } 
     catch(err){
         sails.log.debug("Existio un error cuando se quiso modificar el rol del usuario "+err);
-    }  
+    }
+
  }
 
