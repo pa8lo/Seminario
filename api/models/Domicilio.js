@@ -32,6 +32,18 @@ module.exports = {
       allowNull:true,
       columnName: 'Piso',
     },
+    
+    LatLong:{
+      type: 'string',
+      required:true,
+      description:'Latitud y longitud del cliente'
+    },
+
+    Cp:{
+      type:'string',
+      required:true,
+      description:'Codigo postal del cliente'
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗

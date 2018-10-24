@@ -69,12 +69,18 @@ module.exports.routes = {
 'GET /User/User' : 'UserController.User',
 
 'PATCH /User/DeleteUser' : 'UserController.DeleteUser',
+
+'PUT /User/ChangeRol' : 'UserController.ChangeRol',
 //
 // ENDPOINTS CLIENTE
 //
-'GET /Client/Clients': 'ClienteController.Clientes',
+'GET /Client/Clients': 'ClienteController.Clients',
+
+'GET /Client/Client' : 'ClienteController.Client',
 
 'POST /Client/CreateCLient' : 'ClienteController.CreateClient',
+
+'POST /Client/AddAddress' : 'ClienteController.AddAddress',
 
 'PUT /Client/UpdateUser' : 'ClienteController.UpdateClient',
 

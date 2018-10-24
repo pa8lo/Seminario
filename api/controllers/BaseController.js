@@ -24,14 +24,19 @@ module.exports = {
             return tokenDecode;
         },
      
-    CheckAuthorization: async function (CurrentUser,CategoriaPermiso,NombrePermiso,ip) {
-        if(CurrentUser.ip === ip){
+    CheckAuthorization: async function (CurrentUser,CategoriaPermiso,NombrePermiso,ip,response) {
+        if(CurrentUser.Ip === ip){
+
             await CurrentUser.Authorizations.forEach(Authorization => {
-                (Authorization.Name === NombrePermiso && Authorization.Type === CategoriaPermiso) ? "ok" :  false;        
+                if(Authorization.Name === NombrePermiso && Authorization.Type === CategoriaPermiso){
+                    return "ok";
+                    end;
+                }
+
             });
         }else{
             //sails.log.Info("El usuario  de id : "+ CurrentUser.Id + "quiso acceder desde un ip erroneo.");
-            return false;
+            response.status(405).json({error :"Acceso denegado"});
         }
 
     },
@@ -57,24 +62,26 @@ module.exports = {
     },
     RemoveAuthorization: async function (data,modeloPrincipal,modeloSecundarioString,res) {
             try{
-                await modeloPrincipal.removeFromCollection(data.User.id, modeloSecundario)
+                await modeloPrincipal.removeFromCollection(data.User.id, modeloSecundarioString)
                 .members(data.Authorizations.id);
-                res.status(200).json({message : "ok"})
             }catch(error){
+                sails.log.debug(error)
                 res.status(500).json({error : "Error en el servidor"})
             } 
             
     },
     CreateElement: async function (EntidadUno,EntidadDos,DataEntidadUno,DataEntidadDos,ViaEntidadUno,res) {
         try {
-            var entidadUno = await EntidadUno.create(DataEntidadUno).fetch();
             var entidadDos = await EntidadDos.create(DataEntidadDos).fetch();
-            await EntidadUno.addToCollection( entidadDos.id, ViaEntidadUno)
+            
+            var entidadUno = await EntidadUno.create(DataEntidadUno).fetch();
+            await EntidadUno.addToCollection(entidadDos.id, ViaEntidadUno)
             .members(entidadUno.id); 
             res.status(200).json({message: ViaEntidadUno+"Registrado"});
         } catch (error) {
             sails.log.debug(error)
         }
+    
     },
 
 

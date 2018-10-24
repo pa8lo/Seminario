@@ -28,10 +28,10 @@ module.exports.bootstrap = async function(done) {
     await Rol.create({
       id:2, Name:'Usuario',Description:'Administrador de usuarios de la aplicación'});
    await User.create(
-     {id:1 ,Dni: '35111111', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2],Rols:1,});
+     {id:1 ,Dni: '35111111', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3],Rols:1,});
    await Permiso.create({id:1 ,Name:'Create',Description:'Permite la creacion  usuario',Type:'Usuario',User:1});
    await Permiso.create({id:2 ,Name:'View',Description:'Permite ver usuario',Type:'Usuario',User:1});
-
+   await Permiso.create({id:3 ,Name:'View',Description:'Permite ver Clientes',Type:'Cliente',User:1});
   // 
 
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.

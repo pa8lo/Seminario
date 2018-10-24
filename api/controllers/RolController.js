@@ -13,11 +13,9 @@ module.exports = {
             var currentUser = base.CheckToken(req.headers['access-token']);
             if(currentUser){
                 try{
-                    if(base.CheckAuthorization(currentUser,'Roles','View',req.ip)){
+                    if(base.CheckAuthorization(currentUser,'Roles','View',req.ip,res)){
                          base.SeeElements(Rol,"Rol",res);
-                    }else{
-                        res.status(401).json({error: "Acceso denegado"})
-                    }                        
+                    }                     
                 } catch (error) {
                     res.status(500).json({error: "Acceso denegado"})
                 }
@@ -34,10 +32,8 @@ module.exports = {
         if(req.headers['access-token']){ 
             var currentUser = base.CheckToken(req.headers['access-token']);
             if(currentUser){
-                if(base.CheckAuthorization(currentUser,'Rol','Delete',req.ip)){
+                if(base.CheckAuthorization(currentUser,'Rol','Delete',req.ip,res)){
                     base.RemoveAuthorization(req.body,Rol,'Authorizations',res);
-                }else{
-                    res.status(401).json({Error: "Acceso denegado"})
                 }
             }
         }else{
@@ -49,11 +45,9 @@ module.exports = {
         if(req.headers['access-token']){                       
             var tokenDecode = base.CheckToken(req.headers['access-token']);               
             if(tokenDecode){       
-                if(base.CheckAuthorization(currentUser,'Rol','Create',req.ip)){
+                if(base.CheckAuthorization(currentUser,'Rol','Create',req.ip,res)){
                     var data = req.body
                     Rol.Create(data);
-                }else{
-                    res.status(401).json({error:"Acceso denegado"})
                 }
             }else{
                 sails.log.Info("El usuario  de id : "+ tokenDecode.Id + "quiso acceder desde un ip erroneo.");
@@ -61,7 +55,9 @@ module.exports = {
             }                                      
             }
         },
-           
+        AssignAuthorizations: function (idUser,IdRol){
+            var rol = Rol.findOne({id : IdRol}).populate('Authorizations');
+        }   
     
 
 };
