@@ -91,9 +91,11 @@ module.exports.routes = {
 //
 'GET /Rol/Rols' : 'RolController.Rols',
 
-'PUT /Rol/RemoveAuthorization' : 'RolController.RemoveAuthorization',
+'POST /Rol/RemoveAuthorizations' : 'RolController.RemoveAuthorizations',
 
-//'POST /Rol/CreateRol': 'RolController.CreateRol',
+'POST /Rol/AssignAuthorizations' : 'RolController.AssignAuthorizations',
+
+'POST /Rol/CreateRol': 'RolController.CreateRol',
 //'PUT /User/AssignAuthorization' : 'UserController.AssignAuthorization',
 //'PATCH /User/DeleteUser' : 'UserController.DeleteUser',
 //'PUT /User/UpdateUser' : 'UserController.UpdateUser',

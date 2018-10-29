@@ -162,8 +162,16 @@ module.exports = {
         if(req.headers['access-token']){      
                 var currentUser = base.CheckToken(req.headers['access-token']);
                 if(currentUser){
+                        var data = {
+                            modeloPrincipal:{
+                                id:req.body.User.id
+                            },
+                            modeloSecundario:{
+                                id:req.body.Authorizations.id
+                            }
+                        }
                         if(base.CheckAuthorization(currentUser,'Authorization','Delete',req.ip,res)){   
-                           await base.RemoveAuthorization(req.body,User,'Authorizations',res)
+                           await base.RemoveAuthorization(data,User,'Authorizations',res)
                             res.status(200).json({message : 'Permiso removido con exito.'})
                             
 
@@ -272,7 +280,7 @@ module.exports = {
     try{
      await User.update({id : idUsuario})
      .set({Rols:idNewRol}).fetch();  
-     rol.AssignAuthorizations(idUsuario,idNewRol);
+     rol.UpdateAuthorizations(idUsuario,idNewRol);
     } 
     catch(err){
         sails.log.debug("Existio un error cuando se quiso modificar el rol del usuario "+err);

@@ -24,19 +24,14 @@ module.exports = {
             return tokenDecode;
         },
      
-    CheckAuthorization: async function (CurrentUser,CategoriaPermiso,NombrePermiso,ip,response) {
+    CheckAuthorization: async function (CurrentUser,CategoriaPermiso,NombrePermiso,ip,res) {
         if(CurrentUser.Ip === ip){
+            var existeModelo =await User.findOne({id: 1}).populate('Authorizations',{Name: NombrePermiso,Type: CategoriaPermiso}); 
+            return (existeModelo.Authorizations.length > 0) ?  true :false; 
 
-            await CurrentUser.Authorizations.forEach(Authorization => {
-                if(Authorization.Name === NombrePermiso && Authorization.Type === CategoriaPermiso){
-                    return "ok";
-                    end;
-                }
-
-            });
         }else{
             //sails.log.Info("El usuario  de id : "+ CurrentUser.Id + "quiso acceder desde un ip erroneo.");
-            response.status(405).json({error :"Acceso denegado"});
+        res.status(405).json({error :"Acceso denegado"});
         }
 
     },
@@ -62,8 +57,8 @@ module.exports = {
     },
     RemoveAuthorization: async function (data,modeloPrincipal,modeloSecundarioString,res) {
             try{
-                await modeloPrincipal.removeFromCollection(data.User.id, modeloSecundarioString)
-                .members(data.Authorizations.id);
+                await modeloPrincipal.removeFromCollection(data.modeloPrincipal.id, modeloSecundarioString)
+                .members(data.modeloSecundario.id);
             }catch(error){
                 sails.log.debug(error)
                 res.status(500).json({error : "Error en el servidor"})
@@ -83,6 +78,8 @@ module.exports = {
         }
     
     },
+
+
 
 
                  

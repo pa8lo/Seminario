@@ -13,7 +13,7 @@ module.exports = {
             var currentUser = base.CheckToken(req.headers['access-token']);
             if(currentUser){
                 try{
-                    if(base.CheckAuthorization(currentUser,'Roles','View',req.ip,res)){
+                    if(base.CheckAuthorization(currentUser,'Rol','View',req.ip,res)){
                          base.SeeElements(Rol,"Rol",res);
                     }                     
                 } catch (error) {
@@ -28,26 +28,66 @@ module.exports = {
         }
     },
 
-    RemoveAuthorization:async function (req,res){
+    AssignAuthorizations:async  function (req,res,ModeloPrincipal,data) {
         if(req.headers['access-token']){ 
+                var currentUser = base.CheckToken(req.headers['access-token']);
+                if(currentUser){
+                   
+                var reqUser = req.body;
+                reqUser.Authorizations.forEach(async Authorization    => {
+                    console.log(Authorization);
+                    if (base.CheckAuthorization(currentUser,'Authorization','Assign',req.ip,res)){
+                    await Rol.addToCollection(Authorization, 'Authorizations')
+                    .members(reqUser.rol.id);
+                    }  
+                 });
+                res.status(200).json({message : 'ok.'})
+               
+            }
+        }else{
+             res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
+        }
+    },
+
+    RemoveAuthorizations:async function (req,res){
+        if(req.headers['access-token']){
             var currentUser = base.CheckToken(req.headers['access-token']);
-            if(currentUser){
-                if(base.CheckAuthorization(currentUser,'Rol','Delete',req.ip,res)){
-                    base.RemoveAuthorization(req.body,Rol,'Authorizations',res);
-                }
+                if(await base.CheckAuthorization(currentUser,'Rol','Edit',req.ip,res)){
+                    var reqUser = req.body;
+                    reqUser.Authorizations.forEach(Authorization   => {
+                
+                        var data = {
+                            modeloPrincipal:{
+                                id:reqUser.rol
+                            },
+                            modeloSecundario:{
+                                id:Authorization
+                            }
+                        };
+                        base.RemoveAuthorization(data,Rol,'Authorizations',res)
+                    });
+                    res.status(200).json({message : 'ok'})
+            }else{
+                res.status(401).json({error:'Permiso denegado'});
             }
         }else{
             return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
         }
     },
 
-    CreateRol: function (req,res){
+    CreateRol: async function (req,res){
         if(req.headers['access-token']){                       
-            var tokenDecode = base.CheckToken(req.headers['access-token']);               
-            if(tokenDecode){       
+            var currentUser = base.CheckToken(req.headers['access-token']);               
+            if(currentUser){       
                 if(base.CheckAuthorization(currentUser,'Rol','Create',req.ip,res)){
                     var data = req.body
-                    Rol.Create(data);
+                  try {
+                     var rol = await Rol.create(data).fetch();
+                    res.status(200).json({idRol:rol.id})
+                  } catch (error) {
+                    sails.log.Info("Existio un error al crear el rol : "+ error);
+                    res.status(500).json({error:"Existio un problema al crear rol"})
+                  }  
                 }
             }else{
                 sails.log.Info("El usuario  de id : "+ tokenDecode.Id + "quiso acceder desde un ip erroneo.");
@@ -55,7 +95,7 @@ module.exports = {
             }                                      
             }
         },
-        AssignAuthorizations: async function (idUser,IdRol){
+        UpdateAuthorizations: async function (idUser,IdRol){
             var rol =await Rol.findOne({id : IdRol}).populate('Authorizations');
             try{
                 await rol.Authorizations.forEach(async Auth => {
