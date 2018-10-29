@@ -37,7 +37,7 @@ module.exports = {
     },
 
     SeeElements: function (Element,Mensaje,res){
-        Element.find() 
+        Element.find({Eliminated: false}) 
         .then(function(data){
              if(!data || data.length ==0){
                     return res.send({
@@ -75,6 +75,7 @@ module.exports = {
             res.status(200).json({message: ViaEntidadUno+"Registrado"});
         } catch (error) {
             sails.log.debug(error)
+            res.status(500).json({error: "existio un error para crear la entidad"});
         }
     
     },

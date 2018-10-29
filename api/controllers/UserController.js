@@ -47,7 +47,6 @@ module.exports = {
                                 res.status(204).json({ error: 'No existe usuario.' });
                             } else {
                               // sails.log.Info('Se elimino usuario con id:'+data.id, destruido[0]);
-                                console.log("exito");
                                 res.status(200).json({ message: 'Usuario eliminado.' });                               
                             }
                         }catch(error){
@@ -99,7 +98,8 @@ module.exports = {
     login : async function(req,res){
         try {
             //Traigo todos los datos del request y controlo que existan los necesarios
-            const data = req.allParams();
+            const data = req.body;
+            console.log(data)
             if(!data.Dni || !data.Password){
             return res.status(400).json({ error: 'Faltan ingresar parametros' });
             }
