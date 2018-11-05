@@ -7,6 +7,8 @@
 const jwt = require('jsonwebtoken');
 const secretMessage = require('../Secret');
 
+var base = require('./BaseController.js')
+
 module.exports = {
 
     CheckToken:function (token){        

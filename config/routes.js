@@ -102,6 +102,10 @@ module.exports.routes = {
 // ENDPOINTS PERMISOS
 //
 'GET /Auth/Authorizations': 'AuthController.Authorizations',
+
+// ENDPOINTS DIRECCIÓNES
+//
+'POST /Adress/UpdateAddress' : 'DireccionController.UpdateAddress',
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
   //  ╚╩╝╚═╝╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝

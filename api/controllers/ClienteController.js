@@ -86,7 +86,7 @@ module.exports = {
                     var cliente = await Cliente.update({id:data.Cliente.id})
                     .set(data.Cliente).fetch();                                               
                     if (cliente.length === 0) {
-                    // sails.log.Error('Se intento borrar cliente con id :'+data.id+" pero no existia alguno con ese id");
+                     sails.log.error('Se intento borrar cliente con id :'+data.id+" pero no existia alguno con ese id");
                     res.status(401).json({ error: 'No existe usuario.' });
                     } else {
 
