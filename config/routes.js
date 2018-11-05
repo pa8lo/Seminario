@@ -91,7 +91,7 @@ module.exports.routes = {
 //
 'GET /Rol/Rols' : 'RolController.Rols',
 
-'POST /Rol/RemoveAuthorizations' : 'RolController.RemoveAuthorizations',
+'POST /Rol/RemoveAuthorizations' : 'RolController.RemoveAuthorization',
 
 'POST /Rol/AssignAuthorizations' : 'RolController.AssignAuthorizations',
 

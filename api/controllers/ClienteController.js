@@ -24,9 +24,13 @@ module.exports = {
                     if(base.CheckAuthorization(currentUser,'Cliente','Create',req.ip,res)){
                         try {
                             var  data = req.body;
-                            var domicilio  = await Domicilio.create(data.Address).fetch();   
-
-                            res.status(200).json({message:"Usuario creado con exito"})
+         //                   var existeCliente = await Cliente.findOne({id:data.Address.id});
+          //                  if(existeCliente === undefined){
+                                var domicilio  = await Domicilio.create(data.Address).fetch();   
+                               res.status(200).json({message:"Usuario creado con exito"} )
+            //              }else{
+              //              res.status(400).json({message:"Error con el id del cliete"} )
+                        //  }  
                         }
                         catch (error){
                             sails.log.debug(error)
@@ -75,7 +79,7 @@ module.exports = {
         },
 
         UpdateClient: async function (req,res) {
-          /*  if(req.headers['access-token']){
+            if(req.headers['access-token']){
                 var data = req.body; 
             var currentUser = base.CheckToken(req.headers['access-token']);
                 if(currentUser){
@@ -83,23 +87,15 @@ module.exports = {
                     .set(data.Cliente).fetch();                                               
                     if (cliente.length === 0) {
                     // sails.log.Error('Se intento borrar cliente con id :'+data.id+" pero no existia alguno con ese id");
-                    res.status(204).json({ error: 'No existe usuario.' });
+                    res.status(401).json({ error: 'No existe usuario.' });
                     } else {
-                    // sails.log.Info('Se elimino usuario con id:'+data.id, cliente[0]);
-                    data.Adress.forEach(domicilio => {
-                        var address = await Domicilio.update({id:domicilio.id})
-                        .set(domicilio).fetch();
-                        if (address.length === 0) {
-                         // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
-                         res.status(204).json({ error: 'No existe domicilio.' });
-                         } 
-                        })
-                    res.status(200).json({ message: 'Usuario eliminado.' });
+
+                    res.status(200).json({ message: 'Usuario modificado.' });
                     }
                 }
             }else{
                 return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
-            }*/
+            }
         },
         DeleteClient: async function (req,res) {
             if(req.headers['access-token']){
@@ -108,11 +104,11 @@ module.exports = {
                         if(currentUser.Ip == req.ip){
                             var data = req.body;
                             try{
-                                var destruido = await Client.update({id:data.id})
+                                var destruido = await Cliente.update({id:data.id})
                                                           .set({Eliminated:true}).fetch();                                               
                                 if (destruido.length === 0) {
                                    // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
-                                    res.status(204).json({ error: 'No existe cliente.' });
+                                    res.status(401).json({ error: 'No existe cliente.' });
                                 } else {
                                   // sails.log.Info('Se elimino usuario con id:'+data.id, destruido[0]);
                                     res.status(200).json({ message: 'cliente eliminado.' });

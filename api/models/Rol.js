@@ -14,13 +14,18 @@ module.exports = {
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
     Name:{
       type:'string',
-      required:true
+      required:true,
+      unique:true
     },
     Description:{
       type:'string',
       required:true
     },
 
+    Eliminated:{
+      type: 'boolean',
+      defaultsTo: false, 
+    },
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝

@@ -26,8 +26,13 @@ module.exports = {
      
     CheckAuthorization: async function (CurrentUser,CategoriaPermiso,NombrePermiso,ip,res) {
         if(CurrentUser.Ip === ip){
-            var existeModelo =await User.findOne({id: 1}).populate('Authorizations',{Name: NombrePermiso,Type: CategoriaPermiso}); 
-            return (existeModelo.Authorizations.length > 0) ?  true :false; 
+            try {
+                var existeModelo =await User.findOne({id: CurrentUser.Id}).populate('Authorizations',{Name: NombrePermiso,Type: CategoriaPermiso}); 
+                return (existeModelo !== undefined && existeModelo.Authorizations.length > 0) ?  true :false; 
+            } catch (error) {
+                console.log(error)
+                res.status(500).json({error :"Error en el servidor"});
+            } 
 
         }else{
             //sails.log.Info("El usuario  de id : "+ CurrentUser.Id + "quiso acceder desde un ip erroneo.");
@@ -40,10 +45,7 @@ module.exports = {
         Element.find({Eliminated: false}) 
         .then(function(data){
              if(!data || data.length ==0){
-                    return res.send({
-                        'sucess': false,
-                        'message':' no existen '+Mensaje
-                    })
+                    return res.json([])
              }
              return  res.json(data)
         })
