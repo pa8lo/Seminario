@@ -258,7 +258,7 @@ module.exports = {
                     .set(data.User).fetch();                                                             
                     if (usuario.length === 0) {
                     // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
-                    res.status(401).json({ error: 'No existe usuario.' });
+                    res.status(402).json({ error: 'No existe usuario.' });
                     } else {
                     res.status(200).json({ message: 'Usuario modificado.' });
                     }
@@ -282,8 +282,19 @@ module.exports = {
                         res.status(400).json({error:"Faltan ingresar parametros"}) 
                     }else{
                         if(await base.CheckAuthorization(currentUser,'Usuario','View',req.ip,res)){
-                        var usuario =await User.findOne({id: data.id}).populate('Adress');   
-                        res.status(200).json({user:usuario})             
+                        var usuario =await User.findOne({id: data.id}).populate('Adress');
+                        var Response = {user:{
+                                id:usuario.id,
+                                Dni: usuario.Dni,
+                                Email:usuario.Email,
+                                rol:usuario.Rols,
+                                LastName:usuario.LastName,
+                                Name:usuario.Name,
+                                PrimaryPhone:usuario.PrimaryPhone,
+                                SecondaryPhone:usuario.SecondaryPhone,
+                        },
+                    }   
+                        res.status(200).json(Response)             
                         }else{
                             res.status(401).json({error:"Acceso denegado"})
                         }   

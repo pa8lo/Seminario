@@ -13,7 +13,7 @@ module.exports = {
             var currentUser = base.CheckToken(req.headers['access-token']);
             if(currentUser){
                 try{
-                    if(await base.CheckAuthorization(currentUser,'Rol','View',req.ip,res)){
+                    if(await base.CheckAuthorization(currentUser,'Usuario','Create',req.ip,res)){
                          base.SeeElements(Rol,"Rol",res);
                     }else{
                         res.status(401).json({error:"Acceso DEnegado"})
