@@ -24,6 +24,10 @@ module.exports = {
       type:'string',
       required:true
     },
+    Eliminated:{
+      type: 'boolean',
+      defaultsTo: false, 
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
@@ -47,7 +51,6 @@ module.exports = {
     },
     Category:{
       model:'categoria',
-      via:'Products'
     }
   },
 

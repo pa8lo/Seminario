@@ -81,12 +81,13 @@ module.exports = {
         UpdateClient: async function (req,res) {
             if(req.headers['access-token']){
                 var data = req.body; 
-            var currentUser = base.CheckToken(req.headers['access-token']);
+                var currentUser = base.CheckToken(req.headers['access-token']);
                 if(currentUser){
+                    var ExisteTelefono = Domicilio.findone({id:data.Cliente.Phone})
                     var cliente = await Cliente.update({id:data.Cliente.id})
                     .set(data.Cliente).fetch();                                               
                     if (cliente.length === 0) {
-                     sails.log.error('Se intento borrar cliente con id :'+data.id+" pero no existia alguno con ese id");
+                     //sails.log.error('Se intento borrar cliente con id :'+data.id+" pero no existia alguno con ese id");
                     res.status(401).json({ error: 'No existe usuario.' });
                     } else {
 

@@ -11,7 +11,7 @@ var base = require('./BaseController.js')
 
 module.exports = {
 
-    CheckToken:function (token){        
+    CheckToken :async function  (token){        
         var accessToken = token;            
         var tokenDecode = jwt.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
             if (err) {                
@@ -27,23 +27,28 @@ module.exports = {
         },
      
     CheckAuthorization: async function (CurrentUser,CategoriaPermiso,NombrePermiso,ip,res) {
+        console.log(CurrentUser.Ip)
         if(CurrentUser.Ip === ip){
             try {
                 var existeModelo =await User.findOne({id: CurrentUser.Id}).populate('Authorizations',{Name: NombrePermiso,Type: CategoriaPermiso}); 
                 return (existeModelo !== undefined && existeModelo.Authorizations.length > 0) ?  true :false; 
             } catch (error) {
-                console.log(error)
+                sails.log.debug("Existio un error para ver permisos : "+error)
                 res.status(500).json({error :"Error en el servidor"});
             } 
 
         }else{
-            //sails.log.Info("El usuario  de id : "+ CurrentUser.Id + "quiso acceder desde un ip erroneo.");
-        res.status(405).json({error :"Acceso denegado"});
+        sails.log.info("El usuario  de id : "+ CurrentUser.Id + "quiso acceder desde un ip erroneo.");
+        sails.log.info("-id esperada : " +CurrentUser.Ip);
+        sails.log.info("-id recibida : " +ip);
+        return false;
         }
 
     },
-
-    SeeElements: function (Element,Mensaje,res){
+/**
+ * Muestra todos los elementos de un objeto
+ */
+    SeeElements: function (Element,NombreElemento,res){
         Element.find({Eliminated: false}) 
         .then(function(data){
              if(!data || data.length ==0){
@@ -55,7 +60,7 @@ module.exports = {
              sails.log.debug(err)
              return res.send({
                 'sucess': false,
-                'message':' no existe '+Mensaje
+                'message':' no existe '+NombreElemento
             })
         })
     },
@@ -69,6 +74,42 @@ module.exports = {
             } 
             
     },
+    /**
+     * Permite validar permisos y que esten los datos necesarios para una ejecución
+     * @param {*} req 
+     * @param {*} res 
+     * @param {String} CategoriaPermiso 
+     * @param {String} TipoPermiso 
+     */
+    validator: async function(req,res,CategoriaPermiso,TipoPermiso){
+        if (req.headers['access-token']) {
+            var data = req.body;
+            var currentUser =  CheckToken(req.headers['access-token']);
+            if (currentUser) {
+                sails.log.info("current user : " +currentUser);
+              if (await CheckAuthorizations(currentUser, CategoriaPermiso, TipoPermiso, req.ip, res)) {
+                    return true;
+            } else {
+                
+                sails.log.info("el usuario " + currentUser.Id + "quiso acceder a un lugar sin permisos");
+                res.status(401).json({
+                  error: 'Acceso denegado.'
+                });
+                
+              }
+            }
+          } else {
+            res.status(401).json({
+              erros: 'Medidas de seguridad no ingresadas.'
+            })
+            return false;
+          }
+        },
+    
+    /**
+     * 
+     * creacion de dos entidades relacionadas.
+     */
     CreateElement: async function (EntidadUno,EntidadDos,DataEntidadUno,DataEntidadDos,ViaEntidadUno,res) {
         try {
             var entidadDos = await EntidadDos.create(DataEntidadDos).fetch();
@@ -90,4 +131,34 @@ module.exports = {
                  
 
 };
+async function CheckToken (token){        
+    var accessToken = token;            
+    var tokenDecode = jwt.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
+        if (err) {                
+            console.log(err)                
+            return null;                                                                            
+            }
+            else {                
+            var user = decoded;                                                                           
+            return user;                
+            }
+        });
+        return tokenDecode;
+    }
+    async function  CheckAuthorizations (CurrentUser,CategoriaPermiso,NombrePermiso,ip,res) {
+        if(CurrentUser.Ip === ip){
+            try {
+                var existeModelo =await User.findOne({id: CurrentUser.Id}).populate('Authorizations',{Name: NombrePermiso,Type: CategoriaPermiso}); 
+                return (existeModelo !== undefined && existeModelo.Authorizations.length > 0) ?  true :false; 
+            } catch (error) {
+                console.log(error)
+                res.status(500).json({error :"Error en el servidor"});
+            } 
+
+        }else{
+        sails.log.info("El usuario  de id : "+ CurrentUser.Id + "quiso acceder desde un ip erroneo.");
+        res.status(405).json({error :"Acceso denegado"});
+        }
+
+    }
 

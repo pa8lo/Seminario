@@ -96,9 +96,8 @@ module.exports.routes = {
 'POST /Rol/AssignAuthorizations' : 'RolController.AssignAuthorizations',
 
 'POST /Rol/CreateRol': 'RolController.CreateRol',
-//'PUT /User/AssignAuthorization' : 'UserController.AssignAuthorization',
-//'PATCH /User/DeleteUser' : 'UserController.DeleteUser',
-//'PUT /User/UpdateUser' : 'UserController.UpdateUser',
+
+'POST /Rol/DeleteRol' : 'RolController.DeleteRol',
 // ENDPOINTS PERMISOS
 //
 'GET /Auth/Authorizations': 'AuthController.Authorizations',
@@ -106,6 +105,29 @@ module.exports.routes = {
 // ENDPOINTS DIRECCIÓNES
 //
 'POST /Adress/UpdateAddress' : 'DireccionController.UpdateAddress',
+
+
+// ENDPOINTS PRODUCTOS
+//
+'POST /Product/CreateProduct': 'ProductoController.createProduct',
+
+'GET  /Product/Products' : 'ProductoController.products',
+
+'POST /Product/DeleteProduct': 'ProductoController.deleteProduct',
+
+'POST /Product/UpdateProduct': 'ProductoController.updateProduct',
+
+// ENDPOINTS CATEGORIA
+//
+'GET /Category/Categories' : 'CategoriaController.categories',
+
+'POST /Category/CreateCategory' : 'CategoriaController.createCategory',
+
+'POST /Category/DeleteCategory' : 'CategoriaController.deleteCategory',
+
+'POST /Category/UpdateCategory' : 'CategoriaController.updateCategory',
+
+'Post /Category/Products' : 'CategoriaController.products',
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
   //  ╚╩╝╚═╝╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝
@@ -114,7 +136,7 @@ module.exports.routes = {
   //  ╔╦╗╦╔═╗╔═╗
   //  ║║║║╚═╗║
   //  ╩ ╩╩╚═╝╚═╝
-  'Post /test/AssignUser': 'RolController.AssignAuthorizations'
+
 
 
 };
