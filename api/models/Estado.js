@@ -19,7 +19,12 @@ module.exports = {
     Key:{
       type:'string',
       columnType:'char'
-    }
+    },
+    Eliminated:{
+      type: 'boolean',
+      defaultsTo: false, 
+    },
+    
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
@@ -29,7 +34,10 @@ module.exports = {
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
-
+    Orders:{
+      collection:'pedido',
+      via:'State'
+    }
   },
 
 };

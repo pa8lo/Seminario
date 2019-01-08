@@ -38,7 +38,7 @@ module.exports = {
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
     Orders:{
-      model:'pedido',
+      collection:'pedido',
       via:'Products'
     },
     Offers:{

@@ -14,7 +14,7 @@ module.exports = {
   //traigo todos los usuarios.
   users: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Usuario', 'View', req.ip, res)) {
@@ -44,7 +44,7 @@ module.exports = {
 
   DeleteUser: async function (req, res) {
     if (req.headers['access-token']) {
-      const currentUser = base.CheckToken(req.headers['access-token']);
+      const currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         if (await base.CheckAuthorization(currentUser, 'Usuario', 'Delete', req.ip, res)) {
           var data = req.body;
@@ -96,7 +96,7 @@ module.exports = {
       })
     } else {
       try {
-        const tokenDecode = base.CheckToken(req.headers['access-token']);
+        const tokenDecode =await base.CheckToken(req.headers['access-token']);
         return res.send({
           'sucess': true,
           'User': tokenDecode,
@@ -112,7 +112,7 @@ module.exports = {
 
   createUser: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         var data = req.body;
         var usuario = await User.findOne({
@@ -179,7 +179,6 @@ module.exports = {
             const userToken = token.sign({
               Name: user.Name,
               Id: user.id,
-              Authorizations: user.Authorizations,
               Ip: req.ip
             }, secretMessage.jwtSecret);
             return res.status(200).json({
@@ -210,8 +209,9 @@ module.exports = {
   UserAuthorizations: async function (req, res) {
     var parametros = req.allParams();
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser = await  base.CheckToken(req.headers['access-token']);
       if (currentUser) {
+
         if (await base.CheckAuthorization(currentUser, 'Usuario', 'View', req.ip, res)) {
           try {
             if (parametros.id !== undefined) {
@@ -255,7 +255,7 @@ module.exports = {
 
   RemoveAuthorization: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         var data = {
           modeloPrincipal: {
@@ -304,7 +304,7 @@ module.exports = {
 
   AssignAuthorization: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         var data = req.body
         if (await base.CheckAuthorization(currentUser, 'Authorization', 'Assign', req.ip, res)) {
@@ -344,7 +344,7 @@ module.exports = {
  */
   UpdateUser: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         var data = req.body;
         if (await base.CheckAuthorization(currentUser, 'Usuario', 'Edit', req.ip, res)) {
@@ -381,7 +381,7 @@ module.exports = {
   User: async function (req, res) {
     var data = req.allParams();
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         if (!data.id) {
           res.status(400).json({
@@ -414,7 +414,7 @@ module.exports = {
   //Modifica el rol del usuario configurando sus nuevos permisos
   ChangeRol: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         var parametros = req.body
         console.log(parametros)

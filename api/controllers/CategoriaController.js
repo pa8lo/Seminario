@@ -4,14 +4,12 @@
  * @description :: Server-side actions for handling incoming requests.
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
-const token = require('jsonwebtoken');
-const secretMessage = require('../Secret');
 var base = require('./BaseController.js');
 
 module.exports = {
   categories: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'View', req.ip, res)) {
@@ -44,7 +42,7 @@ module.exports = {
 
   createCategory: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'Create', req.ip, res)) {
@@ -84,7 +82,7 @@ module.exports = {
 
   deleteCategory: async function (req, res) {
     if (req.headers['access-token']) {
-      const currentUser = base.CheckToken(req.headers['access-token']);
+      const currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         if (currentUser.Ip == req.ip) {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'Delete', req.ip, res)) {
@@ -97,10 +95,14 @@ module.exports = {
                   .set({
                     Eliminated: true
                   }).fetch();
+                var products = await seeproducts(data.id)
+                var items = await seeItem(data.id)
+                await deleteProductsFromCategory(products);
+                await deleteItemsFromCategory(items)
                 if (destruido.length === 0) {
                   sails.log.info('Se intento borrar la categoria con id :' + data.id + " pero no existia alguno con ese id");
                   res.status(401).json({
-                    error: 'No existe Producto.'
+                    error: 'No existe Categoria.'
                   });
                 } else {
                   sails.log.info('Se elimino la categoria con id:' + data.id);
@@ -115,8 +117,8 @@ module.exports = {
                 });
               }
             } catch (error) {
-                
-                sails.log.error("El usuario  de id : "+ currentUser.Id + "quiso acceder desde un ip erroneo.");
+
+              sails.log.error("existio un error al eliminar categoria : " + error);
               return res.status(500).json({
                 error: 'Existio un problema al eliminar la categoria' + error
               });
@@ -151,7 +153,7 @@ module.exports = {
   updateCategory: async function (req, res) {
     if (req.headers['access-token']) {
       var data = req.body;
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         if (await base.CheckAuthorization(currentUser, 'Producto', 'Edit', req.ip, res)) {
           if (data.Categoria.id) {
@@ -190,17 +192,103 @@ module.exports = {
       })
     }
   },
-
+  /**
+   * Permite ver los productos de una categoria
+   * @param {*} req 
+   * @param {*} res 
+   */
   products: async function (req, res) {
-    if(await base.validator(req,res,"Producto","View")){
-        var data = req.body
-        var categoria = await Categoria.findOne({
-          id: data.Categoria.id
-        }).populate('Products');
-        res.status(200).json({
-          categoria
-        })
+    if (await base.validator(req, res, "Producto", "View")) {
+      var data = req.body
+      var Productos = await seeproducts(data.Categoria.id)
+      if (!Productos) {
+        sails.log.info('Se intento buscar una categoria inexistente');
+        res.status(401).json({
+          error: 'No existe categoria.'
+        });
+      } else {
+        sails.log.info('Se muestran productos de la categoria');
+        res.status(401).json({
+          Productos
+        });
+      }
+    }
+  },
+  /**
+   * Permite ver la información de una categoria
+   * @param {*} req 
+   * @param {*} res 
+   */
+  category: async function (req, res) {
+    if (await base.validator(req, res, "Producto", "View")) {
+      var data = req.body
+      var categoria = await Categoria.findOne({
+        id: data.Categoria.id
+      });
+      res.status(200).json({
+        categoria
+      })
     }
   },
 
 };
+/**
+   * Permite ver los productos de una categoria
+   * @param {int} idCategoria 
+   */
+async function seeproducts(idCategoria) {
+  var categoria = await Categoria.findOne({
+    id: idCategoria
+  }).populate('Products');
+  if (categoria === undefined || categoria.length === 0) {
+    return false
+  } else {
+    return categoria.Products
+  }
+}
+/**
+   * Permite ver litemas de una categoria
+   * @param {int} idCategoria 
+   */
+async function seeItem(idCategoria) {
+  var categoria = await Categoria.findOne({
+    id: idCategoria
+  }).populate('Items');
+  if (categoria === undefined || categoria.length === 0) {
+    return false
+  } else {
+    return categoria.Items
+  }
+}
+/**
+   * Permite borrar la categoria de un array de items
+   * @param {Array} Items 
+   */
+async function deleteItemsFromCategory(Items) {
+  sails.log.info("Se eliminara la categoria de los siguientes Items : " + JSON.stringify(Items));
+  Items.forEach(async OneItem => {
+    var item = await Item.update({
+        id: OneItem.id
+      })
+      .set({
+        Category: 1
+      }).fetch();
+    sails.log.info("Se cambio la categoria" + item.id + " del  a " + item.Category)
+  })
+}
+/**
+   * Permite borrar la categoria de un array de productos
+   * @param {Array} Items 
+   */
+async function deleteProductsFromCategory(Productos) {
+  sails.log.info("Se eliminara la categoria de los siguientes productos : " + JSON.stringify(Productos));
+  Productos.forEach(async Product => {
+    var producto = await Producto.update({
+        id: Product.id
+      })
+      .set({
+        Category: 1
+      }).fetch();
+    sails.log.info("Se cambio la categoria" + producto.id + " del  a " + producto.Category)
+  })
+}

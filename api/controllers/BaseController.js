@@ -7,7 +7,9 @@
 const jwt = require('jsonwebtoken');
 const secretMessage = require('../Secret');
 
-var base = require('./BaseController.js')
+var messages = require("../globals/index");
+
+
 
 module.exports = {
 
@@ -27,7 +29,6 @@ module.exports = {
         },
      
     CheckAuthorization: async function (CurrentUser,CategoriaPermiso,NombrePermiso,ip,res) {
-        console.log(CurrentUser.Ip)
         if(CurrentUser.Ip === ip){
             try {
                 var existeModelo =await User.findOne({id: CurrentUser.Id}).populate('Authorizations',{Name: NombrePermiso,Type: CategoriaPermiso}); 
@@ -39,7 +40,7 @@ module.exports = {
 
         }else{
         sails.log.info("El usuario  de id : "+ CurrentUser.Id + "quiso acceder desde un ip erroneo.");
-        sails.log.info("-id esperada : " +CurrentUser.Ip);
+        sails.log.info("-id esperada : " + JSON.stringify(CurrentUser));
         sails.log.info("-id recibida : " +ip);
         return false;
         }
@@ -84,9 +85,9 @@ module.exports = {
     validator: async function(req,res,CategoriaPermiso,TipoPermiso){
         if (req.headers['access-token']) {
             var data = req.body;
-            var currentUser =  CheckToken(req.headers['access-token']);
+            var currentUser =await CheckToken(req.headers['access-token']);
             if (currentUser) {
-                sails.log.info("current user : " +currentUser);
+                sails.log.info("[[BASECONTROLLER]] current user : " +JSON.stringify(currentUser));
               if (await CheckAuthorizations(currentUser, CategoriaPermiso, TipoPermiso, req.ip, res)) {
                     return true;
             } else {
@@ -124,6 +125,53 @@ module.exports = {
         }
     
     },
+    /**
+     * Controla si existe un elemento de una entidad en particular
+     * @param {*} Entidad 
+     * @param {*} dato  el dato especifico que se desea buscar
+     */
+    ElementExist: async function(Entidad,dato){
+        sails.log.info("Se busco si existe el elemento :"  +"id" + dato)
+        var existeElemento = await Entidad.find({id:dato})
+        return (existeElemento !== undefined && existeElemento.length > 0) ?  true :false; 
+    },
+    /**
+     * Permite modificar un elemento
+     * @param {*} req 
+     * @param {*} res 
+     * @param {string} Ejemplo : "Usuario" 
+     * @param {string} Ejemplo : "View"  
+     * @param {*} Elemento es el tipo de objeto
+     * @param {int} Elemento es el tipo de objeto
+     * @param {*} objeto completo  modifido
+     */
+    updateElement: async function (req, res,TipoPermiso,TipoDato,Elemento,id,Objeto) {
+        if (await this.validator(req, res, TipoPermiso, TipoDato)) {
+            var data = req.body
+            if (data.id) {
+                var elemento = await Elemento.update({
+                    id
+                  })
+                  .set(Objeto).fetch();
+                if (elemento.length === 0) {
+                  sails.log.info('Se intento modificar el '+Elemento+' con id :' + elemento.id + " pero no existia alguno con ese id");
+                  res.status(messages.response.noFound).json({
+                    error: 'No existe '+Elemento
+                  });
+                } else {
+                  sails.log.info('Se modifico el estado con id :' + id);
+                  res.status(messages.response.ok).json({
+                    message: Elemento+' modificada.'
+                  });
+                }
+              } else {
+                sails.log.info("el usuario " + currentUser.Id + "No ingreso el id ");
+                res.status(messages.response.wrongSintexis).json({
+                  error: 'Faltan ingresar parametros'
+                });
+              }
+        }
+      },
 
 
 

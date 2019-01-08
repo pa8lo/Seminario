@@ -128,6 +128,53 @@ module.exports.routes = {
 'POST /Category/UpdateCategory' : 'CategoriaController.updateCategory',
 
 'Post /Category/Products' : 'CategoriaController.products',
+
+'POST /Category/Category' : 'CategoriaController.category',
+
+// ENDPOINTS ITEMS
+//
+
+'GET /Item/Items'  : 'ItemController.items',
+
+'POST /Item/Delete' : 'ItemController.deleteItem',
+
+'POST /Item/Create' : 'ItemController.createItem',
+
+'POST /Item/UpdateItem' : 'ItemController.updateItem',
+
+//ENDPOINTS PEDIDOS
+//
+
+'GET /Pedido/Pedidos' : 'PedidoController.Orders',
+
+'POST /Pedido/Create' : 'PedidoController.CreateOrder',
+
+
+//ENDPOINTS ESTADO
+//
+
+'GET /Estado/Estados' : 'EstadoController.states',
+
+'POST /Estado/Create' : 'EstadoController.createState',
+
+'POST /Estado/Delete' : 'EstadoController.deleteState',
+
+'POST /Estado/Update' : 'EstadoController.UpdateState' ,
+
+'POST /Estado/Orders' :  'EstadoController.seeOrders',
+
+//ENDPOINTS GASTO
+//
+'GET /Gasto/Expenses' : 'GastoController.expenses',
+
+'POST /Gasto/Create' : 'GastoController.createExpense',
+
+'POST /Gasto/Delete' : 'GastoController.deleteExpense',
+
+'POST /Gasto/Update' : 'GastoController.UpdateExpense' ,
+
+
+
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
   //  ╚╩╝╚═╝╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝

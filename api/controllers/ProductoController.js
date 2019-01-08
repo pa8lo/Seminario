@@ -12,7 +12,7 @@ module.exports = {
 
   products: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'View', req.ip, res)) {
@@ -41,7 +41,7 @@ module.exports = {
   },
   createProduct: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'Create', req.ip, res)) {
@@ -80,7 +80,7 @@ module.exports = {
 
   deleteProduct: async function (req, res) {
     if (req.headers['access-token']) {
-      const currentUser = base.CheckToken(req.headers['access-token']);
+      const currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         if (currentUser.Ip == req.ip) {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'Delete', req.ip, res)) {
@@ -145,7 +145,7 @@ module.exports = {
   updateProduct: async function (req, res) {
     if (req.headers['access-token']) {
       var data = req.body;
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         if (await base.CheckAuthorization(currentUser, 'Producto', 'Edit', req.ip, res)) {
           if (data.Producto.id) {
@@ -187,3 +187,17 @@ module.exports = {
 
 
 };
+async function CheckToken (token){        
+    var accessToken = token;            
+    var tokenDecode = jwt.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
+        if (err) {                
+            console.log(err)                
+            return null;                                                                            
+            }
+            else {                
+            var user = decoded;                                                                           
+            return user;                
+            }
+        });
+        return tokenDecode;
+    }

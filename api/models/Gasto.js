@@ -17,13 +17,15 @@ module.exports = {
       description:'Descripción del gasto realizado',
       allowNull:false,
       columnName:'Detalles',
+      required:true
     },
 
     Amount:{
       type:'number',
       description:'Precio del gasto realizado',
       allowNull:false,
-      columnName:'Importe'
+      columnName:'Importe',
+      required:true
     },
 
     Date:{
@@ -31,7 +33,13 @@ module.exports = {
       description:'Fecha del gasto realizado',
       allowNull:false,
       columnName:'Fecha',
-      columnType: 'datetime'
+      columnType: 'datetime',
+      required:true
+    },
+
+    Eliminated:{
+      type: 'boolean',
+      defaultsTo: false, 
     },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
@@ -44,7 +52,7 @@ module.exports = {
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
     User:{
       model:'user',
-      via:'expenses'
+
     }
   },
 

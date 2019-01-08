@@ -10,7 +10,7 @@ var base = require('./BaseController.js');
 module.exports = {
   rols: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Usuario', 'Create', req.ip, res)) {
@@ -42,7 +42,7 @@ module.exports = {
     var status = 200;
     var mensaje = "ok";
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
 
         var reqUser = req.body;
@@ -143,7 +143,7 @@ module.exports = {
 
   CreateRol: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         if (await base.CheckAuthorization(currentUser, 'Rol', 'Create', req.ip, res)) {
           var data = req.body
@@ -217,7 +217,7 @@ module.exports = {
   },
   DeleteRol: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         var data = req.body
         if (await base.CheckAuthorization(currentUser, 'Rol', 'Delete', req.ip, res)) {
@@ -244,7 +244,7 @@ module.exports = {
   },
   UpdateRol: async function (req, res) {
     if (req.headers['access-token']) {
-      const currentUser = base.CheckToken(req.headers['access-token']);
+      const currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         let data = req.body
         if (await base.CheckAuthorization(currentUser, 'Rol', 'Edit', req.ip, res)) {

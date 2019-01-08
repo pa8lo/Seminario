@@ -21,28 +21,29 @@ module.exports = {
       type:'number',
       columnType:'double'
     },
+    Eliminated:{
+      type: 'boolean',
+      defaultsTo: false, 
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝
-
+   
 
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
     Users:{
-      collection:'user',
-      via:'Orders'
+      model:'user',
     },
 
     Clients:{
-      collection:'cliente',
-      via:'Orders'
+      model:'cliente',
     },
 
     Adress:{
       model:'domicilio',
-      via:'Orders'
     },
 
     Products:{
@@ -53,6 +54,9 @@ module.exports = {
     Offers:{
       collection:'combo',
       via:'Orders'
+    },
+    State:{
+      model:'estado'
     }
   },
 
