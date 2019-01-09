@@ -71,6 +71,8 @@ module.exports.routes = {
 'PATCH /User/DeleteUser' : 'UserController.DeleteUser',
 
 'PUT /User/ChangeRol' : 'UserController.ChangeRol',
+
+'POST /User/ChangePassword' : 'UserController.ChangePassword',
 //
 // ENDPOINTS CLIENTE
 //

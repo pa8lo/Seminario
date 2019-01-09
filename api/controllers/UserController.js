@@ -8,6 +8,7 @@ const token = require('jsonwebtoken');
 const secretMessage = require('../Secret');
 var base = require('./BaseController.js');
 var rol = require('./RolController.js');
+var message = require('../globals/index')
 
 
 module.exports = {
@@ -181,6 +182,7 @@ module.exports = {
               Id: user.id,
               Ip: req.ip
             }, secretMessage.jwtSecret);
+            sails.log.info("Enviando token" )
             return res.status(200).json({
               user: {
                 Name: user.Name,
@@ -470,6 +472,24 @@ module.exports = {
       })
     }
   },
+  ChangePassword : async function(req,res){
+    var currentUser =await base.CheckToken(req.headers['access-token']);
+    sails.log.info(currentUser)
+    var usuario = await User.findOne({
+      id: currentUser.Id
+    }).decrypt()
+    sails.log.info(req.body.Password + "" +usuario.Password)
+    if( req.body.Password === usuario.Password){
+      usuario.Password = req.body.NewPassword;
+      await User.update({id: usuario.id}).set(usuario);
+      sails.log.info("Se modifico la contraseña del usuario con id "+currentUser.Id)
+      res.status(message.response.ok).json({message: "Password modificado"})
+    }else{
+      sails.log.info("Se quizo modifico la contraseña del usuario con id "+currentUser.Id+ "pero se ingreso un password incorrecto")
+      res.status(message.response.Unauthorized).json({error: "Contraseña incorrecta"})
+    }
+
+  }
 
 
 
