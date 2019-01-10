@@ -28,19 +28,20 @@ module.exports.bootstrap = async function(done) {
     await Rol.create({
       id:2, Name:'Usuario',Description:'Administrador de usuarios de la aplicación'});
    await User.create(
-     {id:1 ,Dni: '35111111', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],Rols:1,});
+     {id:1 ,Dni: '35111111', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21],Rols:1,});
      await User.create(
       {id:3 ,Dni: '35211111', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3,4,5,6,7,8,9,10],Rols:1,});
    await Permiso.create({id:1 ,Name:'Create',Description:'Permite la creacion  usuario',Type:'Usuario',User:1});
    await Permiso.create({id:2 ,Name:'View',Description:'Permite ver usuario',Type:'Usuario',User:1});
-   await Permiso.create({id:6 ,Name:'Delete',Description:'Permite ver Clientes',Type:'Usuario',User:1});
-   await Permiso.create({id:3 ,Name:'View',Description:'Permite ver Clientes',Type:'Cliente',User:1});
-   await Permiso.create({id:4 ,Name:'Create',Description:'Permite ver Clientes',Type:'Rol',User:1});
-   await Permiso.create({id:5 ,Name:'Edit',Description:'Permite ver Clientes',Type:'Rol',User:1});
-   await Permiso.create({id:7 ,Name:'Delete',Description:'Permite ver Clientes',Type:'Rol',User:1});
-   await Permiso.create({id:8 ,Name:'Delete',Description:'Permite ver Clientes',Type:'Authorization',User:1});
-   await Permiso.create({id:9 ,Name:'View',Description:'Permite ver Clientes',Type:'Rol',User:1});
-   await Permiso.create({id:10 ,Name:'Edit',Description:'Permite ver Clientes',Type:'Usuario',User:1});
+   await Permiso.create({id:3 ,Name:'Edit',Description:'Permite ver usuario',Type:'Usuario',User:1});
+   await Permiso.create({id:4 ,Name:'Delete',Description:'Permite ver Clientes',Type:'Usuario',User:1});
+   await Permiso.create({id:5 ,Name:'View',Description:'Permite ver Clientes',Type:'Cliente',User:1});
+   await Permiso.create({id:6 ,Name:'Create',Description:'Permite ver Clientes',Type:'Rol',User:1});
+   await Permiso.create({id:7 ,Name:'Edit',Description:'Permite ver Clientes',Type:'Rol',User:1});
+   await Permiso.create({id:8 ,Name:'Delete',Description:'Permite ver Clientes',Type:'Rol',User:1});
+   await Permiso.create({id:9 ,Name:'Delete',Description:'Permite ver Clientes',Type:'Authorization',User:1});
+   await Permiso.create({id:10 ,Name:'View',Description:'Permite ver Clientes',Type:'Rol',User:1});
+   await Permiso.create({id:21 ,Name:'Edit',Description:'Permite ver Clientes',Type:'Usuario',User:1});
    await Permiso.create({id:11 ,Name:'Delete',Description:'Permite Eliminar Producto',Type:'Producto',User:1});
    await Permiso.create({id:12 ,Name:'View',Description:'Permite ver Producto',Type:'Producto',User:1});
    await Permiso.create({id:13 ,Name:'Edit',Description:'Permite Editar Productos',Type:'Producto',User:1});

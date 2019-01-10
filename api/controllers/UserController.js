@@ -483,7 +483,7 @@ module.exports = {
       usuario.Password = req.body.NewPassword;
       await User.update({id: usuario.id}).set(usuario);
       sails.log.info("Se modifico la contraseña del usuario con id "+currentUser.Id)
-      res.status(message.response.ok).json({message: "Password modificado"})
+      res.status(message.response.ok).json({message: "Contraseña Modificada"})
     }else{
       sails.log.info("Se quizo modifico la contraseña del usuario con id "+currentUser.Id+ "pero se ingreso un password incorrecto")
       res.status(message.response.Unauthorized).json({error: "Contraseña incorrecta"})
