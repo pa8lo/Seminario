@@ -13,11 +13,10 @@ var messages = require("../globals/index");
 
 module.exports = {
 
-    CheckToken :async function  (token){        
+    CheckToken :async function  (token){ 
         var accessToken = token;            
         var tokenDecode = jwt.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
-            if (err) {                
-                console.log(err)                
+            if (err) {                            
                 return null;                                                                            
                 }
                 else {                
@@ -26,6 +25,7 @@ module.exports = {
                 }
             });
             return tokenDecode;
+
         },
      
     CheckAuthorization: async function (CurrentUser,CategoriaPermiso,NombrePermiso,ip,res) {

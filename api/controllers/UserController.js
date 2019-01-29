@@ -91,18 +91,24 @@ module.exports = {
   },
   //Devuelvo Los datos del usuario decodificados del token
   currentUser: async function (req, res) {
-    if (!req.headers['access-token']) {
+    if (!req.headers['access-token'] || req.headers['access-token'].length < 1) {
       res.status(401).json({
         error: "Falta ingresar token de seguridad"
       })
     } else {
       try {
         const tokenDecode =await base.CheckToken(req.headers['access-token']);
+        if(tokenDecode != null){
         return res.send({
           'sucess': true,
           'User': tokenDecode,
         })
-
+      }else{
+        return res.send({
+          'sucess': false,
+          'User': tokenDecode,
+        })
+      }
       } catch (error) {
         res.status(401).json({
           error: "Falta ingresar token de seguridad"
@@ -472,23 +478,30 @@ module.exports = {
       })
     }
   },
+  
   ChangePassword : async function(req,res){
+    if(req.headers['access-token']){
     var currentUser =await base.CheckToken(req.headers['access-token']);
-    sails.log.info(currentUser)
-    var usuario = await User.findOne({
-      id: currentUser.Id
-    }).decrypt()
-    sails.log.info(req.body.Password + "" +usuario.Password)
-    if( req.body.Password === usuario.Password){
-      usuario.Password = req.body.NewPassword;
-      await User.update({id: usuario.id}).set(usuario);
-      sails.log.info("Se modifico la contraseña del usuario con id "+currentUser.Id)
-      res.status(message.response.ok).json({message: "Contraseña Modificada"})
+    if(currentUser){
+        var usuario = await User.findOne({
+          id: currentUser.Id
+        }).decrypt()
+        sails.log.info(req.body.Password + "" +usuario.Password)
+        if( req.body.Password === usuario.Password){
+          usuario.Password = req.body.NewPassword;
+          await User.update({id: usuario.id}).set(usuario);
+          sails.log.info("Se modifico la contraseña del usuario con id "+currentUser.Id)
+          res.status(message.response.ok).json({message: "Contraseña Modificada"})
+        }else{
+          sails.log.info("Se quizo modifico la contraseña del usuario con id "+currentUser.Id+ "pero se ingreso un password incorrecto")
+          res.status(message.response.Unauthorized).json({error: "Contraseña incorrecta"})
+        }       
+      }else{
+        res.status(message.response.Unauthorized).json({error: "Su cuenta caduco por favor loguearse"})
+      }
     }else{
-      sails.log.info("Se quizo modifico la contraseña del usuario con id "+currentUser.Id+ "pero se ingreso un password incorrecto")
-      res.status(message.response.Unauthorized).json({error: "Contraseña incorrecta"})
+    res.status(message.response.Unauthorized).json({error: "Su cuenta caduco por favor loguearse"})
     }
-
   }
 
 
@@ -524,6 +537,6 @@ async function Checkrol(idNewRol, idUsuario) {
              return false
          }
     } catch (error) {
-        sails.log.debug("Existio un error cuando se quiso comprobar el rol del usuario " + err);
+        sails.log.debug("Existio un error cuando se quiso comprobar el rol del usuario " + error);
     }
 }

@@ -31,6 +31,14 @@ module.exports.bootstrap = async function(done) {
      {id:1 ,Dni: '35111111', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21],Rols:1,});
      await User.create(
       {id:3 ,Dni: '35211111', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3,4,5,6,7,8,9,10],Rols:1,});
+      await User.create(
+        {id:7 ,Dni: '352111', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3,4,5,6,7,8,9,10],Rols:1,});
+        await User.create(
+          {id:4 ,Dni: '35211211', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3,4,5,6,7,8,9,10],Rols:1,});
+          await User.create(
+            {id:5 ,Dni: '3521', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3,4,5,6,7,8,9,10],Rols:1,});
+            await User.create(
+              {id:6 ,Dni: '35221', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3,4,5,6,7,8,9,10],Rols:1,});
    await Permiso.create({id:1 ,Name:'Create',Description:'Permite la creacion  usuario',Type:'Usuario',User:1});
    await Permiso.create({id:2 ,Name:'View',Description:'Permite ver usuario',Type:'Usuario',User:1});
    await Permiso.create({id:3 ,Name:'Edit',Description:'Permite ver usuario',Type:'Usuario',User:1});
