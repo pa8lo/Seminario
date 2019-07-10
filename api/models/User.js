@@ -50,14 +50,14 @@ module.exports = {
     
     PrimaryPhone: {
       type:'string',
-      description:'Telefono principal del usuario',
-      encrypt:true
+      description:'Telefono principal del usuario'
+      // encrypt:true
     },
 
     SecondaryPhone: {
       type:'string',
-      description:'Telefono secundario del usuario',
-      encrypt:true
+      description:'Telefono secundario del usuario'
+      // encrypt:true
     },
 
     Eliminated:{

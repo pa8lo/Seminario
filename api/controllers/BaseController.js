@@ -14,13 +14,15 @@ var messages = require("../globals/index");
 module.exports = {
 
     CheckToken :async function  (token){ 
+      sails.log.info("se procede a chequear el token "+token)
         var accessToken = token;            
         var tokenDecode = jwt.verify(accessToken,secretMessage.jwtSecret,(err, decoded) => {
             if (err) {                            
                 return null;                                                                            
                 }
                 else {                
-                var user = decoded;                                                                           
+                var user = decoded;         
+                sails.log.info("se devuelve la informacion : "+user);                                                                  
                 return user;                
                 }
             });
@@ -31,6 +33,7 @@ module.exports = {
     CheckAuthorization: async function (CurrentUser,CategoriaPermiso,NombrePermiso,ip,res) {
         if(CurrentUser.Ip === ip){
             try {
+                sails.log.info("se procede a verificar los permisos del usuario "+JSON.stringify(CurrentUser))
                 var existeModelo =await User.findOne({id: CurrentUser.Id}).populate('Authorizations',{Name: NombrePermiso,Type: CategoriaPermiso}); 
                 return (existeModelo !== undefined && existeModelo.Authorizations.length > 0) ?  true :false; 
             } catch (error) {
@@ -42,6 +45,7 @@ module.exports = {
         sails.log.info("El usuario  de id : "+ CurrentUser.Id + "quiso acceder desde un ip erroneo.");
         sails.log.info("-id esperada : " + JSON.stringify(CurrentUser));
         sails.log.info("-id recibida : " +ip);
+       // res.status(401).json({error :"Error con ip vuelva  a loguearse"});
         return false;
         }
 
@@ -114,10 +118,15 @@ module.exports = {
     CreateElement: async function (EntidadUno,EntidadDos,DataEntidadUno,DataEntidadDos,ViaEntidadUno,res) {
         try {
             var entidadDos = await EntidadDos.create(DataEntidadDos).fetch();
-            
+            sails.log.info( "se creo la entidad :"+ entidadUno)
+            sails.log.info( "se comprueba si existe mas de una entidad a crear")
+            if(DataEntidadUno){
             var entidadUno = await EntidadUno.create(DataEntidadUno).fetch();
+            sails.log.info("se creo la entidad dos"+JSON.stringify(entidadUno))
             await EntidadUno.addToCollection(entidadDos.id, ViaEntidadUno)
             .members(entidadUno.id); 
+            }
+            sails.log.info( "se creo correctamente");
             res.status(200).json({message: ViaEntidadUno+"Registrado"});
         } catch (error) {
             sails.log.debug(error)

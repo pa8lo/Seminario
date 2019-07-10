@@ -17,6 +17,7 @@ module.exports = {
       type:'string',
       columnType:'datetime'
     },
+
     Amount:{
       type:'number',
       columnType:'double'

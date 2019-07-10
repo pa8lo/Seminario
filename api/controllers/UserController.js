@@ -135,7 +135,12 @@ module.exports = {
             if (await base.CheckAuthorization(currentUser, 'Usuario', 'Create', req.ip, res)) {
               var data = req.body;
               try {
-                await base.CreateElement(Domicilio, User, data.Adress, data.User, 'User', res)
+                try{
+                  await base.CreateElement(Domicilio, User, data.Adress, data.User, 'User', res)
+                }catch (error){
+                  await User.create(data.user).fetch();
+                }
+                
               } catch (error) {
                 sails.log.debug(error)
               }
