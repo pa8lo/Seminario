@@ -58,6 +58,8 @@ module.exports.routes = {
 
 'POST /User/CreateUser': 'UserController.createUser',
 
+'POST /User/AddAddress' : 'ClienteController.AddAddress',
+
 'POST /User/Login': 'UserController.Login',
 
 'PUT /User/UpdateUser' : 'UserController.UpdateUser',
