@@ -26,8 +26,13 @@ module.exports = {
                             var  data = req.body;
          //                   var existeCliente = await Cliente.findOne({id:data.Address.id});
           //                  if(existeCliente === undefined){
+                            if(data.Address.User || data.Address.Client){
                                 var domicilio  = await Domicilio.create(data.Address).fetch();   
-                               res.status(200).json({message:"Domicilio creado con exito"} )
+                                res.status(200).json({message:"Domicilio creado con exito"} )
+                            }else{
+                                res.status(400).json({error:" la dirección debe estar asociada a un cliente o usuario"})
+                            }
+                                
             //              }else{
               //              res.status(400).json({message:"Error con el id del cliete"} )
                         //  }  
