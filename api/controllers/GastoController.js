@@ -16,14 +16,25 @@ module.exports = {
     },
 
     createExpense: async function(req,res){
-        if (await base.validator(req, res, "Gasto", "View")) {
+        if (await base.validator(req, res, "Gasto", "Create")) {
             try {
-                var currentUser =await base.CheckToken(req.headers['access-token']);
-                var gasto = await Gasto.create(req.body).fetch()
-                sails.log.info("el usuario " + currentUser.Id + "Creo el estado " + gasto.id)
-                res.status(messages.response.ok).json({
-                  message: "gasto creado"
-                })
+              sails.log.info("se procede a crear un gasto con los siguiente datos"+JSON.stringify(req.body))
+                var usuario = await User.findOne({
+                  id: req.body.User})
+                  if(usuario == null){
+                    sails.log.info("se intento crear un gasto con usuario inexistente")
+                    res.status(404).json({
+                      error:"usuario inexistente"
+                    })
+                  }else{
+                    var currentUser =await base.CheckToken(req.headers['access-token']);
+                    sails.log.info("se recibe los datos del gasto : "+req.body);
+                    var gasto = await Gasto.create(req.body).fetch()
+                    sails.log.info("el usuario " + currentUser.Id + "Creo el estado " + gasto.id)
+                    res.status(messages.response.ok).json({
+                      message: "gasto creado"
+                    })
+                  }
               } catch (error) {
                 sails.log.error("existio un error para crear el gasto : " + error)
                 res.status(400).json({
@@ -35,7 +46,7 @@ module.exports = {
     },
 
     deleteExpense: async function (req, res) {
-        if (await base.validator(req, res, "Producto", "Delete")) {
+        if (await base.validator(req, res, "Gasto", "Delete")) {
           var data = req.body;
           try {
             if (data.id) {
@@ -67,7 +78,7 @@ module.exports = {
       },
 
       updateExpense: async function (req,res) {
-          base.updateElement(req,res,"Gasto","Edit",Gasto,req.body.id,req.body.Gasto);
+          await base.updateElement(req,res,"Gasto","Edit",Gasto,req.body.id,req.body.Gasto);
         }
 
 };
