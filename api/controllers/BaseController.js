@@ -54,7 +54,7 @@ module.exports = {
  * Muestra todos los elementos de un objeto
  */
     SeeElements: function (Element,NombreElemento,res){
-        Element.find({Eliminated: false}) 
+        Element.find({Eliminated: false}).decrypt() 
         .then(function(data){
              if(!data || data.length ==0){
                     return res.json([])

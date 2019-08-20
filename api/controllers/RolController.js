@@ -14,7 +14,10 @@ module.exports = {
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Usuario', 'Create', req.ip, res)) {
-            base.SeeElements(Rol, "Rol", res);
+            var roles = await Rol.find({Eliminated : false}).populate('Authorizations')
+            res.status(200).json(
+                roles
+              )
           } else {
             res.status(401).json({
               error: "Acceso DEnegado"
@@ -35,6 +38,53 @@ module.exports = {
       return res.status(400).json({
         error: 'Medidas de seguridad no ingresadas.'
       });
+    }
+  },
+
+  rol: async function (req, res) {
+    var data = req.allParams();
+    if (!data.id) {
+      res.status(400).json({
+        error: "Faltan ingresar parametros"
+      })
+    }else{
+      if (req.headers['access-token']) {
+        var currentUser =await base.CheckToken(req.headers['access-token']);
+        if (currentUser) {
+          try {
+            if (await base.CheckAuthorization(currentUser, 'Rol', 'View', req.ip, res)) {
+              var roles = await Rol.findOne({id : data.id}).populate('Authorizations')
+              if(roles != null){
+                res.status(200).json(
+                  roles
+                )
+              }else{
+                res.status(404).json(
+                  {error:"no existe el rol"}
+                )
+              }
+
+            } else {
+              res.status(401).json({
+                error: "Acceso DEnegado"
+              })
+            }
+          } catch (error) {
+            res.status(500).json({
+              error: "Acceso denegado"
+            })
+          }
+        } else {
+          return res.status(400).json({
+            error: 'Acceso denegado.'
+          });
+        }
+
+      } else {
+        return res.status(400).json({
+          error: 'Medidas de seguridad no ingresadas.'
+        });
+      }
     }
   },
 
@@ -252,7 +302,7 @@ module.exports = {
               id: data.Rol.id
             })
             .set(data.Rol).fetch();
-          if (usuario.length === 0) {
+          if (rol.length === 0) {
             // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
             res.status(401).json({
               error: 'No existe Rol.'

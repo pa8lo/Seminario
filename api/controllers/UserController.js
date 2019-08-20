@@ -169,6 +169,7 @@ module.exports = {
   login: async function (req, res) {
     try {
       //Traigo todos los datos del request y controlo que existan los necesarios
+      console.log(req.hostname);
       const data = req.body;
       console.log(data)
       if (!data.Dni || !data.Password) {
@@ -214,7 +215,7 @@ module.exports = {
       }
     } catch (error) {
       res.status(500).json({
-        error: 'Hubo un problema con el logueo, revisar parametros'
+        error: 'Hubo un problema con el logueo, revisar parametros'+error
       });
     }
   },
@@ -404,10 +405,17 @@ module.exports = {
           if (await base.CheckAuthorization(currentUser, 'Usuario', 'View', req.ip, res)) {
             var usuario = await User.findOne({
               id: data.id
-            }).populate('Adress');
-            res.status(200).json({
-              user: usuario
-            })
+            }).decrypt().populate('Adress');
+            if(usuario != null){
+              res.status(200).json({
+                user: usuario
+              })
+            }else{
+              res.status(404).json({
+                error: "usuario inexistente"
+              })
+            }
+
           } else {
             res.status(401).json({
               error: "Acceso denegado"

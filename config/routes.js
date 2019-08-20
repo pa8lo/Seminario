@@ -95,11 +95,15 @@ module.exports.routes = {
 //
 'GET /Rol/Rols' : 'RolController.Rols',
 
+'GET /Rol/Rol' : 'RolController.Rol',
+
 'POST /Rol/RemoveAuthorizations' : 'RolController.RemoveAuthorization',
 
 'POST /Rol/AssignAuthorizations' : 'RolController.AssignAuthorizations',
 
 'POST /Rol/CreateRol': 'RolController.CreateRol',
+
+'POST /Rol/UpdateRol' : 'RolController.UpdateRol',
 
 'POST /Rol/DeleteRol' : 'RolController.DeleteRol',
 // ENDPOINTS PERMISOS

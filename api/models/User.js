@@ -64,6 +64,9 @@ module.exports = {
       type: 'boolean',
       defaultsTo: false, 
     },
+    Photo : {
+      type:'string'
+    },
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝

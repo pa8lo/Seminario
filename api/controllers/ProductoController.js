@@ -16,7 +16,7 @@ module.exports = {
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'View', req.ip, res)) {
-            var producto = await Producto.find();
+            var producto = await Producto.find({Eliminated : false});
             res.json(producto)
           } else {
             res.status(401).json({
@@ -45,12 +45,23 @@ module.exports = {
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'Create', req.ip, res)) {
+            sails.log.info("Se recibe la información " + JSON.stringify(req.body));
+            
             try {
-              var producto = await Producto.create(req.body).fetch()
-              sails.log.info("el usuario " + currentUser.Id + "Creo el producto " + producto.id)
-              res.status(200).json({
-                message: "Producto creado"
-              })
+              var categoria = await Categoria.findOne({id: req.body.Category});
+              if( categoria == null){
+                sails.log.info("categoria ingresada incorrecta")
+                res.status(404).json({
+                  message: "categoria inexistente"
+                })
+              }else{
+                var producto = await Producto.create(req.body).fetch()
+                sails.log.info("el usuario " + currentUser.Id + "Creo el producto " + producto.id)
+                res.status(200).json({
+                  message: "Producto creado"
+                })
+              }
+
             } catch (error) {
               sails.log.error(error)
             }

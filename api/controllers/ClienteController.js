@@ -26,6 +26,7 @@ module.exports = {
                             var  data = req.body;
          //                   var existeCliente = await Cliente.findOne({id:data.Address.id});
           //                  if(existeCliente === undefined){
+                            console.log(JSON.stringify(req))
                             if(data.Address.User || data.Address.Client){
                                 var domicilio  = await Domicilio.create(data.Address).fetch();   
                                 res.status(200).json({message:"Domicilio creado con exito"} )
