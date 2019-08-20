@@ -4,16 +4,16 @@
  * @description :: Server-side actions for handling incoming requests.
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
-
+var base = require('./BaseController.js')
 module.exports = {
   Offerts: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'View', req.ip, res)) {
-            var combo = await Combo.find();
-            res.json(producto)
+            var combo = await Combo.find({Eliminated : false}).populate('Products');
+            res.status(200).json(combo)
           } else {
             res.status(401).json({
               error: "Acceso denegado"
@@ -37,29 +37,44 @@ module.exports = {
   },
   createOffert: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser = base.CheckToken(req.headers['access-token']);
+      var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'Create', req.ip, res)) {
             try {
               var data = req.body
-              var combo = await Combo.create(data.Combo).fetch()
-              await data.Produts.forEach(async product => {
-                await Combo.addToCollection(product.id, "Offers")
+              var producto = await Producto.find({id: data.Products})
+              sails.log.info("productos encontrados"+producto.length);
+              sails.log.info("productos encontrados"+data.Products);
+              if(producto.length == data.Products.length){
+                var combo = await Combo.create(data.Combo).fetch()
+              sails.log.info("Se creo el combo con el id "+combo.id)
+              await data.Products.forEach(async product => {
+                await Combo.addToCollection(combo.id , "Products")
+                  .members(product);
+                  await Combo.addToCollection(product , "Products")
                   .members(combo.id);
+
+                sails.log.info("permiso con el id "+combo.id+" agregado correctamente")
               });
 
-              sails.log.info("el usuario " + currentUser.Id + "Creo el combo " + producto.id)
+              sails.log.info("el usuario " + currentUser.Id + "Creo el combo " + combo.id)
               res.status(200).json({
                 message: "combo creado"
               })
+              }else{
+                res.status(404).json({
+                  error: "algun producto ingresado no existe"
+                })
+              }
+              
             } catch (error) {
               sails.log.error(error)
             }
 
           } else {
             res.status(401).json({
-              error: "Permisos innecesarios"
+              error: "Permisos insuficientes"
             })
           }
         } catch (error) {
@@ -82,10 +97,10 @@ module.exports = {
 
   deleteOffert: async function (req, res) {
     if (req.headers['access-token']) {
-      const currentUser = base.CheckToken(req.headers['access-token']);
+      const currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         if (currentUser.Ip == req.ip) {
-          if (await base.CheckAuthorization(currentUser, 'Combo', 'Delete', req.ip, res)) {
+          if (await base.CheckAuthorization(currentUser, 'Producto', 'Delete', req.ip, res)) {
             var data = req.body;
             try {
               if (data.id) {
@@ -126,7 +141,7 @@ module.exports = {
           }
 
         } else {
-          sails.log.Info("El usuario  de id : " + currentUser.Id + "quiso acceder desde un ip erroneo.");
+          sails.log.info("El usuario  de id : " + currentUser.Id + "quiso acceder desde un ip erroneo.");
           return res.status(401).json({
             error: 'Acceso denegado.'
           });

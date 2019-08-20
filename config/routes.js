@@ -123,7 +123,7 @@ module.exports.routes = {
 
 'POST /Product/DeleteProduct': 'ProductoController.deleteProduct',
 
-'POST /Product/UpdateProduct': 'ProductoController.updateProduct',
+// 'POST /Product/UpdateProduct': 'ProductoController.updateProduct',
 
 // ENDPOINTS CATEGORIA
 //
@@ -180,6 +180,16 @@ module.exports.routes = {
 'POST /Gasto/Delete' : 'GastoController.deleteExpense',
 
 'POST /Gasto/Update' : 'GastoController.UpdateExpense' ,
+
+//ENDPOINTS Combos
+//
+'GET /Offerts/Offerts' : 'ComboController.Offerts',
+
+'POST /Offerts/Create' : 'ComboController.createOffert',
+
+'POST /Offerts/Delete' : 'ComboController.deleteOffert',
+
+// 'POST /Gasto/Update' : 'GastoController.UpdateExpense' ,
 
 
 

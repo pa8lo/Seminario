@@ -35,7 +35,7 @@ module.exports = {
             try {
                 sails.log.info("se procede a verificar los permisos del usuario "+JSON.stringify(CurrentUser))
                 var existeModelo =await User.findOne({id: CurrentUser.Id}).populate('Authorizations',{Name: NombrePermiso,Type: CategoriaPermiso}); 
-                sails.log.info(existeModelo)
+                sails.log.info("los permisos que se tienen son "+JSON.stringify(existeModelo));
                 return (existeModelo !== undefined && existeModelo.Authorizations.length > 0) ?  true :false; 
             } catch (error) {
                 sails.log.debug("Existio un error para ver permisos : "+error)
