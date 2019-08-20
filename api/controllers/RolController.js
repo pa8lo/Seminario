@@ -90,63 +90,52 @@ module.exports = {
 
   AssignAuthorizations: async function (req, res, ModeloPrincipal, data) {
     var status = 200;
-    var mensaje = "ok";
+    var mensaje = ["ok"];
+    var existeRol =false;
     if (req.headers['access-token']) {
       var currentUser = await base.CheckToken(req.headers['access-token']);
-      if (currentUser) {
+      if (currentUser && await base.CheckAuthorization(currentUser, 'Rol', 'Create', req.ip, res)) {
 
         var reqUser = req.body;
-        await reqUser.Authorizations.forEach(async Authorization => {
+        sails.log.info("Se recibio la información para agregar permisos"+JSON.stringify(reqUser))
+        var rol = await Rol.find({
+          id: reqUser.rol.id
+        }).limit(1);
+        if(rol != null){
+          sails.log.info("se encontro el rol "+JSON.stringify(rol))
+          existeRol =  true;
+        }
 
-          if (await base.CheckAuthorization(currentUser, 'Authorization', 'Assign', req.ip, res)) {
-            console.log(Authorization + "permiso")
-            var existeRol = await Rol.find({
-              id: reqUser.rol.id
-            }).limit(1);
-            var existeAuthorization = await Permiso.findOne({
-              id: Authorization
-            });
-            Permiso.find({
-                id: Authorization
+        await sails.log.info(" existe rol:"+existeRol)
+        if(   existeRol == true){
+        await reqUser.Authorizations.forEach(async Authorization => {
+            console.log(JSON.stringify(Authorization) + "permiso")            
+            await Permiso.find({
+                id: Authorization.id
               })
               .then(async function (data) {
                 if (!data || data.length == 0) {
                   status = 500
-                  mensaje = {
-                    error: "El Rol o usuario no existe"
-                  };
-                  console.log("No entro")
+                  mensaje.push("El permiso "+Authorization.id+"no existe se intentan agregar el resto de permisos" )
                 } else {
-                  return await Rol.addToCollection(Authorization, 'Authorizations')
-                    .members(reqUser.rol.id);
-                  status = 200
-                  mensaje = {
-                    message: "ok"
-                  };
-                  console.log("aca")
+                  await Rol.addToCollection(reqUser.rol.id, 'Authorizations')
+                    .members( Authorization.id);
+                  sails.log.info("permiso con el id "+Authorization.id+" agregado correctamente")
                 }
 
               })
-            if ((existeAuthorization === undefined) && (existeRol === undefined)) {
-              res.status(401).json({
-                error: "Acceso Denegado"
-              })
-            }
-          } else {
-            /*  await Rol.addToCollection(Authorization, 'Authorizations')
-                .members(reqUser.rol.id);
-                status = 200
-                mensaje = {message: "ok"};
-                console.log("aca")
-            }else{
-                status = 400
-                mensaje = {error: "El Rol o usuario no existe"};
-                console.log("No entro")*/
-
-          }
         });
         res.status(status).json(mensaje)
-
+      }else{
+        res.status(404).json({
+          error:"no existe rol"
+        })
+      }
+        
+      }else{
+        res.status(401).json({
+          error:"acceso Denegado"
+        })
       }
     } else {
       res.status(401).json({
@@ -155,29 +144,25 @@ module.exports = {
     }
   },
 
-  /*RemoveAuthorization: async function (req,res) {
+  RemoveAuthorization: async function (req,res) {
       if(req.headers['access-token']){      
-              var currentUser = base.CheckToken(req.headers['access-token']);
+              var currentUser = await base.CheckToken(req.headers['access-token']);
               if(currentUser){
-                      var data = {
-                          modeloPrincipal:{
-                              id:req.body.rol.id
-                          },
-                          modeloSecundario:{
-                              id:req.body.Authorizations.id
-                          }
-                      }
                       if(await base.CheckAuthorization(currentUser,'Authorization','Delete',req.ip,res)){   
                          var existeAuthorization = await Permiso.find({where: {id:req.body.Authorizations.id},})
                          var existeRol = await Rol.find({id: req.body.rol.id});
-                         console.log(existeAuthorization);
-                         /*if(existeAuthorization !== undefined && existeRol !== undefined){
-                            await base.RemoveAuthorization(data,User,'Authorizations',res)
-                           res.status(200).json({message : 'Permiso removido con exito.'}) 
+                         sails.log.info("Permisos a borrar"+JSON.stringify(existeAuthorization));
+                         await req.body.Authorizations.forEach(async Authorization => {
+                         if(existeAuthorization !== undefined && existeRol !== undefined){
+                          await Rol.removeFromCollection(req.body.rol.id , 'Authorizations')
+                          .members(Authorization.id);
                          }else{
                              res.status(401).json({error:"no existe el permiso que desea eliminar"})
+                             return ;
                          }
-                          
+                        })   
+                        res.status(200).json({message : 'Permiso removido con exito.'}) 
+
                       }else{
                           res.status(401).json({error:"Acceso denegado"})
                       }   
@@ -189,7 +174,7 @@ module.exports = {
   }else{
       return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
   }
-  },*/
+  },
 
   CreateRol: async function (req, res) {
     if (req.headers['access-token']) {
@@ -315,7 +300,9 @@ module.exports = {
         }
       }
     }
-  }
+  },
+ 
 
 
 };
+
