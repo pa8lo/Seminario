@@ -27,6 +27,10 @@ module.exports = {
       columnType:'double',
       required:true
     },
+    Eliminated:{
+      type: 'boolean',
+      defaultsTo: false, 
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
@@ -37,7 +41,7 @@ module.exports = {
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
     User: {
-      model:'user',
+      collection:'user',
       via:'Assistance' 
     }
   },

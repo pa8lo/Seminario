@@ -197,7 +197,7 @@ module.exports.routes = {
 
 'POST /Asisstance/Create' : 'AsistenciaController.createAssist',
 
-// 'POST /Offerts/Delete' : 'ComboController.deleteOffert',
+'POST /Asisstance/Delete' : 'AsistenciaController.deleteAssist',
 
 // 'POST /Offerts/Update' : 'ComboController.updateOffert' ,
 

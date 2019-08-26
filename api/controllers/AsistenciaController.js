@@ -14,9 +14,15 @@ module.exports = {
             try {
               if (await base.CheckAuthorization(currentUser, 'Turno', 'View', req.ip, res)) {
                 console.log(currentUser);
-                let asistencias = await Asistencia.find();
+                let usuarios = await User
+                .find({
+                  select: ['id','Name','LastName'],
+                })
+              .populate('Assistance',{where : {
+                Eliminated:false
+              }});
                 res.status(200).json({
-                    asistencias
+                    User: usuarios
                 })
               } else {
                 res.status(401).json({
@@ -63,11 +69,23 @@ module.exports = {
             if (await base.CheckAuthorization(currentUser, 'Turno', 'Create', req.ip, res)) {
                 try {
                     sails.log.info("[[asistenciaController.createassist]]se procede a crear asistencia")
-                   var asistencia = await Asistencia.create(data.Asistencia).fetch()
+                    var datos = {
+                      Date : data.Asistencia.Date,
+                      OutTime:data.Asistencia.OutTime,
+                      InTime:data.Asistencia.InTime,
+                      // User: usuario.id
+                    }
+                   var asistencia = await Asistencia.create(datos).fetch()
                    sails.log.info("[[asistenciaController.createassist]]asistencia creada con el id "+asistencia.id)
-                    await User.addToCollection(asistencia.id, "AsignedTurns")
-                    .members(usuario.id);
+                    await User.addToCollection(usuario.id, "Assistance")
+                    .members(asistencia.id);
+                    res.status(200).json({
+                      message: "asistencia agregada para el usuario "+usuario.id
+                    })
                 } catch (error) {
+                  res.status(500).json({
+                    error:"error al guardar la asistencia"
+                  })
                 sails.log.debug(error)
                 }
             } else {
@@ -83,5 +101,50 @@ module.exports = {
         });
     }
     },
+    deleteAssist: async function (req, res) {
+      if (req.headers['access-token']) {
+          var currentUser =await base.CheckToken(req.headers['access-token']);
+          if (currentUser) {
+          var data = req.body;
+              if (!data.id ) {
+              res.status(400).json({
+                  error: 'Faltan ingresar parametros'
+              });
+              } else {
+              var asistencia = await Asistencia.findOne({
+                  id: data.id
+              });
+              if(asistencia == undefined){
+                  return res.status(400).json({
+                      error:"no existe asistencia"
+                  })
+              }
+              if (await base.CheckAuthorization(currentUser, 'Turno', 'Delete', req.ip, res)) {
+                  try {
+                      sails.log.info("[[asistenciaController.createassist]]se procede a eliminar asistencia")
+                     var asistencia = await Asistencia.update({id:asistencia.id}).set({Eliminated:true});
+                     sails.log.info("[[asistenciaController.createassist]]asistencia eliminada")
+                      res.status(200).json({
+                        message: "asistencia eliminada "
+                      })
+                  } catch (error) {
+                    res.status(500).json({
+                      error:"error al eliminar la asistencia"
+                    })
+                  sails.log.debug(error)
+                  }
+              } else {
+                  res.status(401).json({
+                  error: "Acceso denegado"
+                  })
+              }
+              }
+          }
+      } else {
+          res.status(401).json({
+          error: 'Medidas de seguridad no ingresadas.'
+          });
+      }
+      },
 };
 
