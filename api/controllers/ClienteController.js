@@ -19,16 +19,17 @@ module.exports = {
         },
     
     AddAddress : async function (req,res){
-        var currentUser =  base.CheckToken(req.headers['access-token']);              
+        var currentUser = await  base.CheckToken(req.headers['access-token']);              
                 if(currentUser){       
-                    if(base.CheckAuthorization(currentUser,'Cliente','Create',req.ip,res)){
+                    if(await base.CheckAuthorization(currentUser,'Cliente','Create',req.ip,res)){
                         try {
                             var  data = req.body;
          //                   var existeCliente = await Cliente.findOne({id:data.Address.id});
           //                  if(existeCliente === undefined){
-                            console.log(JSON.stringify(req))
+                            sails.log.info("[[clienteController-addAddress]] se procede a crear el domicilio");
                             if(data.Address.User || data.Address.Client){
-                                var domicilio  = await Domicilio.create(data.Address).fetch();   
+                                var domicilio  = await Domicilio.create(data.Address).fetch();
+                                sails.log.info("[[clienteController-addAddress]] Domicilio creado con exito");   
                                 res.status(200).json({message:"Domicilio creado con exito"} )
                             }else{
                                 res.status(400).json({error:" la dirección debe estar asociada a un cliente o usuario"})

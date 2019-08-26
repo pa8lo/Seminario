@@ -28,7 +28,7 @@ module.exports.bootstrap = async function(done) {
     await Rol.create({
       id:2, Name:'Usuario',Description:'Administrador de usuarios de la aplicación'});
    await User.create(
-     {id:1 ,Dni: '35111111', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21],Rols:1,});
+     {id:1 ,Dni: '35111111', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27],Rols:1,});
      await User.create(
       {id:3 ,Dni: '35211111', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3,4,5,6,7,8,9,10],Rols:1,});
       await User.create(
@@ -41,15 +41,15 @@ module.exports.bootstrap = async function(done) {
               {id:6 ,Dni: '35221', Name: 'Admin',LastName:'Test',Password:'123456',Authorizations:[1,2,3,4,5,6,7,8,9,10],Rols:1,});
    await Permiso.create({id:1 ,Name:'Create',Description:'Permite la creacion  usuario',Type:'Usuario',User:1});
    await Permiso.create({id:2 ,Name:'View',Description:'Permite ver usuario',Type:'Usuario',User:1});
-   await Permiso.create({id:3 ,Name:'Edit',Description:'Permite ver usuario',Type:'Usuario',User:1});
-   await Permiso.create({id:4 ,Name:'Delete',Description:'Permite ver Clientes',Type:'Usuario',User:1});
+   await Permiso.create({id:3 ,Name:'Edit',Description:'Permite editar usuario',Type:'Usuario',User:1});
+   await Permiso.create({id:4 ,Name:'Delete',Description:'Permite Borrar usuarios',Type:'Usuario',User:1});
    await Permiso.create({id:5 ,Name:'View',Description:'Permite ver Clientes',Type:'Cliente',User:1});
-   await Permiso.create({id:6 ,Name:'Create',Description:'Permite ver Clientes',Type:'Rol',User:1});
-   await Permiso.create({id:7 ,Name:'Edit',Description:'Permite ver Clientes',Type:'Rol',User:1});
-   await Permiso.create({id:8 ,Name:'Delete',Description:'Permite ver Clientes',Type:'Rol',User:1});
-   await Permiso.create({id:9 ,Name:'Delete',Description:'Permite ver Clientes',Type:'Authorization',User:1});
-   await Permiso.create({id:10 ,Name:'View',Description:'Permite ver Clientes',Type:'Rol',User:1});
-   await Permiso.create({id:21 ,Name:'Edit',Description:'Permite ver Clientes',Type:'Usuario',User:1});
+   await Permiso.create({id:6 ,Name:'Create',Description:'Permite crear Roles',Type:'Rol',User:1});
+   await Permiso.create({id:7 ,Name:'Edit',Description:'Permite Editar Roles',Type:'Rol',User:1});
+   await Permiso.create({id:8 ,Name:'Delete',Description:'Permite Borrar Roles',Type:'Rol',User:1});
+   await Permiso.create({id:9 ,Name:'Delete',Description:'Permite Borrar Permisos',Type:'Authorization',User:1});
+   await Permiso.create({id:10 ,Name:'View',Description:'Permite ver Roles',Type:'Rol',User:1});
+   await Permiso.create({id:21 ,Name:'Edit',Description:'Permite Editar Usuario',Type:'Usuario',User:1});
    await Permiso.create({id:11 ,Name:'Delete',Description:'Permite Eliminar Producto',Type:'Producto',User:1});
    await Permiso.create({id:12 ,Name:'View',Description:'Permite ver Producto',Type:'Producto',User:1});
    await Permiso.create({id:13 ,Name:'Edit',Description:'Permite Editar Productos',Type:'Producto',User:1});
@@ -60,6 +60,13 @@ module.exports.bootstrap = async function(done) {
    await Permiso.create({id:18 ,Name:'View',Description:'Permite ver gastos',Type:'Gasto',User:1});
    await Permiso.create({id:19 ,Name:'Edit',Description:'Permite Editar gastos',Type:'Gasto',User:1});
    await Permiso.create({id:20 ,Name:'Create',Description:'Permite Crear gastos',Type:'Gasto',User:1});
+   await Permiso.create({id:22 ,Name:'View',Description:'Permite ver turnos ',Type:'Turno',User:1});
+   await Permiso.create({id:23 ,Name:'Create',Description:'Permite crear turnos ',Type:'Turno',User:1});
+   await Permiso.create({id:24 ,Name:'Delete',Description:'Permite eliminar turnos ',Type:'Turno',User:1});
+   await Permiso.create({id:25 ,Name:'Edit',Description:'Permite modificar turnos ',Type:'Turno',User:1});
+   await Permiso.create({id:26 ,Name:'Edit',Description:'Permite Editar Clientes',Type:'Cliente',User:1});
+   await Permiso.create({id:27 ,Name:'Create',Description:'Permite Crear Clientes',Type:'Cliente',User:1});
+
    await Categoria.create({id:1,Name:'Sin Categoria', Description:'Productos sin categoria'})
   // 
 
