@@ -121,6 +121,8 @@ module.exports.routes = {
 
 'GET  /Product/Products' : 'ProductoController.products',
 
+'GET  /Product/Product' : 'ProductoController.product',
+
 'POST /Product/DeleteProduct': 'ProductoController.deleteProduct',
 
 'POST /Product/UpdateProduct': 'ProductoController.updateProduct',
@@ -135,9 +137,9 @@ module.exports.routes = {
 
 'POST /Category/UpdateCategory' : 'CategoriaController.updateCategory',
 
-'Post /Category/Products' : 'CategoriaController.products',
+'GET /Category/Products' : 'CategoriaController.products',
 
-'POST /Category/Category' : 'CategoriaController.category',
+'GET /Category/Category' : 'CategoriaController.category',
 
 // ENDPOINTS ITEMS
 //

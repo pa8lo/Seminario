@@ -196,6 +196,33 @@ module.exports = {
       })
     }
   },
+  product: async function (req, res) {
+    var data = req.allParams();
+    if(data.id ==undefined || data.id == ''|| data.id==0){
+      sails.log.error("no se ingreso el parametro id")
+      res.status(400).json({
+        error:"Faltan ingresar parametros"
+      })
+    }else{
+      sails.log.info("se procede a buscar el producto con el id "+data.id)
+      if (await base.validator(req, res, "Producto", "View")) {
+        var producto = await Producto.find({
+          id: data.id
+        }).populate('Category');
+        if (producto.length >0){
+          sails.log.info("se encontro el producto"+JSON.stringify(producto))
+          res.status(200).json({
+          producto
+        })
+        }else{
+          sails.log.info("no se encontro el producto id :"+data.id)
+          res.status(404).json();
+        }
+
+      }
+    }
+    
+  },
 
 
 };

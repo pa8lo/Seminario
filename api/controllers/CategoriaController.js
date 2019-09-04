@@ -13,7 +13,7 @@ module.exports = {
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'View', req.ip, res)) {
-            var categoria = await Categoria.find();
+            var categoria = await Categoria.find().populate('Products');
             res.json(categoria)
           } else {
             sails.log.info("el Usuario " + currentUser.Id + " Intengo entrar a un lugar sin permisos")
@@ -198,21 +198,31 @@ module.exports = {
    * @param {*} res 
    */
   products: async function (req, res) {
+    let data = req.allParams();
+    sails.log.info("ser recibieron los siguiente parametros: "+data)
     if (await base.validator(req, res, "Producto", "View")) {
-      var data = req.body
-      var Productos = await seeproducts(data.Categoria.id)
-      if (!Productos) {
-        sails.log.info('Se intento buscar una categoria inexistente');
-        res.status(401).json({
-          error: 'No existe categoria.'
-        });
-      } else {
-        sails.log.info('Se muestran productos de la categoria');
-        res.status(401).json({
-          Productos
-        });
+      if(data.id !=undefined || data.id!= ''|| data.id !=0){
+        var Productos = await seeproducts(data.id)
+        if (!Productos) {
+          sails.log.info('Se intento buscar una categoria inexistente');
+          res.status(401).json({
+            error: 'No existe categoria.'
+          });
+        } else {
+          sails.log.info('Se muestran productos de la categoria');
+          res.status(401).json({
+            Productos
+          });
+        }
+        }else{
+          sails.log.info("faltaron ingresar parametros")
+          res.status(400).json({
+            error:"parametros incorrectos"
+          })
+        }
       }
-    }
+      
+    
   },
   /**
    * Permite ver la información de una categoria
@@ -220,15 +230,32 @@ module.exports = {
    * @param {*} res 
    */
   category: async function (req, res) {
-    if (await base.validator(req, res, "Producto", "View")) {
-      var data = req.body
-      var categoria = await Categoria.findOne({
-        id: data.Categoria.id
-      });
-      res.status(200).json({
-        categoria
+    var data = req.allParams();
+    
+    if(data.id ==undefined || data.id == ''|| data.id==0){
+      sails.log.error("no se ingreso el parametro id")
+      res.status(400).json({
+        error:"Faltan ingresar parametros"
       })
+    }else{
+      sails.log.info("se procede a buscar la categoria con el id "+data.id)
+      if (await base.validator(req, res, "Producto", "View")) {
+        var categoria = await Categoria.find({
+          id: data.id
+        });
+        if (categoria.length >0){
+          sails.log.info("se encontro la categoria"+JSON.stringify(categoria))
+          res.status(200).json({
+          categoria
+        })
+        }else{
+          sails.log.info("no se encontro la categoria id :"+data.id)
+          res.status(404).json();
+        }
+
+      }
     }
+    
   },
 
 };
