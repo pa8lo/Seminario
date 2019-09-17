@@ -17,14 +17,24 @@ module.exports = {
       columnType:'datetime',
       required:true
     },
-    OutTime:{
+    OutHour:{
       type:'number',
-      columnType:'double',
+      columnType:'number',
       required:true
     },
-    InTime:{
+    OutMinute:{
       type:'number',
-      columnType:'double',
+      columnType:'number',
+      required:true
+    },
+    InHour:{
+      type:'number',
+      columnType:'number',
+      required:true
+    },
+    InMinute:{
+      type:'number',
+      columnType:'number',
       required:true
     },
     Eliminated:{

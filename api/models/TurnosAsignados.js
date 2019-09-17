@@ -35,8 +35,7 @@ module.exports = {
       via:'AsignedTurns'
     },
     Turn:{
-      model:'turno',
-      via:'Asigneds'
+      model:'turno'
     }
   },
 

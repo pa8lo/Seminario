@@ -20,6 +20,10 @@ module.exports = {
       type:'string',
       required:false
     },
+    Eliminated:{
+      type: 'boolean',
+      defaultsTo: false, 
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗

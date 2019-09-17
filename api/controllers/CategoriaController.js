@@ -13,7 +13,7 @@ module.exports = {
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'View', req.ip, res)) {
-            var categoria = await Categoria.find().populate('Products');
+            var categoria = await Categoria.find({Eliminated:false}).populate('Products');
             res.json(categoria)
           } else {
             sails.log.info("el Usuario " + currentUser.Id + " Intengo entrar a un lugar sin permisos")
@@ -241,8 +241,9 @@ module.exports = {
       sails.log.info("se procede a buscar la categoria con el id "+data.id)
       if (await base.validator(req, res, "Producto", "View")) {
         var categoria = await Categoria.find({
-          id: data.id
-        });
+          id: data.id,
+          Eliminated:false
+        }).populate('Products');
         if (categoria.length >0){
           sails.log.info("se encontro la categoria"+JSON.stringify(categoria))
           res.status(200).json({

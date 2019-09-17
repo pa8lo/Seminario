@@ -88,91 +88,111 @@ module.exports = {
     }
   },
 
-  AssignAuthorizations: async function (req, res, ModeloPrincipal, data) {
+  AssignAuthorizations: async function (req, res) {
+    let errores=[];
     var status = 200;
-    var mensaje = ["ok"];
-    var existeRol =false;
+    var correctos = [];
     if (req.headers['access-token']) {
       var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser && await base.CheckAuthorization(currentUser, 'Rol', 'Create', req.ip, res)) {
-
         var reqUser = req.body;
         sails.log.info("Se recibio la información para agregar permisos"+JSON.stringify(reqUser))
+        var permisos = await Permiso.count({
+          where: {id:req.body.Authorizations}});
         var rol = await Rol.find({
-          id: reqUser.rol.id
-        }).limit(1);
-        if(rol != null){
-          sails.log.info("se encontro el rol "+JSON.stringify(rol))
-          existeRol =  true;
-        }
-
-        await sails.log.info(" existe rol:"+existeRol)
-        if(   existeRol == true){
-        await reqUser.Authorizations.forEach(async Authorization => {
-            console.log(JSON.stringify(Authorization) + "permiso")            
-            await Permiso.find({
-                id: Authorization.id
-              })
-              .then(async function (data) {
-                if (!data || data.length == 0) {
-                  status = 500
-                  mensaje.push("El permiso "+Authorization.id+"no existe se intentan agregar el resto de permisos" )
-                } else {
-                  await Rol.addToCollection(reqUser.rol.id, 'Authorizations')
-                    .members( Authorization.id);
-                  sails.log.info("permiso con el id "+Authorization.id+" agregado correctamente")
-                }
-
-              })
+            id: reqUser.rol.id,
+            Eliminated:false
         });
-        res.status(status).json(mensaje)
+        sails.log.info("se encontro :"+rol.length+" rol")
+        sails.log.info("se encontratos "+permisos+" permisos")
+        if(rol.length >0 && permisos == req.body.Authorizations.length){
+                  await Rol.addToCollection(reqUser.rol.id, 'Authorizations')
+                    .members( req.body.Authorizations);
+                  sails.log.info("se agregaron los siguientes permisos : "+req.body.Authorizations)
+                  correctos.push("se agregaron los siguientes permisos : "+req.body.Authorizations)
       }else{
-        res.status(404).json({
-          error:"no existe rol"
-        })
-      }
-        
+        if(rol.length <= 0 ){
+          sails.log.error("no existe rol")
+          errores.push("no existe rol")
+          status=404;
+        }
+        if(permisos != req.body.Authorizations.length){
+          sails.log.error("no existe uno o varios permisos")
+          errores.push("no existe uno o varios permisos")
+        }
+      }  
       }else{
-        res.status(401).json({
-          error:"acceso Denegado"
-        })
+        sails.log.error("acceso denegado");
+        errores.push("acceso denegado")
+        status=401
       }
     } else {
-      res.status(401).json({
-        erros: 'Medidas de seguridad no ingresadas.'
-      })
+      sails.log.error("Medidas de seguridad no ingresadas.");
+      errores.push("Medidas de seguridad no ingresadas.")
+      status=401
+    }
+    sails.log.info("erorres : "+errores.length);
+    sails.log.info("correctos : "+correctos.length);
+    if(correctos.length > 0){
+      sails.log.info("correctos : "+correctos.length);
+      res.status(status).json({correctos})
+    }else{
+      sails.log.error("cantidad de errores encontrados : "+errores.length);
+      res.status(status).json({errores})
     }
   },
 
   RemoveAuthorization: async function (req,res) {
+    var errores =[];
+    let codigoRespuesta = 200;
       if(req.headers['access-token']){      
               var currentUser = await base.CheckToken(req.headers['access-token']);
               if(currentUser){
                       if(await base.CheckAuthorization(currentUser,'Authorization','Delete',req.ip,res)){   
-                         var existeAuthorization = await Permiso.find({where: {id:req.body.Authorizations.id},})
-                         var existeRol = await Rol.find({id: req.body.rol.id});
-                         sails.log.info("Permisos a borrar"+JSON.stringify(existeAuthorization));
-                         await req.body.Authorizations.forEach(async Authorization => {
-                         if(existeAuthorization !== undefined && existeRol !== undefined){
+                         var permisos = await Permiso.count({where: {id:req.body.Authorizations}})
+                         var roles = await Rol.count({id: req.body.rol.id ,Eliminated:false});
+                         sails.log.info("roles encontrados :"+roles);
+                         sails.log.info("Permisos a borrar"+permisos);
+                         if(roles == 1 && permisos == req.body.Authorizations.length){
                           await Rol.removeFromCollection(req.body.rol.id , 'Authorizations')
-                          .members(Authorization.id);
-                         }else{
-                             res.status(401).json({error:"no existe el permiso que desea eliminar"})
-                             return ;
-                         }
-                        })   
-                        res.status(200).json({message : 'Permiso removido con exito.'}) 
-
+                          .members(req.body.Authorizations);
+                        }else{
+                          if(roles == 0){
+                          errores.push("no existe el rol que desea eliminar")
+                          codigoRespuesta = 400
+                          sails.log.error("no existe el rol que se desea eliminar ")
+                          }
+                          if(roles > 1){
+                            errores.push("datos inconsistentes con el id rol")
+                            codigoRespuesta = 500
+                            sails.log.error("datos inconsistentes con el id rol")
+                          }
+                          if(permisos != req.body.Authorizations.length){
+                            errores.push("Uno o varios permisos no existen")
+                            codigoRespuesta = 404
+                            sails.log.error("Uno o varios permisos no existen")
+                          }
+                        }
                       }else{
-                          res.status(401).json({error:"Acceso denegado"})
+                        errores.push("Acceso denegado")
+                        codigoRespuesta = 401
+                        sails.log.error("errores encontrados"+JSON.stringify(errores))
                       }   
-
               }else{
-                  return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
+                errores.push("Medidas de seguridad invalidas.")
+                codigoRespuesta = 401
+                sails.log.error("errores encontrados"+JSON.stringify(errores))
               }
-              
   }else{
-      return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
+    errores.push("Medidas de seguridad no ingresadas.")
+    codigoRespuesta = 401
+    sails.log.error("errores encontrados"+JSON.stringify(errores))
+  }
+  if(errores.length == 0 ){
+    res.status(200).json({Message : "se borraron los permisos con el id : "+req.body.Authorizations})
+  }else{
+    sails.log.error("cantidad de errores" + errores.length)
+    res.status(codigoRespuesta).json({errores})
   }
   },
 

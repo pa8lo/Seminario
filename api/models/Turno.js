@@ -12,23 +12,32 @@ module.exports = {
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
-    Date:{
+    Name:{
       type:'string',
-      columnType:'datetime',
-      columnName:'Fecha',
+      required:true,
+      unique:true
+    },
+    OutHour:{
+      type:'number',
+      columnName:'Hora Salida',
       required:true
     },
-    OutTime:{
+    OutMinute:{
       type:'number',
-      columnType:'double',
-      columnName:'Horario Salida',
+      columnName:'Minuto Salida',
+    },
+    InHour:{
+      type:'number',
+      columnName:'Hora Entrada',
       required:true
     },
-    InTime:{
+    InMinute:{
       type:'number',
-      columnType:'double',
-      columnName:'Horario Entrada',
-      required:true
+      columnName:'Minuto Entrada',
+    },
+    Eliminated:{
+      type: 'boolean',
+      defaultsTo: false, 
     },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗

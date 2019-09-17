@@ -22,14 +22,21 @@ module.exports = {
                 }
                 else {                
                 var user = decoded;         
-                sails.log.info("se devuelve la informacion : "+user);                                                                  
+                sails.log.info("se devuelve la informacion : "+JSON.stringify(user));
                 return user;                
                 }
             });
             return tokenDecode;
 
         },
-     
+     /**
+     * Controla si el usuario tiene todos los permisos necesarios
+     * @param {*} CurrentUser  el perfil del usuario
+     * @param {*} CategoriaPermiso  la categoria  del permiso que se desea comprobar
+     * @param {*} NombrePermiso  el nombre  del permiso que se desea comprobar
+     * @param {*} ip  el ip que viene en el req
+     * @param {*} re  respuesta del servidor
+     */
     CheckAuthorization: async function (CurrentUser,CategoriaPermiso,NombrePermiso,ip,res) {
         if(CurrentUser.Ip === ip){
             try {
@@ -50,7 +57,7 @@ module.exports = {
         }
 
     },
-/**
+    /**
  * Muestra todos los elementos de un objeto
  */
     SeeElements: function (Element,NombreElemento,res){
@@ -181,6 +188,9 @@ module.exports = {
               }
         }
       },
+    // addError:function(error){
+
+    // }  
 
 
 

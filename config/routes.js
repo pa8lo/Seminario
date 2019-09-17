@@ -197,12 +197,29 @@ module.exports.routes = {
 //
 'GET /Asisstance/Asisstances' : 'AsistenciaController.Assists',
 
+'GET /Asisstance/Asisst' : 'AsistenciaController.Assist',
+
 'POST /Asisstance/Create' : 'AsistenciaController.createAssist',
 
 'POST /Asisstance/Delete' : 'AsistenciaController.deleteAssist',
 
 // 'POST /Offerts/Update' : 'ComboController.updateOffert' ,
 
+//ENDPOINTS Turnos
+//
+'Get /Turn/Turns' : 'TurnoController.Turns',
+
+'Get /Turn/AssignedTurns' : 'TurnoController.assignedTurns',
+
+'Post /Turn/CreateTurn' : 'TurnoController.createTurn',
+
+'Post /Turn/DeleteTurn' : 'TurnoController.deleteTurn',
+
+'Post /Turn/AssignDate' : 'TurnoController.assignDate',
+
+'Post /Turn/AssignUser' : 'TurnoController.assignUser',
+
+'Post /Turn/Deallocate' : 'TurnoController.deallocate'
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
