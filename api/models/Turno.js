@@ -15,7 +15,6 @@ module.exports = {
     Name:{
       type:'string',
       required:true,
-      unique:true
     },
     OutHour:{
       type:'number',

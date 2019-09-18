@@ -241,34 +241,18 @@ module.exports = {
  * Recibe un id de usuario y un id de rol y actualiza los permisos de cada uno
  */
   UpdateAuthorizations: async function (idUser, IdRol) {
-    var rolesUsuario = await User.findOne({
-      id: idUser
-    }).populate('Authorizations')
+    sails.log.info("aca3")
+    let ids =[]
     var rol = await Rol.findOne({
-      id: IdRol
-    }).populate('Authorizations')
-    try {
-      await rolesUsuario.Authorizations.forEach(async Auth => {
-        try {
-          await User.removeFromCollection(idUser, 'Authorizations')
-            .members(Auth.id);
-        } catch (error) {
-          sails.log.debug(error);
-        }
-
-      })
-      await rol.Authorizations.forEach(async Auth => {
-        try {
-          await User.addToCollection(idUser, 'Authorizations')
-            .members(Auth.id);
-        } catch (error) {
-          sails.log.debug(error);
-        }
-
-      })
-    } catch (error) {
-      sails.log.debug(error);
-    }
+      where: {id:IdRol},
+    }).populate('Authorizations',{ select: ['id']})
+    sails.log.info(JSON.stringify(rol.Authorizations));
+    rol.Authorizations.forEach(async Auth => {
+      ids.push(Auth.id)
+    })
+    await User.replaceCollection(idUser , 'Authorizations')
+    .members(ids);
+    sails.log.info("se agregaron los siguientes permisos al usuario "+ids)
   },
   DeleteRol: async function (req, res) {
     if (req.headers['access-token']) {
@@ -313,6 +297,9 @@ module.exports = {
               error: 'No existe Rol.'
             });
           } else {
+            await Rol.replaceCollection(data.Rol.id , 'Authorizations')
+                          .members(data.Authorizations);
+            await ActualizarPermisosUsuarios(data.Rol.id,data.Authorizations);
             res.status(200).json({
               message: 'Rol modificado.'
             });
@@ -321,8 +308,12 @@ module.exports = {
       }
     }
   },
- 
-
-
 };
+  async function ActualizarPermisosUsuarios(idrol,arrayPermiso){
+    var usuarios =await User.find({Rols:idrol})
+    usuarios.forEach(async usuario => {
+      await User.replaceCollection(usuario.id , 'Authorizations')
+                          .members(arrayPermiso);
+    });
+  }
 

@@ -22,7 +22,6 @@ module.exports = {
     Dni: {
       type: 'string',
       description:'Documento de identida del usuario',
-      unique:true,
       required:true
     },
 

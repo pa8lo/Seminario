@@ -18,6 +18,11 @@ module.exports = {
             throw _error.GenerateError('no existe/n '+mensaje,404) 
         }
     },
+    ValidarCantidadUsuariosEncontrados(cantidadEnviado,cantidadEncontrado){
+        if(cantidadEnviado != cantidadEncontrado){
+            throw _error.GenerateError('no existen uno o varios usuarios que se quieren asignar',400) 
+        }
+    },
     validarRequest:async  function (req,CategoriaPermiso,NombrePermiso){
         let currentuser = await CheckToken(req.headers['access-token']);
         sails.log.info(currentuser)
@@ -34,6 +39,11 @@ module.exports = {
         if (!data.Turno.OutHour || !data.Turno.InHour) {
             throw _error.GenerateError("faltan ingresar parametros",400) 
             } 
+    },
+    validarRequestCrearUsuario : function(){
+        if(!data.User.Dni || !data.User.Password || !data.User.Name){
+            throw _error.GenerateError("faltan ingresar parametros",400) 
+        }
     },
     validarExistencia: async function(_campo,_entidad){
         let entidad = await _entidad.find(_campo)
