@@ -30,6 +30,21 @@ module.exports = {
         validacion = await CheckAuthorization(currentuser,CategoriaPermiso,NombrePermiso);
         return currentuser;
     },
+    ValidarRequestLogin:function(data){
+        if (!data.Dni || !data.Password){
+            throw _error.GenerateError("faltan ingresar parametros",400) 
+        }
+    },
+    ValidarExistenciaLogin: function(user){
+        if(!user || user.length ==0){
+            throw _error.GenerateError("Se han ingresado datos erroneos",401) 
+        }
+    },
+    ValidarDatosLogin:function (inputPassword, userPassword){
+        if (inputPassword != userPassword){
+            throw _error.GenerateError("Se han ingresado datos erroneos",401) 
+        }
+    },
     validarRequestEliminarEntidad:function(id){
         if (!id) {
             throw _error.GenerateError("faltan ingresar parametros",400) 

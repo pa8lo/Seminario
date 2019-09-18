@@ -13,189 +13,85 @@ var _validaciones = require('./ValidacionController');
 module.exports = {
   //traigo todos los usuarios.
   users: async function (req, res) {
-    if (req.headers['access-token']) {
-      var currentUser =await base.CheckToken(req.headers['access-token']);
-      if (currentUser) {
-        try {
-          if (await base.CheckAuthorization(currentUser, 'Usuario', 'View', req.ip, res)) {
-            console.log(currentUser);
-            base.SeeElements(User, "usuario", res);
-          } else {
-            res.status(401).json({
-              error: "Acceso denegado"
-            })
-          }
-        } catch (error) {
-          res.status(401).json({
-            error: "Acceso denegado"
-          })
-        }
-      } else {
-        return res.status(401).json({
-          error: 'Acceso denegado.'
-        });
-      }
-    } else {
-      return res.status(401).json({
-        error: 'Medidas de seguridad no ingresadas.'
-      });
+    try {
+      let currentUser = await _validaciones.validarRequest(req, 'Usuario', 'View');
+      base.SeeElements(User, "usuario", res);
+    } catch (err) {
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
     }
   },
 
   DeleteUser: async function (req, res) {
-    if (req.headers['access-token']) {
-      const currentUser =await base.CheckToken(req.headers['access-token']);
-      if (currentUser) {
-        if (await base.CheckAuthorization(currentUser, 'Usuario', 'Delete', req.ip, res)) {
-          var data = req.body;
-          try {
-            var destruido = await User.update({
-                id: data.id
-              })
-              .set({
-                Eliminated: true
-              }).fetch();
-            if (destruido.length === 0) {
-              // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
-              res.status(401).json({
-                error: 'No existe usuario.'
-              });
-            } else {
-              // sails.log.Info('Se elimino usuario con id:'+data.id, destruido[0]);
-              res.status(200).json({
-                message: 'Usuario eliminado.'
-              });
-            }
-          } catch (error) {
-            //sails.log.Error("El usuario  de id : "+ currentUser.Id + "quiso acceder desde un ip erroneo.");
-            return res.status(500).json({
-              error: 'Existio un problema al eliminar usuario' + error
-            });
-          }
-        } else {
-          res.status(401).json({
-            error: "Acceso denegado"
-          })
-        }
-      } else {
-        return res.status(401).json({
-          error: 'Acceso denegado.'
-        });
-      }
-    } else {
-      return res.status(401).json({
-        error: 'Medidas de seguridad no ingresadas.'
-      });
-    }
-  },
-  //Devuelvo Los datos del usuario decodificados del token
-  currentUser: async function (req, res) {
-    if (!req.headers['access-token'] || req.headers['access-token'].length < 1) {
-      res.status(401).json({
-        error: "Falta ingresar token de seguridad"
-      })
-    } else {
-      try {
-        const tokenDecode =await base.CheckToken(req.headers['access-token']);
-        if(tokenDecode != null){
-        return res.send({
-          'sucess': true,
-          'User': tokenDecode,
-        })
-      }else{
-        return res.send({
-          'sucess': false,
-          'User': tokenDecode,
-        })
-      }
-      } catch (error) {
-        res.status(401).json({
-          error: "Falta ingresar token de seguridad"
-        })
-      }
+    try {
+      let currentUser = await _validaciones.validarRequest(req, 'Usuario', 'View');
+      var data = req.body;
+      let validacion = await _validaciones.validarRequestEliminarEntidad(data.id);
+      var destruido = await User.update({ id: data.id }).set({ Eliminated: true }).fetch();
+      validacion = _validaciones.ValidarEntidad(destruido, "Usuario");
+      res.status(200).json({ message: ' Usuario eliminado' });
+    } catch (err) {
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
     }
   },
 
   createUser: async function (req, res) {
-    try{
-      let currentUser = await _validaciones.validarRequest(req,'Usuario','Create');
+    try {
+      let currentUser = await _validaciones.validarRequest(req, 'Usuario', 'Create');
       var data = req.body;
       sails.log.info(currentUser)
-      let validacion = await _validaciones.validarExistencia({Dni:data.User.Dni.trim(),Eliminated:false},User)
-      validacion = await _validaciones.validarExistenciaEliminar({id:data.User.Rols,Eliminated:false},Rol);
+      let validacion = await _validaciones.validarExistencia({ Dni: data.User.Dni.trim(), Eliminated: false }, User)
+      validacion = await _validaciones.validarExistenciaEliminar({ id: data.User.Rols, Eliminated: false }, Rol);
       sails.log.info("aca")
       var usuario = await User.create(data.User).fetch();
       sails.log.info(usuario);
       await rol.UpdateAuthorizations(usuario.id, data.User.Rols);
       res.status(200).json({
-        message:"usuario creado correctamente",
-        usuario:usuario
-    })
-    }catch(err){
+        message: "usuario creado correctamente",
+        usuario: usuario
+      })
+    } catch (err) {
       console.log(err)
-      sails.log.error("error"+JSON.stringify(err))
+      sails.log.error("error" + JSON.stringify(err))
       res.status(err.code).json(err.message);
     }
   },
 
   login: async function (req, res) {
     try {
-      //Traigo todos los datos del request y controlo que existan los necesarios
-      console.log(req.hostname);
       const data = req.body;
-      console.log(data)
-      if (!data.Dni || !data.Password) {
-        return res.status(400).json({
-          error: 'Faltan ingresar parametros'
-        });
-      }
-      try {
-        //Busco un usuario que coincida y Inflo el atributo rols
-        const user = await User.findOne({
-          Dni: data.Dni.trim()
-        }).decrypt().populate('Rols').populate('Authorizations');
-        if (!user) {
-          return res.status(400).json({
-            error: 'Ha ingresado datos erroneos'
-          });
-        }
-        try {
-          if (user.Password == data.Password) {
-            const userToken = token.sign({
-              Name: user.Name,
-              Id: user.id,
-              Ip: req.ip
-            }, secretMessage.jwtSecret);
-            sails.log.info("Enviando token" )
-            return res.status(200).json({
-              user: {
-                Name: user.Name,
-                Rol: user.Rol
-              },
-              token: userToken
-            })
-          } else {
-            return res.status(402).json({
-              error: 'Ha ingresado datos erroneos'
-            });
-          }
-        } catch (err) {
-          console.log(err)
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    } catch (error) {
-      res.status(500).json({
-        error: 'Hubo un problema con el logueo, revisar parametros'+error
-      });
+      let validacion = _validaciones.ValidarRequestLogin(data);
+      var user = await User.findOne({
+        Dni: data.Dni.trim(),
+        Eliminated: false
+      }).decrypt().populate('Rols');
+      validacion = _validaciones.ValidarExistenciaLogin(user);
+      validacion = _validaciones.ValidarDatosLogin(user.Password, data.Password);
+      var userToken = token.sign({
+        Name: user.Name,
+        Id: user.id,
+        Ip: req.ip
+      }, secretMessage.jwtSecret);
+      sails.log.info("Enviando token")
+      res.status(200).json({
+        user: {
+          Name: user.Name,
+          Rol: user.Rol
+        },
+        token: userToken
+      })
+    } catch (err) {
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
     }
   },
 
   UserAuthorizations: async function (req, res) {
     var parametros = req.allParams();
     if (req.headers['access-token']) {
-      var currentUser = await  base.CheckToken(req.headers['access-token']);
+      var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
 
         if (await base.CheckAuthorization(currentUser, 'Usuario', 'View', req.ip, res)) {
@@ -241,7 +137,7 @@ module.exports = {
 
   RemoveAuthorization: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser =await base.CheckToken(req.headers['access-token']);
+      var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         var data = {
           modeloPrincipal: {
@@ -290,7 +186,7 @@ module.exports = {
 
   AssignAuthorization: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser =await base.CheckToken(req.headers['access-token']);
+      var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         var data = req.body
         if (await base.CheckAuthorization(currentUser, 'Authorization', 'Assign', req.ip, res)) {
@@ -325,19 +221,19 @@ module.exports = {
       })
     }
   },
- /**
- * Actualiza datos del usuario
- */
+  /**
+  * Actualiza datos del usuario
+  */
   UpdateUser: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser =await base.CheckToken(req.headers['access-token']);
+      var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         var data = req.body;
         if (await base.CheckAuthorization(currentUser, 'Usuario', 'Edit', req.ip, res)) {
-            await Checkrol(data.User.Rols,data.User.id)
+          await Checkrol(data.User.Rols, data.User.id)
           var usuario = await User.update({
-              id: data.User.id
-            })
+            id: data.User.id
+          })
             .set(data.User).fetch();
           if (usuario.length === 0) {
             // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
@@ -367,7 +263,7 @@ module.exports = {
   User: async function (req, res) {
     var data = req.allParams();
     if (req.headers['access-token']) {
-      var currentUser =await base.CheckToken(req.headers['access-token']);
+      var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         if (!data.id) {
           res.status(400).json({
@@ -378,11 +274,11 @@ module.exports = {
             var usuario = await User.findOne({
               id: data.id
             }).decrypt().populate('Adress');
-            if(usuario != null){
+            if (usuario != null) {
               res.status(200).json({
                 user: usuario
               })
-            }else{
+            } else {
               res.status(404).json({
                 error: "usuario inexistente"
               })
@@ -407,12 +303,12 @@ module.exports = {
   //Modifica el rol del usuario configurando sus nuevos permisos
   ChangeRol: async function (req, res) {
     if (req.headers['access-token']) {
-      var currentUser =await base.CheckToken(req.headers['access-token']);
+      var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         var parametros = req.body
         console.log(parametros)
         if (await base.CheckAuthorization(currentUser, 'Usuario', 'Edit', req.ip, res)) {
-            
+
           var ExisteRol = await Rol.findOne({
             id: parametros.Rol.id
           })
@@ -463,65 +359,65 @@ module.exports = {
       })
     }
   },
-  
-  ChangePassword : async function(req,res){
-    if(req.headers['access-token']){
-    var currentUser =await base.CheckToken(req.headers['access-token']);
-    if(currentUser){
+
+  ChangePassword: async function (req, res) {
+    if (req.headers['access-token']) {
+      var currentUser = await base.CheckToken(req.headers['access-token']);
+      if (currentUser) {
         var usuario = await User.findOne({
           id: currentUser.Id
         }).decrypt()
-        sails.log.info(req.body.Password + "" +usuario.Password)
-        if( req.body.Password === usuario.Password){
+        sails.log.info(req.body.Password + "" + usuario.Password)
+        if (req.body.Password === usuario.Password) {
           usuario.Password = req.body.NewPassword;
-          await User.update({id: usuario.id}).set(usuario);
-          sails.log.info("Se modifico la contraseña del usuario con id "+currentUser.Id)
-          res.status(message.response.ok).json({message: "Contraseña Modificada"})
-        }else{
-          sails.log.info("Se quizo modifico la contraseña del usuario con id "+currentUser.Id+ "pero se ingreso un password incorrecto")
-          res.status(message.response.Unauthorized).json({error: "Contraseña incorrecta"})
-        }       
-      }else{
-        res.status(message.response.Unauthorized).json({error: "Su cuenta caduco por favor loguearse"})
+          await User.update({ id: usuario.id }).set(usuario);
+          sails.log.info("Se modifico la contraseña del usuario con id " + currentUser.Id)
+          res.status(message.response.ok).json({ message: "Contraseña Modificada" })
+        } else {
+          sails.log.info("Se quizo modifico la contraseña del usuario con id " + currentUser.Id + "pero se ingreso un password incorrecto")
+          res.status(message.response.Unauthorized).json({ error: "Contraseña incorrecta" })
+        }
+      } else {
+        res.status(message.response.Unauthorized).json({ error: "Su cuenta caduco por favor loguearse" })
       }
-    }else{
-    res.status(message.response.Unauthorized).json({error: "Su cuenta caduco por favor loguearse"})
+    } else {
+      res.status(message.response.Unauthorized).json({ error: "Su cuenta caduco por favor loguearse" })
     }
   }
 
 
 
 };
- /**
- * Actualiza el rol del usuario.
- */
+/**
+* Actualiza el rol del usuario.
+*/
 async function UpdateRol(idNewRol, idUsuario) {
   try {
     await User.update({
-        id: idUsuario
-      })
+      id: idUsuario
+    })
       .set({
         Rols: idNewRol
       }).fetch();
-   await  rol.UpdateAuthorizations(idUsuario, idNewRol);
+    await rol.UpdateAuthorizations(idUsuario, idNewRol);
   } catch (err) {
     sails.log.debug("Existio un error cuando se quiso modificar el rol del usuario " + err);
   }
 
 };
- /**
- * Controla si el id del rol es igual que el id del rol que se quiere modificar
- */
+/**
+* Controla si el id del rol es igual que el id del rol que se quiere modificar
+*/
 async function Checkrol(idNewRol, idUsuario) {
-    try {
-         var usuario = await User.findOne({id : idUsuario})
-         if(idNewRol !== usuario.rols){
-             console.log("AD")
-             await UpdateRol(idNewRol,idUsuario)
-         }else{
-             return false
-         }
-    } catch (error) {
-        sails.log.debug("Existio un error cuando se quiso comprobar el rol del usuario " + error);
+  try {
+    var usuario = await User.findOne({ id: idUsuario })
+    if (idNewRol !== usuario.rols) {
+      console.log("AD")
+      await UpdateRol(idNewRol, idUsuario)
+    } else {
+      return false
     }
+  } catch (error) {
+    sails.log.debug("Existio un error cuando se quiso comprobar el rol del usuario " + error);
+  }
 }
