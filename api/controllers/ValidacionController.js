@@ -25,7 +25,7 @@ module.exports = {
     },
     validarRequest:async  function (req,CategoriaPermiso,NombrePermiso){
         let currentuser = await CheckToken(req.headers['access-token']);
-        sails.log.info(currentuser)
+          sails.log.info(currentuser)
         let validacion = await ValidarIp(currentuser.Ip,req.ip);
         validacion = await CheckAuthorization(currentuser,CategoriaPermiso,NombrePermiso);
         return currentuser;

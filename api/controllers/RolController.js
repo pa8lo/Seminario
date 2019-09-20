@@ -241,7 +241,6 @@ module.exports = {
  * Recibe un id de usuario y un id de rol y actualiza los permisos de cada uno
  */
   UpdateAuthorizations: async function (idUser, IdRol) {
-    sails.log.info("aca3")
     let ids =[]
     var rol = await Rol.findOne({
       where: {id:IdRol},

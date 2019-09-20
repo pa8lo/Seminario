@@ -44,7 +44,6 @@ module.exports = {
       sails.log.info(currentUser)
       let validacion = await _validaciones.validarExistencia({ Dni: data.User.Dni.trim(), Eliminated: false }, User)
       validacion = await _validaciones.validarExistenciaEliminar({ id: data.User.Rols, Eliminated: false }, Rol);
-      sails.log.info("aca")
       var usuario = await User.create(data.User).fetch();
       sails.log.info(usuario);
       await rol.UpdateAuthorizations(usuario.id, data.User.Rols);
@@ -89,51 +88,44 @@ module.exports = {
   },
 
   UserAuthorizations: async function (req, res) {
-    var parametros = req.allParams();
-    if (req.headers['access-token']) {
-      var currentUser = await base.CheckToken(req.headers['access-token']);
-      if (currentUser) {
-
-        if (await base.CheckAuthorization(currentUser, 'Usuario', 'View', req.ip, res)) {
-          try {
-            if (parametros.id !== undefined) {
-              var usuario = await User.findOne({
-                id: parametros.id
-              }).populate('Authorizations');
-              if (usuario) {
-                res.status(200).json({
-                  Authorizations: usuario.Authorizations
-                });
-              } else {
-                res.status(200).json({
-                  Authorizations: []
-                });
-              }
-
-            } else {
-              res.status(401).json({
-                error: "faltan ingresar parametros"
-              })
-            }
-
-          } catch (error) {
-            console.log(error);
-            res.status(500).json({
-              error: "existio un problema para mostrar los permisos"
-            })
-          }
-        } else {
-          res.status(401).json({
-            error: "Acceso denegado"
-          })
-        }
-      } else {
-        return res.status(401).json({
-          error: 'Medidas de seguridad no ingresadas.'
-        });
-      }
+    try{
+      let currentUser = await _validaciones.validarRequest(req, 'Usuario', 'View');
+      var parametros = req.allParams();
+      let validacion = await _validaciones.validarRequestEliminarEntidad(parametros.id);
+      var usuario = await User.findOne({id: parametros.id}).populate('Authorizations');
+      validacion = _validaciones.ValidarExistenciaLogin(usuario);
+      res.status(200).json({Authorizations: usuario.Authorizations});
+    }catch(err){
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
     }
   },
+    currentUser: async function (req, res) {
+        if (!req.headers['access-token'] || req.headers['access-token'].length < 1) {
+          res.status(401).json({
+            error: "Falta ingresar token de seguridad"
+         })
+       } else {
+         try {
+           const tokenDecode =await base.CheckToken(req.headers['access-token']);
+           if(tokenDecode != null){
+           return res.send({
+             'sucess': true,
+             'User': tokenDecode,
+           })
+         }else{
+           return res.send({
+             'sucess': false,
+             'User': tokenDecode,
+           })
+         }
+         } catch (error) {
+           res.status(401).json({
+             error: "Falta ingresar token de seguridad"
+           })
+         }
+        }
+      },
 
   RemoveAuthorization: async function (req, res) {
     if (req.headers['access-token']) {
@@ -261,43 +253,16 @@ module.exports = {
   },
 
   User: async function (req, res) {
-    var data = req.allParams();
-    if (req.headers['access-token']) {
-      var currentUser = await base.CheckToken(req.headers['access-token']);
-      if (currentUser) {
-        if (!data.id) {
-          res.status(400).json({
-            error: "Faltan ingresar parametros"
-          })
-        } else {
-          if (await base.CheckAuthorization(currentUser, 'Usuario', 'View', req.ip, res)) {
-            var usuario = await User.findOne({
-              id: data.id
-            }).decrypt().populate('Adress');
-            if (usuario != null) {
-              res.status(200).json({
-                user: usuario
-              })
-            } else {
-              res.status(404).json({
-                error: "usuario inexistente"
-              })
-            }
-
-          } else {
-            res.status(401).json({
-              error: "Acceso denegado"
-            })
-          }
-
-
-        }
-
-      }
-    } else {
-      return res.status(401).json({
-        erros: 'Medidas de seguridad no ingresadas.'
-      })
+    try{
+      var data = req.allParams();
+      let currentUser = await _validaciones.validarRequest(req,'Usuario','View');
+      let validacion = await _validaciones.validarRequestEliminarEntidad(data.id);
+      var usuario = await User.findOne({id: data.id}).decrypt().populate('Adress');
+      validacion = await _validaciones.ValidarEntidad(usuario,"Usuario")
+      res.status(200).json({user: usuario})
+    }catch(err){
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
     }
   },
   //Modifica el rol del usuario configurando sus nuevos permisos
