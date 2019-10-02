@@ -35,10 +35,34 @@ module.exports = {
             throw _error.GenerateError("faltan ingresar parametros",400) 
         }
     },
+    ValidarRequestCrearAsistencia:function(data){
+        if(!data.Asistencia.InTime || !data.Asistencia.User){
+            throw _error.GenerateError("faltan ingresar parametros",400) 
+        }
+        ValidarFecha(sails.moment(data.Asistencia.InTime));
+    },
     ValidarExistenciaLogin: function(user){
         if(!user || user.length ==0){
             throw _error.GenerateError("Se han ingresado datos erroneos",401) 
         }
+    },
+    ValidarFechaAsistencia: function(_asistencia,_asistenciaExistente){
+        let horarioIngreso;
+        let horarioSalida ;
+        if(_asistencia.InTime){
+            horarioIngreso =sails.moment(_asistencia.InTime);
+        }else{
+            horarioIngreso= sails.moment(_asistenciaExistente.InTime);
+        }
+        if(_asistencia.OutTime){
+            horarioSalida = sails.moment(_asistencia.OutTime);
+        }else{
+            horarioSalida = sails.moment(_asistenciaExistente.OutTime)
+        }
+        ValidarFecha(horarioIngreso);
+        ValidarFecha(horarioSalida)
+        return DevolverDiferencia(horarioIngreso,horarioSalida);
+
     },
     ValidarDatosLogin:function (inputPassword, userPassword){
         if (inputPassword != userPassword){
@@ -74,6 +98,18 @@ module.exports = {
     }
 
 };
+    function DevolverDiferencia(_fechaIngreso,_fechaSalida){
+        let diferencia = _fechaSalida.diff(_fechaIngreso, 'minutes');
+        if (diferencia<=0){
+            throw _error.GenerateError("La fecha de salida no puede ser menor o igual a la de entrada",400)
+        }
+        return diferencia;
+    }
+    function ValidarFecha(fecha){
+        if(!fecha.isValid()){
+            throw _error.GenerateError("fecha invalida se espera DD/MM/YYYY HH:MM:SS:MS",400) 
+        }
+    }
      function CheckToken(token){ 
         sails.log.info("se procede a chequear el token "+token)
         var accessToken = token;            

@@ -12,30 +12,17 @@ module.exports = {
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
-    Date:{
+    InTime:{
       type:'string',
       columnType:'datetime',
       required:true
     },
-    OutHour:{
-      type:'number',
-      columnType:'number',
-      required:true
+    OutTime:{
+      type:'string',
+      columnType:'datetime',
     },
-    OutMinute:{
-      type:'number',
-      columnType:'number',
-      required:true
-    },
-    InHour:{
-      type:'number',
-      columnType:'number',
-      required:true
-    },
-    InMinute:{
-      type:'number',
-      columnType:'number',
-      required:true
+    Diference:{
+      type:'number'
     },
     Eliminated:{
       type: 'boolean',

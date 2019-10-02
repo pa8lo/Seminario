@@ -266,64 +266,65 @@ module.exports = {
     }
   },
   //Modifica el rol del usuario configurando sus nuevos permisos
-  ChangeRol: async function (req, res) {
-    if (req.headers['access-token']) {
-      var currentUser = await base.CheckToken(req.headers['access-token']);
-      if (currentUser) {
-        var parametros = req.body
-        console.log(parametros)
-        if (await base.CheckAuthorization(currentUser, 'Usuario', 'Edit', req.ip, res)) {
+  // ChangeRol: async function (req, res) {
+  //   let currentUser = await _validaciones.validarRequest(req,'Usuarios','Edit')
+  //   // if (req.headers['access-token']) {
+  //   //   var currentUser = await base.CheckToken(req.headers['access-token']);
+  //   //   if (currentUser) {
+  //   var parametros = req.body
+  //       console.log(parametros)
+  //       // if (await base.CheckAuthorization(currentUser, 'Usuario', 'Edit', req.ip, res)) {
 
-          var ExisteRol = await Rol.findOne({
-            id: parametros.Rol.id
-          })
-          var existeUsuario = await User.findOne({
-            id: parametros.User.id
-          })
-          if (ExisteRol !== undefined && existeUsuario !== undefined) {
-            var usuario = await User.findOne({
-              id: parametros.User.id
-            }).populate('Authorizations');
-            await usuario.Authorizations.forEach(Auth => {
-              var data = {
-                User: {
-                  id: parametros.User.id
-                },
-                Authorizations: {
-                  id: Auth.id
-                }
-              }
-              base.RemoveAuthorization(data, User, 'Authorizations', res);
+  //         var ExisteRol = await Rol.findOne({
+  //           id: parametros.Rol.id
+  //         })
+  //         var existeUsuario = await User.findOne({
+  //           id: parametros.User.id
+  //         })
+  //         if (ExisteRol !== undefined && existeUsuario !== undefined) {
+  //           var usuario = await User.findOne({
+  //             id: parametros.User.id
+  //           }).populate('Authorizations');
+  //           await usuario.Authorizations.forEach(Auth => {
+  //             var data = {
+  //               User: {
+  //                 id: parametros.User.id
+  //               },
+  //               Authorizations: {
+  //                 id: Auth.id
+  //               }
+  //             }
+  //             base.RemoveAuthorization(data, User, 'Authorizations', res);
 
-            });
-            try {
-              await UpdateRol(parametros.Rol.id, parametros.User.id)
-              res.status(200).json({
-                message: "Usuario midificado correctamente"
-              })
-            } catch (err) {
-              sails.log.debug(err);
-              res.status(404).json({
-                error: "Existío un error cuando se quiso actualizar el rol"
-              })
-            }
-          } else {
-            res.status(401).json({
-              error: "No existe rol o usuario"
-            })
-          }
-        } else {
-          res.status(401).json({
-            error: "Acceso denegado"
-          })
-        }
-      }
-    } else {
-      return res.status(401).json({
-        erros: 'Medidas de seguridad no ingresadas.'
-      })
-    }
-  },
+  //           });
+  //           try {
+  //             await UpdateRol(parametros.Rol.id, parametros.User.id)
+  //             res.status(200).json({
+  //               message: "Usuario midificado correctamente"
+  //             })
+  //           } catch (err) {
+  //             sails.log.debug(err);
+  //             res.status(404).json({
+  //               error: "Existío un error cuando se quiso actualizar el rol"
+  //             })
+  //           }
+  //         } else {
+  //           res.status(401).json({
+  //             error: "No existe rol o usuario"
+  //           })
+  //         }
+  //       } else {
+  //         res.status(401).json({
+  //           error: "Acceso denegado"
+  //         })
+  //       }
+  //     }
+  //   } else {
+  //     return res.status(401).json({
+  //       erros: 'Medidas de seguridad no ingresadas.'
+  //     })
+  //   }
+  // },
 
   ChangePassword: async function (req, res) {
     if (req.headers['access-token']) {
