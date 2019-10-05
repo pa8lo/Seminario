@@ -99,6 +99,10 @@ module.exports = {
       collection:'pedido',
       via:'Users'
     },
+    OrdersAssigned:{
+        collection:'pedido',
+        via:'Delivery'
+    },
     AsignedTurns:{
       collection:'turnosAsignados',
       via:'Users'

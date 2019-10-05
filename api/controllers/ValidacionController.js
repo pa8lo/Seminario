@@ -99,7 +99,11 @@ module.exports = {
 
 };
     function DevolverDiferencia(_fechaIngreso,_fechaSalida){
-        let diferencia = _fechaSalida.diff(_fechaIngreso, 'minutes');
+        let minutosDiferencia = _fechaSalida.diff(_fechaIngreso, 'minutes');
+        let diferencia = {
+            horas: Math.trunc(minutosDiferencia/60),
+            minutos:minutosDiferencia%60
+        }
         if (diferencia<=0){
             throw _error.GenerateError("La fecha de salida no puede ser menor o igual a la de entrada",400)
         }

@@ -21,7 +21,10 @@ module.exports = {
       type:'string',
       columnType:'datetime',
     },
-    Diference:{
+    Hours:{
+      type:'number'
+    },
+    Minutes:{
       type:'number'
     },
     Eliminated:{

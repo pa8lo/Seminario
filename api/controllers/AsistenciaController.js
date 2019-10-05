@@ -120,7 +120,9 @@ module.exports = {
         let validaciones = _validaciones.ValidarExistenciaLogin(asistenciaExistente);
         let diferencia = _validaciones.ValidarFechaAsistencia(data.Asistencia,asistenciaExistente);
         sails.log.info("[[asistenciaController.createassist]]se procede a crear asistencia") 
-        data.Asistencia.Diference = diferencia;
+        data.Asistencia.Hours = diferencia.horas;
+        data.Asistencia.Minutes = diferencia.minutos;
+
         var asistencia = await Asistencia.update({
           id: data.Asistencia.id
         })

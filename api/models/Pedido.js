@@ -38,6 +38,9 @@ module.exports = {
     Users:{
       model:'user',
     },
+    Delivery:{
+      model:'user'
+    },
 
     Clients:{
       model:'cliente',

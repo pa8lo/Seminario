@@ -48,7 +48,6 @@ module.exports.bootstrap = async function(done) {
    */ 
   await User
       .create({
-          id:1,
           Dni: '35111111',
           Name: 'Admin',
           LastName:'Test',
@@ -58,7 +57,6 @@ module.exports.bootstrap = async function(done) {
         });
   await User
       .create({
-          id:3,
           Dni: '35211111',
           Name: 'Admin',
           LastName:'Test',
