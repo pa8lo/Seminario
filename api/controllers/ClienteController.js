@@ -5,6 +5,7 @@
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
 var base = require('./BaseController.js')
+var _validaciones = require('./ValidacionController');
 module.exports = {
   
     CreateClient :async function (req,res) {
@@ -19,6 +20,26 @@ module.exports = {
         },
     
     AddAddress : async function (req,res){
+        try {
+            let currentUser = await _validaciones.validarRequest(req, 'Cliente', 'Create');
+
+            var  data = req.body;
+
+    //                   var existeCliente = await Cliente.findOne({id:data.Address.id});
+    //                  if(existeCliente === undefined){
+            sails.log.info("[[clienteController-addAddress]] se procede a crear el domicilio");
+            if(data.Address.User || data.Address.Client){
+                var domicilio  = await Domicilio.create(data.Address).fetch();
+                sails.log.info("[[clienteController-addAddress]] Domicilio creado con exito");   
+                res.status(200).json({message:"Domicilio creado con exito"} )
+            }else{
+                res.status(400).json({error:" la dirección debe estar asociada a un cliente o usuario"})
+            }
+          } catch (err) {
+            console.log(err)
+            sails.log.error("error" + JSON.stringify(err))
+            res.status(err.code).json(err.message);
+          }
         var currentUser = await  base.CheckToken(req.headers['access-token']);              
                 if(currentUser){       
                     if(await base.CheckAuthorization(currentUser,'Cliente','Create',req.ip,res)){
@@ -54,7 +75,10 @@ module.exports = {
                 if(currentUser){
                     if( base.CheckAuthorization(currentUser,'Cliente','View',req.ip,res)){
                         try {
-                            base.SeeElements(Cliente,'Clientes',res);
+                            let clientes =await Cliente.find({Eliminated: false}).populate('Adress');
+                            let validaciones  =await _validaciones.ValidarEntidad(clientes,"cliente");
+                            res.json(clientes)
+                            // base.SeeElements(Cliente,'Clientes',res);
                         } catch (error) {
                             sails.log.debug(error)
                             res.status(401).json({error: "Acceso denegado"})
