@@ -59,7 +59,7 @@ module.exports = {
         try{
             let currentuser = await _validaciones.validarRequest(req,"Turno","Delete");
             var data = req.body;
-            let validacion =  await _validaciones.validarRequestEliminarEntidad(data.id);
+            let validacion =  await _validaciones.validarRequestIdEntidad(data.id);
             validacion = await _validaciones.validarExistenciaEliminar({id : data.id},Turno);
             sails.log.info("[[turnoController.createassist]]se procede a eliminar turno")
             var turno = await Turno.update({id:data.id}).set({Eliminated:true});
@@ -112,8 +112,8 @@ module.exports = {
         try{
             let currentuser = await _validaciones.validarRequest(req,"Turno","Delete");
             var data = req.body
-            let validacion = await _validaciones.validarRequestEliminarEntidad(data.Turno);
-            validacion = await _validaciones.validarRequestEliminarEntidad(data.User);
+            let validacion = await _validaciones.validarRequestIdEntidad(data.Turno);
+            validacion = await _validaciones.validarRequestIdEntidad(data.User);
             var turnoAsignado = await TurnosAsignados.find({
              id: data.Turno,
              }).populate('Users');

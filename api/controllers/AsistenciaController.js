@@ -96,6 +96,7 @@ module.exports = {
         validaciones = _validaciones.ValidarRequestCrearAsistencia(data)
         sails.log.info("[[asistenciaController.createassist]]se procede a crear asistencia")
         var datos = {
+          OutTime:data.Asistencia.InTime,
           InTime:data.Asistencia.InTime,
           User: data.Asistencia.User
         }

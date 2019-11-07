@@ -27,7 +27,7 @@ module.exports = {
     try {
       let currentUser = await _validaciones.validarRequest(req, 'Usuario', 'View');
       var data = req.body;
-      let validacion = await _validaciones.validarRequestEliminarEntidad(data.id);
+      let validacion = await _validaciones.validarRequestIdEntidad(data.id);
       var destruido = await User.update({ id: data.id }).set({ Eliminated: true }).fetch();
       validacion = _validaciones.ValidarEntidad(destruido, "Usuario");
       res.status(200).json({ message: ' Usuario eliminado' });
@@ -91,7 +91,7 @@ module.exports = {
     try{
       let currentUser = await _validaciones.validarRequest(req, 'Usuario', 'View');
       var parametros = req.allParams();
-      let validacion = await _validaciones.validarRequestEliminarEntidad(parametros.id);
+      let validacion = await _validaciones.validarRequestIdEntidad(parametros.id);
       var usuario = await User.findOne({id: parametros.id}).populate('Authorizations');
       validacion = _validaciones.ValidarExistenciaLogin(usuario);
       res.status(200).json({Authorizations: usuario.Authorizations});
@@ -256,7 +256,7 @@ module.exports = {
     try{
       var data = req.allParams();
       let currentUser = await _validaciones.validarRequest(req,'Usuario','View');
-      let validacion = await _validaciones.validarRequestEliminarEntidad(data.id);
+      let validacion = await _validaciones.validarRequestIdEntidad(data.id);
       var usuario = await User.findOne({id: data.id}).decrypt().populate('Adress');
       validacion = await _validaciones.ValidarEntidad(usuario,"Usuario")
       res.status(200).json({user: usuario})

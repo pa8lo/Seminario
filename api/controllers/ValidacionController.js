@@ -69,7 +69,7 @@ module.exports = {
             throw _error.GenerateError("Se han ingresado datos erroneos",401) 
         }
     },
-    validarRequestEliminarEntidad:function(id){
+    validarRequestIdEntidad:function(id){
         if (!id) {
             throw _error.GenerateError("faltan ingresar parametros",400) 
             } 
