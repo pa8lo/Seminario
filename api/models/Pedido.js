@@ -55,6 +55,16 @@ module.exports = {
       via:'Orders'
     },
 
+    ProductosPorPedido:{
+      collection:'productosporpedido',
+      via: 'Order'
+    },
+
+    CombosPorPedido:{
+      collection:'combosporpedido',
+      via: 'Order'
+    },
+
     Offers:{
       collection:'combo',
       via:'Orders'

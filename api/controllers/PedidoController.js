@@ -13,7 +13,13 @@ module.exports = {
     if (await base.validator(req, res, "Pedido", "View")) {
       var pedido = await Pedido.find({
         Eliminated: false
-      }).populate('State').populate('Products').populate('Users').populate('Clients').populate('Adress').populate('Delivery');
+      }).populate('State')
+        .populate('ProductosPorPedido')
+        .populate('Products')
+        .populate('Users')
+        .populate('Clients')
+        .populate('Adress')
+        .populate('Delivery');
       res.status(messages.response.ok).json(pedido)
     }
   },
@@ -22,7 +28,7 @@ module.exports = {
     if (await base.validator(req, res, "Pedido", "Create")) {
       try {
         if (await base.ElementExist(Estado, req.body.State) &&
-          await base.ElementExist(Producto, req.body.Products) &&
+          // await base.ElementExist(Producto, req.body.Products) &&
           await base.ElementExist(User, req.body.Users) &&
           await base.ElementExist(Cliente, req.body.Clients) &&
           await base.ElementExist(Domicilio, req.body.Adress)) {
@@ -30,22 +36,32 @@ module.exports = {
           let date = new Date()
           let fecha =  date.getFullYear()+"-"+date.getMonth()+"-"+date.getDay()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()
           req.body.Date = fecha
+          let validaciones = await _validaciones.ValidarProductoxPedido(req.body.ProductosPorPedido);
+          validaciones = await _validaciones.ValidarComboxPedido(req.body.CombosPorPedido);
+          req.body.Products = await DevolverIdsProducto(req.body.ProductosPorPedido);
+          req.body.Offers = await DevolverIdsCombos(req.body.CombosPorPedido);
+          //TODO validar productos
+          req.body.ProductosPorPedido = await CrearProductoPorPedidos(req.body.ProductosPorPedido);
+          //TODO validar combos
+          //TODO unificar metodos de combos por pedidos y productos por pedidos
+          req.body.CombosPorPedido = await CrearCombosPorPedidos(req.body.CombosPorPedido);
+          sails.log.info("se va a crear el pedido"+JSON.stringify(req.body))
           var pedido = await Pedido.create(req.body).fetch()
+          pedido = await Pedido.find({id:pedido.id}).populate("ProductosPorPedido").populate("CombosPorPedido")
           sails.log.info("el usuario " + currentUser.Id + "Creo el pedido " + pedido.id)
-          res.status(messages.response.ok).json({
-            message: "Pedido creado"
-          })
+           res.status(messages.response.ok).json({
+             pedido
+           })
         } else {
           sails.log.info("Se quiso crear un pedido con objetos no existentes");
           res.status(messages.response.noFound).json({
             error: "Alguno de los elementos enviados no existe"
           })
         }
-      } catch (error) {
-        sails.log.error("existio un error para crear el pedido : " + error)
-        res.status(400).json({
-          error: "error al crear el pedido"
-        })
+      } catch (err) {
+        console.log(err)
+        sails.log.error("error" + JSON.stringify(err))
+        res.status(err.code).json(err.message);
       }
     }
   },
@@ -70,3 +86,58 @@ module.exports = {
   }
 
 };
+async function  CrearProductoPorPedidos(productosPorPedido){
+  sails.log.info("se proceden a crear los productos por pedido"+JSON.stringify(productosPorPedido))
+  let idsProductoPorPedido = []
+  await Promise.all(productosPorPedido.map(async (productoxpedido) => {
+    let idProducto = await ProductosPorPedido
+                            .create(productoxpedido)
+                            .fetch()
+    sails.log.info("se creo el productoxpedido"+JSON.stringify(idProducto))
+    idsProductoPorPedido.push(idProducto.id)
+  })).then(() =>{
+    sails.log.info("Se crearon bien todos los productos por pedido")
+  }).catch(err => {
+    sails.log.error("se produjo un error al crear el pedido por producto" + JSON.stringify(err))
+  })
+  sails.log.info("se devielven los id "+idsProductoPorPedido)
+  return idsProductoPorPedido
+}
+async function  CrearCombosPorPedidos(combosporpedido){
+  sails.log.info("se proceden a crear los combos  por pedido"+JSON.stringify(combosporpedido))
+  let idsCombosPorPedido = []
+  await Promise.all(combosporpedido.map(async (comboxpedido) => {
+    sails.log.info("se procede a crear el combo por pedido"+JSON.stringify(comboxpedido))
+      let Combo = await CombosPorPedido
+                            .create(comboxpedido)
+                            .fetch()
+    sails.log.info("se creo el productoxpedido"+JSON.stringify(Combo))
+    idsCombosPorPedido.push(Combo.id)
+  })).then(() =>{
+    sails.log.info("Se crearon bien todos los combos por pedido")
+  }).catch(err => {
+    sails.log.error("se produjo un error al crear el combo por pedido" + JSON.stringify(err))
+  })
+  sails.log.info("se devielven los id "+idsCombosPorPedido)
+  return idsCombosPorPedido
+}
+async function DevolverIdsProducto(productosPorPedido){
+  let idsProductos= []
+  await Promise.all(productosPorPedido.map(async (productoxpedido) => {
+    sails.log.info("se guarda en id "+productoxpedido.Product)  
+    idsProductos.push(productoxpedido.Product)
+  })).catch(err => 
+    sails.log.error("se produjo un error al intentar extraer ids de producto"))
+    sails.log.info("se devuelven los id "+idsProductos)  
+  return idsProductos
+}
+async function DevolverIdsCombos(combosporpedido){
+  let idsCombos= []
+  await Promise.all(combosporpedido.map(async (comboxpedido) => {
+    sails.log.info("se guarda en id "+comboxpedido.Offer)  
+    idsCombos.push(comboxpedido.Offer)
+  })).catch(err => 
+    sails.log.error("se produjo un error al intentar extraer ids de combos"))
+    sails.log.info("se devuelven los id "+idsCombos)  
+  return idsCombos;
+}

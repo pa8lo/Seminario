@@ -45,7 +45,11 @@ module.exports = {
     Products:{
       collection:'producto',
       via:'Offers'
-    }
+    },
+    CombosPorPedido:{
+      collection:'combosporpedido',
+      via: 'Offer'
+    },
   },
 
 };

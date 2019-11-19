@@ -1,7 +1,7 @@
 /**
- * Producto.js
+ * ProductosPorPedido.js
  *
- * @description :: A model definition.  Represents a database table/collection/etc.
+ * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
@@ -9,25 +9,14 @@ module.exports = {
 
   attributes: {
 
+    Count:{
+        type:'number',
+        required:true
+      },
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
-    Description:{
-      type:'string',
-      required:true
-    },
-    Name:{
-      type:'string',
-      required:true
-    },
-    Amount:{
-      type:'string',
-      required:true
-    },
-    Eliminated:{
-      type: 'boolean',
-      defaultsTo: false, 
-    },
+
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
@@ -37,25 +26,13 @@ module.exports = {
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
-    Orders:{
-      collection:'pedido',
-      via:'Products'
+    Product:{
+      model:'producto',
     },
-    ProductosPorPedido:{
-      collection:'productosporpedido',
-      via: 'Product'
+    Order:{
+      model:'pedido',
     },
-    Offers:{
-      collection:'combo',
-      via:'Products'
-    },
-    Items:{
-      collection:'item',
-      via:'Products'
-    },
-    Category:{
-      model:'categoria',
-    }
+    
   },
 
 };

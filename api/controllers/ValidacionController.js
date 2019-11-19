@@ -46,6 +46,36 @@ module.exports = {
             throw _error.GenerateError("Se han ingresado datos erroneos",401) 
         }
     },
+    ValidarProductoxPedido: function(productosxpedido){
+        let errors = false;
+        console.log(JSON.stringify(productosxpedido))
+        productosxpedido.forEach(productoxpedido => {
+            console.log(JSON.stringify(productoxpedido.Product))
+            sails.log.info("se procede a validar producto por pedido : " + productoxpedido)
+            if(!productoxpedido.Product || productoxpedido.Product.length == 0  || productoxpedido.Count.length == 0 ){
+                errors = true
+            }
+        })
+        if(errors){
+            throw _error.GenerateError("faltan ingresar parametros de algun producto",400)  
+        }
+        
+    },
+    ValidarComboxPedido: function(combosxpedido){
+        let errors = false;
+        console.log(JSON.stringify(combosxpedido))
+        combosxpedido.forEach(comboxpedido => {
+            console.log(JSON.stringify(comboxpedido.Product))
+            sails.log.info("se procede a validar combo por pedido : " + comboxpedido)
+            if(!comboxpedido.Offer || comboxpedido.Offer.length == 0  || comboxpedido.Count.length == 0 ){
+                errors = true
+            }
+        })
+        if(errors){
+            throw _error.GenerateError("faltan ingresar parametros de algun producto",400)  
+        }
+        
+    },
     ValidarFechaAsistencia: function(_asistencia,_asistenciaExistente){
         let horarioIngreso;
         let horarioSalida ;
