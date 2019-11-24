@@ -69,15 +69,19 @@ module.exports = {
   assignDelivery: async function(req,res){
     try {
       const data = req.body;
+      sails.log.info("Se procede a validar parametros")
       let validacion = await _validaciones.validarRequestIdEntidad(data.Delivery.id);
       validacion = await _validaciones.validarRequestIdEntidad(data.Pedido.id);
+      sails.log.info("Se procede a buscar delivery")
       let usuario = await User.findOne({id: data.Delivery.id});
+      sails.log.info("se encontro el delivery con el id "+usuario.id)
       validacion = await _validaciones.ValidarEntidad(usuario,"Delivery");
       let pedido = await Pedido.find({id:data.Pedido.id})
       validacion = await _validaciones.ValidarEntidad(pedido,"Pedido");
+      sails.log.info("se procede a asignar el delivery al pedido")
       pedido.Delivery = data.Delivery.id;
-
-      let ped = await Pedido.update({ id: pedido.id }).set(pedido).fetch();
+      sails.log.info(pedido)
+      let ped = await Pedido.update({ id: pedido.id }).set({Delivery:data.Delivery.id}).fetch();
       console.log(ped)
       res.status(200).json({  })
     } catch (err) {
@@ -142,3 +146,4 @@ async function DevolverIdsCombos(combosporpedido){
     sails.log.info("se devuelven los id "+idsCombos)  
   return idsCombos;
 }
+
