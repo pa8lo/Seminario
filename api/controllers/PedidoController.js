@@ -15,6 +15,7 @@ module.exports = {
         Eliminated: false
       }).populate('State')
         .populate('ProductosPorPedido')
+        .populate('CombosPorPedido')
         .populate('Products')
         .populate('Users')
         .populate('Clients')
