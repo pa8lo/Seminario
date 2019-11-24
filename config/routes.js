@@ -157,9 +157,13 @@ module.exports.routes = {
 
 'GET /Pedido/Pedidos' : 'PedidoController.Orders',
 
+'GET /Pedido/Delivery' : 'PedidoController.OrdersByDelivery',
+
 'POST /Pedido/Create' : 'PedidoController.CreateOrder',
 
 'POST /Pedido/Asignar' : 'PedidoController.assignDelivery',
+
+
 
 
 //ENDPOINTS ESTADO

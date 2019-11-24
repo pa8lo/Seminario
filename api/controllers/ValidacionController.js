@@ -30,6 +30,15 @@ module.exports = {
         validacion = await CheckAuthorization(currentuser,CategoriaPermiso,NombrePermiso);
         return currentuser;
     },
+    ValidarToken:async function(req){
+        if(req.headers['access-token']){
+            let currentuser = await CheckToken(req.headers['access-token']);
+            return currentuser
+        }else{
+            throw _error.GenerateError("Medidas de seguridad no ingresadas",401) 
+        }
+    },
+
     ValidarRequestLogin:function(data){
         if (!data.Dni || !data.Password){
             throw _error.GenerateError("faltan ingresar parametros",400) 
@@ -40,6 +49,12 @@ module.exports = {
             throw _error.GenerateError("faltan ingresar parametros",400) 
         }
         ValidarFecha(sails.moment(data.Asistencia.InTime));
+    },
+    ValidarRequestBuscarxDelivery(id){
+        if(!id || id.length == 0 || id == 0){
+            throw _error.GenerateError("faltan ingresar parametros",400) 
+        }
+        sails.log.info("parametros ingresados correctamente")
     },
     ValidarExistenciaLogin: function(user){
         if(!user || user.length ==0){

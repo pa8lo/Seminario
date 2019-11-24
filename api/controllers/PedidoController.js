@@ -24,6 +24,19 @@ module.exports = {
       res.status(messages.response.ok).json(pedido)
     }
   },
+  OrdersByDelivery: async function (req,res){
+    try{
+      sails.log.info("se inicia la busqueda de los pedidos para el delivery")
+      var data = req.allParams();
+      let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
+      sails.log.info("se busco este usuario"+JSON.stringify(currentUser))
+      let pedidos = await Pedido.find({Delivery:currentUser.id})
+      sails.log.info("se devuelven los pedidos"+JSON.stringify(pedidos))
+      res.status(200).json(pedidos)
+    }catch(err){
+
+    }
+  },
 
   createOrder: async function (req, res) {
     if (await base.validator(req, res, "Pedido", "Create")) {
