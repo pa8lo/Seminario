@@ -20,7 +20,7 @@ module.exports = {
         var currentUser =await base.CheckToken(req.headers['access-token']);
         var estado = await Estado.create(req.body).fetch()
         sails.log.info("el usuario " + currentUser.Id + "Creo el estado " + estado.id)
-        res.status(messages.response.created).json(
+        res.status(messages.response.ok).json(
           estado
         )
       } catch (error) {

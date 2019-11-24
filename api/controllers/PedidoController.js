@@ -30,7 +30,7 @@ module.exports = {
       var data = req.allParams();
       let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
       sails.log.info("se busco este usuario"+JSON.stringify(currentUser))
-      let pedidos = await Pedido.find({Delivery:currentUser.id})
+      let pedidos = await Pedido.find({Delivery:currentUser.id}).populate('Adress').populate('Clients').populate('Users').populate('State')
       sails.log.info("se devuelven los pedidos"+JSON.stringify(pedidos))
       res.status(200).json(pedidos)
     }catch(err){
@@ -63,7 +63,7 @@ module.exports = {
           var pedido = await Pedido.create(req.body).fetch()
           pedido = await Pedido.find({id:pedido.id}).populate("ProductosPorPedido").populate("CombosPorPedido")
           sails.log.info("el usuario " + currentUser.Id + "Creo el pedido " + pedido.id)
-           res.status(messages.response.ok).json({
+           res.status(messages.response.created).json({
              pedido
            })
         } else {

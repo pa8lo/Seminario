@@ -59,7 +59,7 @@ module.exports = {
               });
 
               sails.log.info("el usuario " + currentUser.Id + "Creo el combo " + combo.id)
-              res.status(201).json(combo)
+              res.status(200).json(combo)
               }else{
                 res.status(404).json({
                   error: "algun producto ingresado no existe"
