@@ -57,7 +57,7 @@ module.exports = {
               }else{
                 var producto = await Producto.create(req.body).fetch()
                 sails.log.info("el usuario " + currentUser.Id + "Creo el producto " + producto.id)
-                res.status(201).json({
+                res.status(200).json({
                   producto
                 })
               }

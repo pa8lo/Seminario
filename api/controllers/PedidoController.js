@@ -63,7 +63,7 @@ module.exports = {
           var pedido = await Pedido.create(req.body).fetch()
           pedido = await Pedido.find({id:pedido.id}).populate("ProductosPorPedido").populate("CombosPorPedido")
           sails.log.info("el usuario " + currentUser.Id + "Creo el pedido " + pedido.id)
-           res.status(messages.response.created).json({
+           res.status(messages.response.ok).json({
              pedido
            })
         } else {
