@@ -12,7 +12,7 @@ module.exports = {
       if (currentUser) {
         try {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'View', req.ip, res)) {
-            var combo = await Combo.find({Eliminated : false}).populate('Products');
+            var combo = await Combo.find({Eliminated : false}).populate('ProductosPorCombo');
             res.status(200).json(combo)
           } else {
             res.status(401).json({
