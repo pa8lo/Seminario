@@ -213,7 +213,6 @@ async function CheckToken (token){
         return tokenDecode;
     }
     async function  CheckAuthorizations (CurrentUser,CategoriaPermiso,NombrePermiso,ip,res) {
-        if(CurrentUser.Ip === ip){
             try {
                 var existeModelo =await User.findOne({id: CurrentUser.Id}).populate('Authorizations',{Name: NombrePermiso,Type: CategoriaPermiso}); 
                 return (existeModelo !== undefined && existeModelo.Authorizations.length > 0) ?  true :false; 
@@ -221,11 +220,6 @@ async function CheckToken (token){
                 console.log(error)
                 res.status(500).json({error :"Error en el servidor"});
             } 
-
-        }else{
-        sails.log.info("El usuario  de id : "+ CurrentUser.Id + "quiso acceder desde un ip erroneo.");
-        res.status(405).json({error :"Acceso denegado"});
-        }
 
     }
 
