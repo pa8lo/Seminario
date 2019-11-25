@@ -50,6 +50,10 @@ module.exports = {
       collection:'combosporpedido',
       via: 'Offer'
     },
+    ProductosPorCombo:{
+      collection:'productosporcombos',
+      via:'Offer'
+    }
   },
 
 };

@@ -43,22 +43,15 @@ module.exports = {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'Create', req.ip, res)) {
             try {
               var data = req.body
-              var producto = await Producto.find({id: data.Products})
-              sails.log.info("productos encontrados"+producto.length);
-              sails.log.info("productos encontrados"+data.Products);
-              if(producto.length == data.Products.length){
-                var combo = await Combo.create(data.Combo).fetch()
+              // var producto = await Producto.find({id: data.Products})
+              // sails.log.info("productos encontrados"+producto.length);
+              // sails.log.info("productos encontrados"+data.Products);
+              if(true){
+                req.body.Combo.ProductosPorCombo = await CrearProductoPorCombos(req.body.Combo.ProductosPorCombo);
+                var combo = await Combo.create(req.body.Combo).fetch()
               sails.log.info("Se creo el combo con el id "+combo.id)
-              await data.Products.forEach(async product => {
-                await Combo.addToCollection(combo.id , "Products")
-                  .members(product);
-                  await Combo.addToCollection(product , "Products")
-                  .members(combo.id);
-
-                sails.log.info("permiso con el id "+combo.id+" agregado correctamente")
-              });
-
               sails.log.info("el usuario " + currentUser.Id + "Creo el combo " + combo.id)
+               combo = await Combo.find({id:combo.id}).populate('ProductosPorCombo')
               res.status(200).json(combo)
               }else{
                 res.status(404).json({
@@ -266,3 +259,30 @@ module.exports = {
         }
 }
 };
+async function DevolverIdsProducto(productosPorCombos){
+  let idsProductos= []
+  await Promise.all(productosPorPedido.map(async (productoxpedido) => {
+    sails.log.info("se guarda en id "+productoxpedido.Product)  
+    idsProductos.push(productoxpedido.Product)
+  })).catch(err => 
+    sails.log.error("se produjo un error al intentar extraer ids de producto"))
+    sails.log.info("se devuelven los id "+idsProductos)  
+  return idsProductos
+}
+async function  CrearProductoPorCombos(productosPorCombos){
+  sails.log.info("se proceden a crear los productos por combo"+JSON.stringify(productosPorCombos))
+  let idsProductoPorCombo = []
+  await Promise.all(productosPorCombos.map(async (productoxcombo) => {
+    let idProducto = await ProductosPorCombos
+                            .create(productoxcombo)
+                            .fetch()
+    sails.log.info("se creo el productoxcombo"+JSON.stringify(idProducto))
+    idsProductoPorCombo.push(idProducto.id)
+  })).then(() =>{
+    sails.log.info("Se crearon bien todos los productos por pedido")
+  }).catch(err => {
+    sails.log.error("se produjo un error al crear el pedido por producto" + JSON.stringify(err))
+  })
+  sails.log.info("se devielven los id "+idsProductoPorCombo)
+  return idsProductoPorCombo
+}
