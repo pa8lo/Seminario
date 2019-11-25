@@ -81,6 +81,7 @@ module.exports = {
   },
   assignDelivery: async function(req,res){
     try {
+      //Todo agregar seguridad
       const data = req.body;
       sails.log.info("Se procede a validar parametros")
       let validacion = await _validaciones.validarRequestIdEntidad(data.Delivery.id);
@@ -100,6 +101,14 @@ module.exports = {
     } catch (err) {
       sails.log.error("error" + JSON.stringify(err))
       res.status(err.code).json(err.message);
+    }
+  },
+  ChangeState: async function(req,res){
+    try {
+      //Todo pensar seguridad
+
+    } catch (error) {
+      
     }
   }
 

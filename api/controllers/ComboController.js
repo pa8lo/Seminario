@@ -13,13 +13,15 @@ module.exports = {
         try {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'View', req.ip, res)) {
             var combo = await Combo.find({Eliminated : false}).populate('ProductosPorCombo');
-            res.status(200).json(combo)
+            let respuesta = await AgregarDatosProductos(combo)
+            res.status(200).json(respuesta)
           } else {
             res.status(401).json({
               error: "Acceso denegado"
             })
           }
         } catch (error) {
+          sails.log.error(error)
           res.status(401).json({
             error: "Acceso denegado"
           })
@@ -268,6 +270,20 @@ async function DevolverIdsProducto(productosPorCombos){
     sails.log.error("se produjo un error al intentar extraer ids de producto"))
     sails.log.info("se devuelven los id "+idsProductos)  
   return idsProductos
+}
+async function AgregarDatosProductos(combo){
+  await Promise.all(combo.map(async (c) =>{
+     await Promise.all(c.ProductosPorCombo.map(async (productoporcombo) => {
+        let producto = await Producto.find({id: productoporcombo.Product})
+        sails.log.info(producto)
+        productoporcombo.Product = producto
+        sails.log.info(productoporcombo)
+      }))
+  })).catch(err => 
+    sails.log.error("se produjo un error al intentar extraer ids de producto"))
+    sails.log.info("se devuelve el combo modificado")
+    sails.log.info(combo)  
+  return combo
 }
 async function  CrearProductoPorCombos(productosPorCombos){
   sails.log.info("se proceden a crear los productos por combo"+JSON.stringify(productosPorCombos))
