@@ -70,28 +70,17 @@ module.exports = {
     },    
 
     Clients : async function (req,res) {
-            if(req.headers['access-token']){
-                var currentUser = await base.CheckToken(req.headers['access-token']);
-                if(currentUser){
-                    if( base.CheckAuthorization(currentUser,'Cliente','View',req.ip,res)){
-                        try {
-                            let clientes =await Cliente.find({Eliminated: false}).populate('Adress');
-                            let validaciones  =await _validaciones.ValidarEntidad(clientes,"cliente");
-                            res.json(clientes)
-                            // base.SeeElements(Cliente,'Clientes',res);
-                        } catch (error) {
-                            sails.log.debug(error)
-                            res.status(401).json({error: "Acceso denegado"})
-                        }
-                    }
-
-                }else{
-                    return res.status(401).json({ error: 'Acceso denegado.' });
-                }   
-
-            }else{
-                return res.status(401).json({ error: 'Medidas de seguridad no ingresadas.' });
-            }   
+        try {
+            let currentUser = await _validaciones.validarRequest(req, 'Usuario', 'View');
+            let clientes = await Cliente.find({Eliminated: false}).populate('Adress');
+            let validaciones  =await _validaciones.ValidarEntidad(clientes,"cliente");
+            res.json(clientes)
+        } catch (err) {
+            console.log(err)
+            sails.log.error("error" + JSON.stringify(err))
+            res.status(err.code).json(err.message);
+          }
+            
 
         },
         Client : async function (req,res){
