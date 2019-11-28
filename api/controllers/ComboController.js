@@ -4,8 +4,26 @@
  * @description :: Server-side actions for handling incoming requests.
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
-var base = require('./BaseController.js')
+var base = require('./BaseController.js');
+var _validaciones = require('./ValidacionController');
+
 module.exports = {
+  Offert : async function (req,res){
+    try{
+      var data = req.allParams();
+      let currentUser = await _validaciones.validarRequest(req,'Producto','View');
+      let validacion = await _validaciones.validarRequestIdEntidad(data.id);
+      var combo = await Combo.findOne({id: data.id, Eliminated:false}).populate('ProductosPorCombo');
+      sails.log.info("se encontro el combo")
+      sails.log.info(combo)
+      validacion = await _validaciones.ValidarEntidad(combo,"Combo")
+      let respuesta = await AgregarProductosACombo(combo.ProductosPorCombo)
+      res.status(200).json(combo)
+    }catch(err){
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
+    }
+  },
   Offerts: async function (req, res) {
     if (req.headers['access-token']) {
       var currentUser = await base.CheckToken(req.headers['access-token']);
@@ -261,13 +279,19 @@ module.exports = {
         }
 }
 };
+async function AgregarProductosACombo(productosPorCombo){
+  sails.log.info("se procede a agregar Productos a combos")
+  sails.log.info(productosPorCombo);
+  Promise.all(productosPorCombo.map(async (productoporcombo) => {
+    let producto = await Producto.find({id: productoporcombo.Product})
+    productoporcombo.Product = producto
+  }))
+  return productosPorCombo;
+}
 async function AgregarDatosProductos(combo){
   sails.log.info("se procede a agregar información de los productos")
   await Promise.all(combo.map(async (c) =>{
-     await Promise.all(c.ProductosPorCombo.map(async (productoporcombo) => {
-        let producto = await Producto.find({id: productoporcombo.Product})
-        productoporcombo.Product = producto
-      }))
+     await AgregarProductosACombo(c.ProductosPorCombos);
   })).catch(err => 
     sails.log.error("se produjo un error al intentar extraer ids de producto"))
     sails.log.info("información agregada")

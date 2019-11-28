@@ -193,6 +193,8 @@ module.exports.routes = {
 //
 'GET /Offerts/Offerts' : 'ComboController.Offerts',
 
+'GET /Offerts/Offert' : 'ComboController.Offert',
+
 'POST /Offerts/Create' : 'ComboController.createOffert',
 
 'POST /Offerts/Delete' : 'ComboController.deleteOffert',
