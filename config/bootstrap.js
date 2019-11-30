@@ -11,6 +11,7 @@
 
 module.exports.bootstrap = async function(done) {
   sails.moment = require('moment');
+  sails.nestedPop = require('nested-pop');
   // By convention, this is a good place to set up fake data during development.
   //
   // For example:

@@ -277,7 +277,18 @@ module.exports = {
             erros: 'Medidas de seguridad no ingresadas.'
           })
         }
-}
+  },
+  CompletarDatosProductosPedido: async function(pedidos){
+    sails.log.debug(pedidos)
+    if(pedidos){
+      await Promise.all(pedidos.map(async (pedido) =>{
+        await AgregarDatosProductos(pedidos.CombosPorPedido)
+      })).catch(err => 
+        sails.log.error("se produjo un error al intentar extraer ids de producto"))
+        sails.log.info("información agregada")
+      
+    }
+  }
 };
 async function AgregarProductosACombo(productosPorCombo){
   sails.log.info("se procede a agregar Productos a combos")
@@ -290,6 +301,7 @@ async function AgregarProductosACombo(productosPorCombo){
 }
 async function AgregarDatosProductos(combo){
   sails.log.info("se procede a agregar información de los productos")
+  sails.log.info(combo)
   await Promise.all(combo.map(async (c) =>{
      await AgregarProductosACombo(c.ProductosPorCombos);
   })).catch(err => 
@@ -298,6 +310,7 @@ async function AgregarDatosProductos(combo){
     sails.log.info(combo)  
   return combo
 }
+
 async function  CrearProductoPorCombos(productosPorCombos){
   sails.log.info("se proceden a crear los productos por combo"+JSON.stringify(productosPorCombos))
   let idsProductoPorCombo = []

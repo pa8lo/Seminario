@@ -35,7 +35,6 @@ module.exports = {
     
     LatLong:{
       type: 'string',
-      required:true,
       description:'Latitud y longitud del cliente'
     },
 

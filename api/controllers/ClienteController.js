@@ -85,6 +85,9 @@ module.exports = {
         },
         Client : async function (req,res){
             var data = req.allParams();
+            sails.log.info(req.allParams())
+            sails.log.info("llega la siguiente información en request:")
+            sails.log.info(data)
             if(req.headers['access-token']){ 
                 var currentUser = base.CheckToken(req.headers['access-token']);
                     if(currentUser){

@@ -7,11 +7,12 @@
 var messages = require("../globals/index");
 var base = require('./BaseController.js')
 var _validaciones = require('./ValidacionController');
+var _comboController = require('./ComboController');
 
 module.exports = {
   Orders: async function (req, res) {
     if (await base.validator(req, res, "Pedido", "View")) {
-      var pedido = await Pedido.find({
+      var pedidos = await Pedido.find({
         Eliminated: false
       }).populate('State')
         .populate('ProductosPorPedido')
@@ -20,8 +21,29 @@ module.exports = {
         .populate('Users')
         .populate('Clients')
         .populate('Adress')
-        .populate('Delivery');
-      res.status(messages.response.ok).json(pedido)
+        .populate('Delivery')
+        .then(function(pedidos) {
+ 
+          return sails.nestedPop(pedidos, {
+            CombosPorPedido: [
+                  'Offer'
+              ],
+            ProductosPorPedido: [
+                  'Product'
+            ]  
+          }).then(function(users) {
+              return users
+          }).catch(function(err) {
+              throw err;
+          });
+          
+      }).catch(function(err) {
+          throw err;
+      })
+      
+        // await _comboController.CompletarDatosProductosPedido(pedidos);
+        
+      res.status(messages.response.ok).json(pedidos)
     }
   },
   OrdersByDelivery: async function (req,res){
@@ -106,7 +128,7 @@ module.exports = {
   ChangeState: async function(req,res){
     try {
       //Todo pensar seguridad
-
+      
     } catch (error) {
       
     }

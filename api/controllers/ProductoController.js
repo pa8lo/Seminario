@@ -240,3 +240,22 @@ async function CheckToken (token){
         });
         return tokenDecode;
     }
+async function AgregarProductosACombo(productosPorPedido){
+      sails.log.info("se procede a agregar Productos a combos")
+      sails.log.info(productosPorPedido);
+      Promise.all(productosPorPedido.map(async (productoporpedido) => {
+        let productoporpedido = await Producto.find({id: productoporpedido.Product})
+        productosPorPedido.Product = producto
+      }))
+      return productosPorPedido;
+    }
+async function AgregarDatosProductos(pedidos){
+      sails.log.info("se procede a agregar información de los productos")
+      await Promise.all(pedidos.map(async (c) =>{
+         await AgregarProductosACombo(c.ProductosPorPedido);
+      })).catch(err => 
+        sails.log.error("se produjo un error al intentar extraer ids de producto"))
+        sails.log.info("información agregada")
+        sails.log.info(combo)  
+      return combo
+    }
