@@ -163,7 +163,7 @@ module.exports.routes = {
 
 'POST /Pedido/Asignar' : 'PedidoController.assignDelivery',
 
-
+'POST /Pedido/ChangeState' : 'PedidoController.ChangeState',
 
 
 //ENDPOINTS ESTADO

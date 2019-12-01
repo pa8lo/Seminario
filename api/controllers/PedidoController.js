@@ -11,7 +11,8 @@ var _comboController = require('./ComboController');
 
 module.exports = {
   Orders: async function (req, res) {
-    if (await base.validator(req, res, "Pedido", "View")) {
+    try {
+      let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
       var pedidos = await Pedido.find({
         Eliminated: false
       }).populate('State')
@@ -23,7 +24,6 @@ module.exports = {
         .populate('Adress')
         .populate('Delivery')
         .then(function(pedidos) {
- 
           return sails.nestedPop(pedidos, {
             CombosPorPedido: [
                   'Offer'
@@ -36,14 +36,14 @@ module.exports = {
           }).catch(function(err) {
               throw err;
           });
-          
       }).catch(function(err) {
           throw err;
       })
-      
-        // await _comboController.CompletarDatosProductosPedido(pedidos);
-        
       res.status(messages.response.ok).json(pedidos)
+    } catch (err) {
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
     }
   },
   OrdersByDelivery: async function (req,res){
@@ -56,7 +56,9 @@ module.exports = {
       sails.log.info("se devuelven los pedidos"+JSON.stringify(pedidos))
       res.status(200).json(pedidos)
     }catch(err){
-
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
     }
   },
 
@@ -129,10 +131,16 @@ module.exports = {
   },
   ChangeState: async function(req,res){
     try {
-      //Todo pensar seguridad
-      
-    } catch (error) {
-      
+      let data = req.body
+      let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'Edit');
+      var ExisteEstado = await Estado.findOne({id:data.State.id})
+      _validaciones.ValidarEntidad(ExisteEstado)
+      var cliente = await Pedido.update({id:data.Pedido.id}).set({State:ExisteEstado.id}).fetch()
+      res.status(200).json(pedido)
+    } catch (err) {
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
     }
   }
 
