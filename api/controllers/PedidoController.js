@@ -70,8 +70,10 @@ module.exports = {
           await base.ElementExist(Domicilio, req.body.Adress)) {
           var currentUser = await base.CheckToken(req.headers['access-token']);
           let date = new Date()
-          let fecha =  date.getFullYear()+"-"+date.getMonth()+"-"+date.getDay()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()
+          let fecha =  date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDay()+1)+" "+(date.getUTCHours()-3)+":"+date.getUTCMinutes()+":"+date.getUTCSeconds()
+          sails.log.info(fecha)
           req.body.Date = fecha
+          sails.log.info(req.body.Date)
           let validaciones = await _validaciones.ValidarProductoxPedido(req.body.ProductosPorPedido);
           validaciones = await _validaciones.ValidarComboxPedido(req.body.CombosPorPedido);
           req.body.Products = await DevolverIdsProducto(req.body.ProductosPorPedido);

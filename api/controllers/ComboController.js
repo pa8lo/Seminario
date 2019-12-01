@@ -25,35 +25,28 @@ module.exports = {
     }
   },
   Offerts: async function (req, res) {
-    if (req.headers['access-token']) {
-      var currentUser = await base.CheckToken(req.headers['access-token']);
-      if (currentUser) {
-        try {
-          if (await base.CheckAuthorization(currentUser, 'Producto', 'View', req.ip, res)) {
-            var combo = await Combo.find({Eliminated : false}).populate('ProductosPorCombo');
-            let respuesta = await AgregarDatosProductos(combo)
-            res.status(200).json(respuesta)
-          } else {
-            res.status(401).json({
-              error: "Acceso denegado"
-            })
-          }
-        } catch (error) {
-          sails.log.error(error)
-          res.status(401).json({
-            error: "Acceso denegado"
-          })
-        }
-      } else {
-        return res.status(401).json({
-          error: 'Acceso denegado.'
-        });
-      }
-    } else {
-      return res.status(401).json({
-        error: 'Medidas de seguridad no ingresadas.'
-      });
-    }
+    // try{
+      let currentUser = await _validaciones.validarRequest(req,'Producto','View');
+      var combo = await Combo.find({Eliminated : false})
+      .populate('ProductosPorCombo')
+      .then(function(combo) {
+        sails.log.info(combo)
+        return sails.nestedPop(combo, {
+            ProductosPorCombos: [
+                'Product'
+          ]  
+        }).then(function(combos) {
+            return combos
+        }).catch(function(err) {
+            throw err;
+        })
+      })
+      // let respuesta = await AgregarDatosProductos(combo)
+      res.status(200).json(combo)
+// }catch(err){
+//       sails.log.error("error" + JSON.stringify(err))
+//       res.status(err.code).json(err.message);
+//     }
   },
   createOffert: async function (req, res) {
     if (req.headers['access-token']) {

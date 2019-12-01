@@ -45,6 +45,10 @@ module.exports = {
       collection:'productosporpedido',
       via: 'Product'
     },
+    ProductosPorCombo:{
+      collection:'productosporcombos',
+      via:'Product'
+    },
     Offers:{
       collection:'combo',
       via:'Products'
@@ -56,6 +60,7 @@ module.exports = {
     Category:{
       model:'categoria',
     }
+
   },
 
 };
