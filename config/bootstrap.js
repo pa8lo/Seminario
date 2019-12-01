@@ -23,7 +23,19 @@ module.exports.bootstrap = async function(done) {
    if (await User.count() > 0) {
      return done();
    }
-  
+   /*
+   *
+   * Creación de estados
+   *
+   */
+  await Estado.create({
+    Description:'Entregado',
+    Key:'E'
+  })
+  await Estado.create({
+    Description:'Finalizado',
+    Key:'F'
+  })
    /*
    *
    * Creación de permisos

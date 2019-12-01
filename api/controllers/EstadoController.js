@@ -5,7 +5,8 @@
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
 var messages = require("../globals/index");
-var base = require('./BaseController.js')
+var base = require('./BaseController.js');
+var _validaciones = require('./ValidacionController');
 module.exports = {
     states: async function (req, res) {
     if (await base.validator(req, res, "Pedido", "View")) {
@@ -15,20 +16,19 @@ module.exports = {
   },
 
   createState: async function (req, res) {
-    if (await base.validator(req, res, "Pedido", "Create")) {
-      try {
-        var currentUser =await base.CheckToken(req.headers['access-token']);
-        var estado = await Estado.create(req.body).fetch()
-        sails.log.info("el usuario " + currentUser.Id + "Creo el estado " + estado.id)
-        res.status(messages.response.ok).json(
-          estado
-        )
-      } catch (error) {
-        sails.log.error("existio un error para crear el estado : " + error)
-        res.status(400).json({
-          error: "error al crear el Estado"
-        })
-      }
+    try {
+      let estadoRequest = req.body
+      let currentUser = await _validaciones.validarRequest(req, "Pedido", "Create");
+      let validacion = await _validaciones.ValidarEstado(estadoRequest)
+      var estado = await Estado.create(estadoRequest).fetch()
+      sails.log.info("el usuario " + currentUser.Id + "Creo el estado " + estado.id)
+      res.status(messages.response.ok).json(
+        estado
+      )
+    } catch (err) {
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
     }
   },
 

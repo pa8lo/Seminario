@@ -49,53 +49,19 @@ module.exports = {
 //     }
   },
   createOffert: async function (req, res) {
-    if (req.headers['access-token']) {
-      var currentUser = await base.CheckToken(req.headers['access-token']);
-      if (currentUser) {
-        try {
-          if (await base.CheckAuthorization(currentUser, 'Producto', 'Create', req.ip, res)) {
-            try {
-              var data = req.body
-              // var producto = await Producto.find({id: data.Products})
-              // sails.log.info("productos encontrados"+producto.length);
-              // sails.log.info("productos encontrados"+data.Products);
-              if(true){
-                req.body.Combo.ProductosPorCombo = await CrearProductoPorCombos(req.body.Combo.ProductosPorCombo);
-                var combo = await Combo.create(req.body.Combo).fetch()
-              sails.log.info("Se creo el combo con el id "+combo.id)
-              sails.log.info("el usuario " + currentUser.Id + "Creo el combo " + combo.id)
-               combo = await Combo.find({id:combo.id}).populate('ProductosPorCombo')
-              res.status(200).json(combo)
-              }else{
-                res.status(404).json({
-                  error: "algun producto ingresado no existe"
-                })
-              }
-              
-            } catch (error) {
-              sails.log.error(error)
-            }
-
-          } else {
-            res.status(401).json({
-              error: "Permisos insuficientes"
-            })
-          }
-        } catch (error) {
-          res.status(401).json({
-            error: "Existio un problema con los permisos"
-          })
-        }
-
-      } else {
-        return res.status(401).json({
-          error: 'Falta ingresar token.'
-        });
-      }
-    } else {
-      return res.status(401).json({
-        error: 'Medidas de seguridad no ingresadas.'
-      });
+    try {
+      let currentUser = await _validaciones.validarRequest(req, 'Producto', 'Create');
+      let validacion = await _validaciones.ValidarProductoxPedido(req.body.Combo.ProductosPorCombo)
+      req.body.Combo.ProductosPorCombo = await CrearProductoPorCombos(req.body.Combo.ProductosPorCombo);
+      var combo = await Combo.create(req.body.Combo).fetch()
+      sails.log.info("Se creo el combo con el id "+combo.id)
+      sails.log.info("el usuario " + currentUser.Id + "Creo el combo " + combo.id)
+     combo = await Combo.find({id:combo.id}).populate('ProductosPorCombo')
+      res.status(200).json(combo)
+    } catch (err) {
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
     }
   },
 
@@ -164,47 +130,21 @@ module.exports = {
     }
   },
   updateOffert: async function (req, res) {
-    if (req.headers['access-token']) {
-      var data = req.body;
-      var currentUser = base.CheckToken(req.headers['access-token']);
-      if (currentUser) {
-        if (await base.CheckAuthorization(currentUser, 'Producto', 'Edit', req.ip, res)) {
-          if (data.Producto.id) {
-            var producto = await Producto.update({
-                id: data.Producto.id
-              })
-              .set({Name:data.Producto.Name,
-                Description :data.Producto.Description
-              }).fetch();
-            if (producto.length === 0) {
-              sails.log.info('Se intento modificar el producto con id :' + producto.id + " pero no existia alguno con ese id");
-              res.status(401).json({
-                error: 'No existe producto.'
-              });
-            } else {
-              sails.log.info('Se modifico el producto con id :' + producto.id);
-              res.status(200).json({
-                message: 'Producto modificado.'
-              });
-            }
-          } else {
-            sails.log.info("el usuario " + currentUser.Id + "No ingreso el id ");
-            res.status(401).json({
-              error: 'Faltan ingresar parametros'
-            });
-          }
-
-        } else {
-          sails.log.info("el usuario " + currentUser.Id + "quiso acceder a un lugar sin permisos");
-          res.status(401).json({
-            error: 'Acceso denegado.'
-          });
-        }
-      }
-    } else {
-      return res.status(401).json({
-        erros: 'Medidas de seguridad no ingresadas.'
+    try {
+      let data = req.body;
+      let currentUser = await _validaciones.validarRequest(req, 'Producto', 'Edit');
+      _validaciones.validarRequestIdEntidad(data.Combo.id)
+      var combo = await Combo.update({
+        id: data.Combo.id
       })
+      .set({Name:data.Combo.Name,
+        Description :data.Combo.Description
+      }).fetch();
+      res.status(200).json(combo)
+    } catch (err) {
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
     }
   },
 

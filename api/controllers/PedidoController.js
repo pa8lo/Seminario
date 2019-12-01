@@ -135,7 +135,7 @@ module.exports = {
       let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'Edit');
       var ExisteEstado = await Estado.findOne({id:data.State.id})
       _validaciones.ValidarEntidad(ExisteEstado)
-      var cliente = await Pedido.update({id:data.Pedido.id}).set({State:ExisteEstado.id}).fetch()
+      var pedido = await Pedido.update({id:data.Pedido.id}).set({State:ExisteEstado.id}).fetch()
       res.status(200).json(pedido)
     } catch (err) {
       console.log(err)
