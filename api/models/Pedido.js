@@ -14,8 +14,7 @@ module.exports = {
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
 
     Date: {
-      type:'string',
-      columnType:'datetime'
+      type: 'ref', columnType: 'datetime'
     },
 
     Amount:{

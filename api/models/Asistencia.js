@@ -13,13 +13,11 @@ module.exports = {
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
     InTime:{
-      type:'string',
-      columnType:'datetime',
+      type: 'ref', columnType: 'datetime',
       required:true
     },
     OutTime:{
-      type:'string',
-      columnType:'datetime',
+      type: 'ref', columnType: 'datetime'
     },
     Hours:{
       type:'number'
