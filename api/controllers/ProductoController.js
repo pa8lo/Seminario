@@ -244,7 +244,7 @@ async function AgregarProductosACombo(productosPorPedido){
       sails.log.info("se procede a agregar Productos a combos")
       sails.log.info(productosPorPedido);
       Promise.all(productosPorPedido.map(async (productoporpedido) => {
-        let productoporpedido = await Producto.find({id: productoporpedido.Product})
+        let producto = await Producto.find({id: productoporpedido.Product})
         productosPorPedido.Product = producto
       }))
       return productosPorPedido;
