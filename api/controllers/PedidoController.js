@@ -61,16 +61,13 @@ module.exports = {
       res.status(err.code).json(err.message);
     }
   },
-
   createOrder: async function (req, res) {
-    if (await base.validator(req, res, "Pedido", "Create")) {
       try {
         if (await base.ElementExist(Estado, req.body.State) &&
-          // await base.ElementExist(Producto, req.body.Products) &&
           await base.ElementExist(User, req.body.Users) &&
           await base.ElementExist(Cliente, req.body.Clients) &&
           await base.ElementExist(Domicilio, req.body.Adress)) {
-          var currentUser = await base.CheckToken(req.headers['access-token']);
+          let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
           let date = new Date()
           let fecha =  date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDay()+1)+" "+(date.getUTCHours()-3)+":"+date.getUTCMinutes()+":"+date.getUTCSeconds()
           sails.log.info(fecha)
@@ -80,10 +77,7 @@ module.exports = {
           validaciones = await _validaciones.ValidarComboxPedido(req.body.CombosPorPedido);
           req.body.Products = await DevolverIdsProducto(req.body.ProductosPorPedido);
           req.body.Offers = await DevolverIdsCombos(req.body.CombosPorPedido);
-          //TODO validar productos
           req.body.ProductosPorPedido = await CrearProductoPorPedidos(req.body.ProductosPorPedido);
-          //TODO validar combos
-          //TODO unificar metodos de combos por pedidos y productos por pedidos
           req.body.CombosPorPedido = await CrearCombosPorPedidos(req.body.CombosPorPedido);
           sails.log.info("se va a crear el pedido"+JSON.stringify(req.body))
           var pedido = await Pedido.create(req.body).fetch()
@@ -103,7 +97,6 @@ module.exports = {
         sails.log.error("error" + JSON.stringify(err))
         res.status(err.code).json(err.message);
       }
-    }
   },
   assignDelivery: async function(req,res){
     try {
@@ -143,7 +136,6 @@ module.exports = {
       res.status(err.code).json(err.message);
     }
   }
-
 };
 async function  CrearProductoPorPedidos(productosPorPedido){
   sails.log.info("se proceden a crear los productos por pedido"+JSON.stringify(productosPorPedido))
