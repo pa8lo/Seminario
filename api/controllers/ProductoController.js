@@ -235,7 +235,7 @@ async function CheckToken (token){
             }
             else {                
             var user = decoded;                                                                           
-            return user;                
+            return user ;                
             }
         });
         return tokenDecode;
@@ -250,6 +250,7 @@ async function AgregarProductosACombo(productosPorPedido){
       return productosPorPedido;
     }
 async function AgregarDatosProductos(pedidos){
+  sails.log.info("AgregarDatosProducto")
       sails.log.info("se procede a agregar información de los productos")
       await Promise.all(pedidos.map(async (c) =>{
          await AgregarProductosACombo(c.ProductosPorPedido);
