@@ -116,7 +116,7 @@ module.exports = {
         }
     },
     ValidarEstado: async function(estado){
-        if(estado.Key.toUpperCase() != 'F' && estado.Key.toUpperCase() != 'R'){
+        if(estado.Key.toUpperCase() != 'E' && estado.Key.toUpperCase() != 'R'){
             let estadoExistente = await Estado.find({Key:estado.Key,Eliminated:false})
             sails.log.info(estadoExistente.length)
             if(estadoExistente && estadoExistente.length > 0){

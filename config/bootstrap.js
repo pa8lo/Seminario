@@ -33,8 +33,8 @@ module.exports.bootstrap = async function(done) {
     Key:'E'
   })
   await Estado.create({
-    Description:'Finalizado',
-    Key:'F'
+    Description:'Rechazado',
+    Key:'R'
   })
    /*
    *

@@ -148,6 +148,32 @@ module.exports = {
       sails.log.error("error" + JSON.stringify(err))
       res.status(err.code).json(err.message);
     }
+  },
+  PedidoEntregadoDelivery: async function(req,res){
+    try {
+      let data = req.body
+      var ExisteEstado = await Estado.findOne({Key:'E'})
+      _validaciones.ValidarEntidad(ExisteEstado)
+      var pedido = await Pedido.update({id:data.Pedido.id}).set({State:ExisteEstado.id}).fetch()
+      res.status(200).json(pedido)
+    } catch (err) {
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
+    }
+  },
+  PedidoRechazadoDelivery: async function(req,res){
+    try {
+      let data = req.body
+      var ExisteEstado = await Estado.findOne({Key:'R'})
+      _validaciones.ValidarEntidad(ExisteEstado)
+      var pedido = await Pedido.update({id:data.Pedido.id}).set({State:ExisteEstado.id}).fetch()
+      res.status(200).json(pedido)
+    } catch (err) {
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
+    }
   }
 };
 async function  CrearProductoPorPedidos(productosPorPedido){
