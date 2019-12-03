@@ -12,7 +12,9 @@ var messages = require("../globals/index");
 
 
 module.exports = {
-
+    state: function(req,res){
+      res.status(200).json();
+    },
     CheckToken :async function  (token){ 
       sails.log.info("se procede a chequear el token "+token)
         var accessToken = token;            

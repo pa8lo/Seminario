@@ -46,6 +46,10 @@ module.exports.routes = {
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
 
 //
+// MANTENER APLICACIÓN  
+//
+'GET /State': 'BaseController.state',
+//
 // ENDPOINTS USUARIO
 //
 'GET /User/users': 'UserController.users',
