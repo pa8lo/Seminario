@@ -122,6 +122,19 @@ module.exports = {
       res.status(err.code).json(err.message);
     }
   },
+  DeletePedido: async function (req, res) {
+    try {
+      let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'Delete');
+      var data = req.body;
+      let validacion = await _validaciones.validarRequestIdEntidad(data.id);
+      var destruido = await Pedido.update({ id: data.id }).set({ Eliminated: true }).fetch();
+      validacion = _validaciones.ValidarEntidad(destruido, "Usuario");
+      res.status(200).json({ message: ' Pedido eliminado' });
+    } catch (err) {
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
+    }
+  },
   ChangeState: async function(req,res){
     try {
       let data = req.body

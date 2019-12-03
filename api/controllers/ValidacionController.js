@@ -118,11 +118,12 @@ module.exports = {
     ValidarEstado: async function(estado){
         if(estado.Key.toUpperCase() != 'F' && estado.Key.toUpperCase() != 'R'){
             let estadoExistente = await Estado.find({Key:estado.Key,Eliminated:false})
-            if(estadoExistente){
+            sails.log.info(estadoExistente.length)
+            if(estadoExistente && estadoExistente.length > 0){
                 throw _error.GenerateError("ya existe el estado que quiere crear",400)
             }
         }else{
-            throw _error.GenerateError("ya existe el estado que quiere crear",400)
+            throw _error.GenerateError("ya existe el estado que quiere crearse",400)
         }
     },
     validarRequestIdEntidad:function(id){

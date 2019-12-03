@@ -165,6 +165,8 @@ module.exports.routes = {
 
 'POST /Pedido/ChangeState' : 'PedidoController.ChangeState',
 
+'POST /Pedido/Delete': 'PedidoController.DeletePedido',
+
 
 //ENDPOINTS ESTADO
 //
