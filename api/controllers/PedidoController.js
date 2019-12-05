@@ -52,7 +52,13 @@ module.exports = {
       var data = req.allParams();
       let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
       sails.log.info("se busco este usuario"+JSON.stringify(currentUser))
-      let pedidos = await Pedido.find({Delivery:currentUser.id}).populate('Adress').populate('Clients').populate('Users').populate('State')
+      let estadoEntregado = await Estado.findOne({Key:'E'})
+      let estadoFinalizado = await Estado.findOne({Key:'F'})
+      let pedidos = await Pedido.find({Delivery:currentUser.id,State:{'!=':[estadoEntregado.id,estadoFinalizado.id]}})
+      .populate('Adress')
+      .populate('Clients')
+      .populate('Users')
+      .populate('State')
       sails.log.info("se devuelven los pedidos"+JSON.stringify(pedidos))
       res.status(200).json(pedidos)
     }catch(err){
@@ -153,8 +159,12 @@ module.exports = {
     try {
       let data = req.body
       var ExisteEstado = await Estado.findOne({Key:'E'})
+      sails.log.info("se va a actualizar el estado:")
+      sails.log.info(ExisteEstado)
       _validaciones.ValidarEntidad(ExisteEstado)
-      var pedido = await Pedido.update({id:data.Pedido.id}).set({State:ExisteEstado.id}).fetch()
+      var pedido = await Pedido.update({id:data.id}).set({State:ExisteEstado.id}).fetch()
+      sails.log.info("se entrego el pedido : ")
+      sails.log.info(pedido)
       res.status(200).json(pedido)
     } catch (err) {
       console.log(err)
@@ -167,7 +177,7 @@ module.exports = {
       let data = req.body
       var ExisteEstado = await Estado.findOne({Key:'R'})
       _validaciones.ValidarEntidad(ExisteEstado)
-      var pedido = await Pedido.update({id:data.Pedido.id}).set({State:ExisteEstado.id}).fetch()
+      var pedido = await Pedido.update({id:data.id}).set({State:ExisteEstado.id}).fetch()
       res.status(200).json(pedido)
     } catch (err) {
       console.log(err)
