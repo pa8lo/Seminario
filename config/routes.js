@@ -171,7 +171,7 @@ module.exports.routes = {
 
 'POST /Pedido/Delete': 'PedidoController.DeletePedido',
 
-'POST /Pedido/Rechazado': 'PedicoController.PedidoRechazadoDelivery',
+'POST /Pedido/Rechazado': 'PedidoController.PedidoRechazadoDelivery',
 
 'POST /Pedido/Entregado' : 'PedidoController.PedidoEntregadoDelivery',
 
