@@ -176,6 +176,7 @@ module.exports = {
     try {
       let data = req.body
       var ExisteEstado = await Estado.findOne({Key:'R'})
+      sails.log.info("se va a actualizar el pedido con el id :" +data.id)
       _validaciones.ValidarEntidad(ExisteEstado)
       var pedido = await Pedido.update({id:data.id}).set({State:ExisteEstado.id}).fetch()
       res.status(200).json(pedido)
