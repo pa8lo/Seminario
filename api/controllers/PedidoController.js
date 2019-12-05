@@ -53,7 +53,7 @@ module.exports = {
       let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
       sails.log.info("se busco este usuario"+JSON.stringify(currentUser))
       let estadoEntregado = await Estado.findOne({Key:'E'})
-      let estadoFinalizado = await Estado.findOne({Key:'F'})
+      let estadoFinalizado = await Estado.findOne({Key:'R'})
       let pedidos = await Pedido.find({Delivery:currentUser.id,State:{'!=':[estadoEntregado.id,estadoFinalizado.id]}})
       .populate('Adress')
       .populate('Clients')
