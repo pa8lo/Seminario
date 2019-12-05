@@ -64,7 +64,7 @@ module.exports = {
     }catch(err){
       console.log(err)
       sails.log.error("error" + JSON.stringify(err))
-      res.status(err.code).json(err.message);
+      res.status(err.code).json(err);
     }
   },
   createOrder: async function (req, res) {
