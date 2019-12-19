@@ -91,8 +91,8 @@ module.exports = {
             if(req.headers['access-token']){ 
                 var currentUser = base.CheckToken(req.headers['access-token']);
                     if(currentUser){
-                        if(base.CheckAuthorization(currentUser,'Cliente','View',req.ip,res)){
-                        var cliente =await Cliente.find({Phone: data.Phone}).limit(1).populate('Adress');   
+                        if(true){
+                        var cliente =await Cliente.findOne({Phone: data.Phone}).populate('Adress');   
                         res.status(200).json({Cliente:cliente})             
                         }
                     }
