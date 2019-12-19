@@ -13,7 +13,7 @@ module.exports = {
                 if(currentUser){       
                     if(base.CheckAuthorization(currentUser,'Cliente','Create',req.ip,res)){                          
                     var data = req.body;
-                    var cliente = await Cliente.create(data).fetch();
+                    var cliente = await Cliente.create(data);
                     res.status(200).json({UserId: cliente.id})      
                 }   
             }
