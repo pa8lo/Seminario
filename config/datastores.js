@@ -50,9 +50,9 @@ module.exports.datastores = {
     ***************************************************************************/
     // adapter: 'sails-postgresql',
     // url: 'postgres://nhugaulg:exJ3FY7-OSmS8c7WcaLUmymAgX0P1TLw@raja.db.elephantsql.com:5432/nhugaulg', 
-    adapter: 'sails-mysql',
+    //adapter: 'sails-mysql',
      //url: 'mysql://sql10254732:I3SeRawNqU@sql10.freemysqlhosting.net:3306/sql10254732', //Online
-    url: 'mysql://E9FBwOknS0:Em6wc60zbg@remotemysql.com:3306/E9FBwOknS0', //Online
+    //url: 'mysql://E9FBwOknS0:Em6wc60zbg@remotemysql.com:3306/E9FBwOknS0', //Online
 //url: 'mysql://root@127.0.0.1:3308/seminario',//Facultad
      //url: 'mysql://root@127.0.0.1:14864/seminario',//Casa
      //https://remotemysql.com/databases.php pagina donde esta el sql

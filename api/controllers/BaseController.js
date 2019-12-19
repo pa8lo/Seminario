@@ -40,7 +40,6 @@ module.exports = {
      * @param {*} re  respuesta del servidor
      */
     CheckAuthorization: async function (CurrentUser,CategoriaPermiso,NombrePermiso,ip,res) {
-        if(CurrentUser.Ip === ip){
             try {
                 sails.log.info("se procede a verificar los permisos del usuario "+JSON.stringify(CurrentUser))
                 var existeModelo =await User.findOne({id: CurrentUser.Id}).populate('Authorizations',{Name: NombrePermiso,Type: CategoriaPermiso}); 
@@ -51,12 +50,6 @@ module.exports = {
                 res.status(500).json({error :"Error en el servidor"});
             } 
 
-        }else{
-        sails.log.info("El usuario  de id : "+ CurrentUser.Id + "quiso acceder desde un ip erroneo.");
-        sails.log.info("-id esperada : " + JSON.stringify(CurrentUser));
-        sails.log.info("-id recibida : " +ip);
-        return false;
-        }
 
     },
     /**

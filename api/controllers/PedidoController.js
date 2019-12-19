@@ -141,7 +141,16 @@ module.exports = {
       res.status(err.code).json(err.message);
     }
   },
-  ChangeState: async function(req,res){
+  UpdatePedido: async function (req, res){
+    try {
+      let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'Edit');
+      ValidarEstadoDePedido(req.Estado);
+      let pedido = await Pedido.update()
+    } catch (error) {
+      
+    }
+  },
+  ChangeState: async function(req, res){
     try {
       let data = req.body
       let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'Edit');
