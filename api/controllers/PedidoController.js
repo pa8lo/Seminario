@@ -68,7 +68,7 @@ module.exports = {
     }
   },
   createOrder: async function (req, res) {
-      try {
+      // try {
         if (await base.ElementExist(Estado, req.body.State) &&
           await base.ElementExist(User, req.body.Users) &&
           await base.ElementExist(Cliente, req.body.Clients) &&
@@ -98,11 +98,11 @@ module.exports = {
             error: "Alguno de los elementos enviados no existe"
           })
         }
-      } catch (err) {
-        console.log(err)
-        sails.log.error("error" + JSON.stringify(err))
-        res.status(err.code).json(err.message);
-      }
+      // } catch (err) {
+      //   console.log(err)
+      //   sails.log.error("error" + JSON.stringify(err))
+      //   res.status(err.code).json(err.message);
+      // }
   },
   assignDelivery: async function(req,res){
     try {
