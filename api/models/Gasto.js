@@ -28,13 +28,8 @@ module.exports = {
       required:true
     },
 
-    Date:{
-      type:'string',
-      description:'Fecha del gasto realizado',
-      allowNull:false,
-      columnName:'Fecha',
-      columnType: 'datetime',
-      required:true
+    Date: {
+      type: 'ref', columnType: 'datetime'
     },
 
     Eliminated:{

@@ -6,42 +6,44 @@
  */
 
 var messages = require("../globals/index");
-var base = require('./BaseController.js')
+var base = require('./BaseController.js');
+var _validaciones = require('./ValidacionController');
+
 module.exports = {
     expenses: async function (req, res) {
-        if (await base.validator(req, res, "Gasto", "View")) {
+        try {
+          let currentUser = await _validaciones.validarRequest(req, 'Gasto', 'View');
           var estado = await Gasto.find({Eliminated: false});
-          res.json(estado)
+          res.status(200).json(estado)
+        } catch (err) {
+          console.log(err)
+          sails.log.error("error" + JSON.stringify(err))
+          res.status(err.code).json(err.message);
         }
     },
 
     createExpense: async function(req,res){
-        if (await base.validator(req, res, "Gasto", "Create")) {
-            try {
-              sails.log.info("se procede a crear un gasto con los siguiente datos"+JSON.stringify(req.body))
-                var usuario = await User.findOne({
-                  id: req.body.User})
-                  if(usuario == null){
-                    sails.log.info("se intento crear un gasto con usuario inexistente")
-                    res.status(404).json({
-                      error:"usuario inexistente"
-                    })
-                  }else{
-                    var currentUser =await base.CheckToken(req.headers['access-token']);
-                    sails.log.info("se recibe los datos del gasto : "+req.body);
-                    var gasto = await Gasto.create(req.body).fetch()
-                    sails.log.info("el usuario " + currentUser.Id + "Creo el estado " + gasto.id)
-                    res.status(messages.response.ok).json({
-                      message: "gasto creado"
-                    })
-                  }
-              } catch (error) {
-                sails.log.error("existio un error para crear el gasto : " + error)
-                res.status(400).json({
-                  error: "error al crear el gasto"
-                })
-              }
+        try {
+          let currentUser = await _validaciones.validarRequest(req, 'Gasto', 'Create');
+          var data = req.body;
+          sails.log.info(currentUser)
+          let date = new Date()
+          sails.log.info("se procede a crear un gasto con los siguiente datos"+JSON.stringify(req.body))
+          validacion = await _validaciones.validarExistenciaEliminar({ id: data.User, Eliminated: false }, User)
+          if(!data.Date){
+            data.Date = fecha;
+          }else{
+            let fecha =  data.date+(date.getUTCHours()-3)+":"+date.getUTCMinutes()+":"+date.getUTCSeconds()
+            data.Date = fecha;
 
+          }
+          sails.log.info(data)
+          var gasto = await Gasto.create(data).fetch();
+          sails.log.info(gasto);
+          res.status(200).json(gasto);
+        } catch (err) {
+          sails.log.error("error" + JSON.stringify(err))
+          res.status(err.code).json(err.message);
         }
     },
 
