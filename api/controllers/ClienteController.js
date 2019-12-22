@@ -9,14 +9,17 @@ var _validaciones = require('./ValidacionController');
 module.exports = {
   
     CreateClient :async function (req,res) {
-            var currentUser =  base.CheckToken(req.headers['access-token']);              
-                if(currentUser){       
-                    if(base.CheckAuthorization(currentUser,'Cliente','Create',req.ip,res)){                          
-                    var data = req.body;
-                    var cliente = await Cliente.create(data);
-                    res.status(200).json({UserId: cliente.id})      
-                }   
-            }
+            try {
+                let currentUser = await _validaciones.validarRequest(req, 'Cliente', 'Create');
+                var data = req.body;
+                sails.log.info(currentUser)
+                let validacion = await _validaciones.validarExistencia({ Phone: data.Phone, Eliminated: false }, Cliente)
+                var cliente = await Cliente.create(data).fetch();
+                res.status(200).json({UserId: cliente.id}) 
+              } catch (err) {
+                sails.log.error("error" + JSON.stringify(err))
+                res.status(err.code).json(err.message);
+              }
         },
     
     AddAddress : async function (req,res){

@@ -62,39 +62,46 @@ module.exports = {
     }
   },
   ValidarProductoxPedido: async function (productosxpedido) {
-    await Promise.all(productosxpedido.map(async (productoxpedido) => {
-      if (!productoxpedido.Product || productoxpedido.Product.length == 0 || productoxpedido.Count.length == 0) {
-        throw _error.GenerateError("faltan ingresar parametros de algun producto", 400)
-      }
-      let producto = await Producto.findOne({
-        id: productoxpedido.Product
-      });
-      if (!producto || producto.length == 0) {
-        throw _error.GenerateError("no existe un producto ingresado ", 400)
-      }
-    })).then(() => {
-      sails.log.info("Se crearon bien todos los productos por pedido")
-    }).catch(err => {
-      throw _error.GenerateError(err.message, err.code)
-    })
+    if(productosxpedido){
+      sails.log.info("se procede a validar PRoducto por Pedido")
+      sails.log.info(productosxpedido)
+      await Promise.all(productosxpedido.map(async (productoxpedido) => {
+        sails.log.info("se procede a validar los productos : ")
+        sails.log.info(productoxpedido)
+        if (!productoxpedido.Product || productoxpedido.Product == 0 || productoxpedido.Count.length == 0) {
+          throw _error.GenerateError("faltan ingresar parametros de algun producto", 400)
+        }
+        let producto = await Producto.findOne({
+          id: productoxpedido.Product
+        });
+        if (!producto || producto.length == 0) {
+          throw _error.GenerateError("no existe un producto ingresado ", 400)
+        }
+      })).then(() => {
+        sails.log.info("Se crearon bien todos los productos por pedido")
+      }).catch(err => {
+        throw _error.GenerateError(err.message, err.code)
+      })
+    }
   },
   ValidarComboxPedido: async function (combosxpedido) {
-    await Promise.all(combosxpedido.map(async (comboxpedido) => {
-      if (!comboxpedido.Offer || comboxpedido.Offer.length == 0 || comboxpedido.Count.length == 0) {
-        throw _error.GenerateError("faltan ingresar parametros de algun combo", 400)
-      }
-      let combo = await Producto.findOne({
-        id: comboxpedido.Offer
-      });
-      if (!combo || combo.length == 0) {
-        throw _error.GenerateError("no existe un combo ingresado ", 400)
-      }
-    })).then(() => {
-      sails.log.info("Se crearon bien todos los productos por pedido")
-    }).catch(err => {
-      throw _error.GenerateError(err.message, err.code)
-    })
-
+    if(combosxpedido){
+      await Promise.all(combosxpedido.map(async (comboxpedido) => {
+        if (!comboxpedido.Offer || comboxpedido.Offer.length == 0 || comboxpedido.Count.length == 0) {
+          throw _error.GenerateError("faltan ingresar parametros de algun combo", 400)
+        }
+        let combo = await Producto.findOne({
+          id: comboxpedido.Offer
+        });
+        if (!combo || combo.length == 0) {
+          throw _error.GenerateError("no existe un combo ingresado ", 400)
+        }
+      })).then(() => {
+        sails.log.info("Se crearon bien todos los productos por pedido")
+      }).catch(err => {
+        throw _error.GenerateError(err.message, err.code)
+      })
+    }
   },
   ValidarFechaAsistencia: function (_asistencia, _asistenciaExistente) {
     let horarioIngreso;

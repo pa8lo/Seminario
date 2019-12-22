@@ -81,10 +81,14 @@ module.exports = {
           sails.log.info(req.body.Date)
           let validaciones = await _validaciones.ValidarProductoxPedido(req.body.ProductosPorPedido);
           validaciones = await _validaciones.ValidarComboxPedido(req.body.CombosPorPedido);
-          req.body.Products = await DevolverIdsProducto(req.body.ProductosPorPedido);
-          req.body.Offers = await DevolverIdsCombos(req.body.CombosPorPedido);
-          req.body.ProductosPorPedido = await CrearProductoPorPedidos(req.body.ProductosPorPedido);
-          req.body.CombosPorPedido = await CrearCombosPorPedidos(req.body.CombosPorPedido);
+          if(req.body.ProductosPorPedido){
+            req.body.Products = await DevolverIdsProducto(req.body.ProductosPorPedido);
+            req.body.ProductosPorPedido = await CrearProductoPorPedidos(req.body.ProductosPorPedido);
+          }
+          if(req.body.CombosPorPedido){
+            req.body.Offers = await DevolverIdsCombos(req.body.CombosPorPedido);
+            req.body.CombosPorPedido = await CrearCombosPorPedidos(req.body.CombosPorPedido);
+          }
           sails.log.info("se va a crear el pedido"+JSON.stringify(req.body))
           var pedido = await Pedido.create(req.body).fetch()
           pedido = await Pedido.find({id:pedido.id}).populate("ProductosPorPedido").populate("CombosPorPedido")
@@ -122,7 +126,7 @@ module.exports = {
       sails.log.info(pedido)
       let ped = await Pedido.update({ id: pedido.id }).set({Delivery:data.Delivery.id}).fetch();
       console.log(ped)
-      res.status(200).json({  })
+      res.status(200).json(ped)
     } catch (err) {
       sails.log.error("error" + JSON.stringify(err))
       res.status(err.code).json(err.message);

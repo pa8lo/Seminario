@@ -53,12 +53,11 @@ module.exports.datastores = {
     adapter: 'sails-mysql',
     // url: 'mysql://sql10254732:I3SeRawNqU@sql10.freemysqlhosting.net:3306/sql10254732', //Online
    url: 'mysql://E9FBwOknS0:Em6wc60zbg@remotemysql.com:3306/E9FBwOknS0', //Online
+  // url: 'mysql://fJI1aUfvRB:P3I3MQUACw@remotemysql.com:3306/fJI1aUfvRB'
 //url: 'mysql://root@127.0.0.1:3308/seminario',//Facultad
      //url: 'mysql://root@127.0.0.1:14864/seminario',//Casa
      //https://remotemysql.com/databases.php pagina donde esta el sql
      //usuario pablorozek@gmail.com
      //password: magogarre
   },
-
-
 };
