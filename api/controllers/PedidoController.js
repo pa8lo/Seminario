@@ -120,10 +120,12 @@ module.exports = {
       sails.log.info("se encontro el delivery con el id "+usuario.id)
       validacion = await _validaciones.ValidarEntidad(usuario,"Delivery");
       let pedido = await Pedido.find({id:data.Pedido.id})
+      console.log(pedido)
       validacion = await _validaciones.ValidarEntidad(pedido,"Pedido");
       sails.log.info("se procede a asignar el delivery al pedido")
       pedido.Delivery = data.Delivery.id;
       sails.log.info(pedido)
+      console.log(pedido)
       let ped = await Pedido.update({ id: pedido.id }).set({Delivery:data.Delivery.id}).fetch();
       console.log(ped)
       res.status(200).json(ped)
