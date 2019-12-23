@@ -126,7 +126,7 @@ module.exports = {
       // pedido.Delivery = data.Delivery.id;
       sails.log.info(pedido)
       console.log(pedido)
-      let ped = await Pedido.update({ id: pedido.id }).set({Delivery:data.Delivery.id}).fetch();
+      let ped = await Pedido.update({id:data.Pedido.id}).set({Delivery:data.Delivery.id}).fetch();
       console.log(ped)
       res.status(200).json(ped)
     } catch (err) {
