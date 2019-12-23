@@ -123,7 +123,7 @@ module.exports = {
       console.log(pedido)
       validacion = await _validaciones.ValidarEntidad(pedido,"Pedido");
       sails.log.info("se procede a asignar el delivery al pedido")
-      pedido.Delivery = data.Delivery.id;
+      // pedido.Delivery = data.Delivery.id;
       sails.log.info(pedido)
       console.log(pedido)
       let ped = await Pedido.update({ id: pedido.id }).set({Delivery:data.Delivery.id}).fetch();
