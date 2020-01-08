@@ -32,16 +32,17 @@ module.exports = {
       .then(function(combo) {
         sails.log.info(combo)
         return sails.nestedPop(combo, {
-            ProductosPorCombos: [
-                'Product'
-          ]  
+          ProductosPorPedido: [
+            'Product'
+        ]    
         }).then(function(combos) {
+          sails.log.info(combo)
             return combos
         }).catch(function(err) {
             throw err;
         })
       })
-      // let respuesta = await AgregarDatosProductos(combo)
+       let respuesta = await AgregarDatosProductos(combo)
       res.status(200).json(combo)
 // }catch(err){
 //       sails.log.error("error" + JSON.stringify(err))
