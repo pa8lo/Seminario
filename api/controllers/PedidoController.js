@@ -5,7 +5,7 @@
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
 var messages = require("../globals/index");
-var base = require('./BaseController.js')
+var base = require('./BaseController.js');
 var _validaciones = require('./ValidacionController');
 var _comboController = require('./ComboController');
 
