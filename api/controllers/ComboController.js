@@ -123,11 +123,15 @@ module.exports = {
       let data = req.body;
       let currentUser = await _validaciones.validarRequest(req, 'Producto', 'Edit');
       _validaciones.validarRequestIdEntidad(data.Combo.id)
+      let validacion = await _validaciones.ValidarProductoxPedido(data.Combo.ProductosPorCombo)
+      data.Combo.ProductosPorCombo = await CrearProductoPorCombos(data.Combo.ProductosPorCombo);
       var combo = await Combo.update({
         id: data.Combo.id
       })
       .set({Name:data.Combo.Name,
-        Description :data.Combo.Description
+        Description :data.Combo.Description,
+        Amount : data.Combo.Amount,
+        ProductosPorCombo : data.Combo.ProductosPorCombo
       }).fetch();
       res.status(200).json(combo)
     } catch (err) {
