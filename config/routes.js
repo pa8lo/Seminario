@@ -165,6 +165,8 @@ module.exports.routes = {
 
 'POST /Pedido/Create' : 'PedidoController.CreateOrder',
 
+'POST /Pedido/Update' : 'PedidoController.UpdatePedido',
+
 'POST /Pedido/Asignar' : 'PedidoController.assignDelivery',
 
 'POST /Pedido/ChangeState' : 'PedidoController.ChangeState',

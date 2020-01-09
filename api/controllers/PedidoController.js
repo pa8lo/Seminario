@@ -150,10 +150,36 @@ module.exports = {
   UpdatePedido: async function (req, res){
     try {
       let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'Edit');
-      ValidarEstadoDePedido(req.Estado);
-      let pedido = await Pedido.update()
+      // ValidarEstadoDePedido(req.Estado);
+      let validaciones = await _validaciones.ValidarProductoxPedido(req.body.ProductosPorPedido);
+      validaciones = await _validaciones.ValidarComboxPedido(req.body.CombosPorPedido);
+      if(req.body.ProductosPorPedido){
+        req.body.Products = await DevolverIdsProducto(req.body.ProductosPorPedido);
+        req.body.ProductosPorPedido = await CrearProductoPorPedidos(req.body.ProductosPorPedido);
+      }else{
+        req.body.ProductosPorPedido = []
+      }
+      if(req.body.CombosPorPedido){
+        req.body.Offers = await DevolverIdsCombos(req.body.CombosPorPedido);
+        req.body.CombosPorPedido = await CrearCombosPorPedidos(req.body.CombosPorPedido);
+      }else{
+        req.body.CombosPorPedido =[]
+      }
+      let date = new Date()
+      let fecha =  date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDay()+1)+" "+(date.getUTCHours()-3)+":"+date.getUTCMinutes()+":"+date.getUTCSeconds()
+      sails.log.info(fecha)
+      req.body.Date = fecha
+      sails.log.info("se procede a actualizar el pedido")
+      let pedido = await Pedido.update({
+        id: req.body.id
+      })
+      .set(req.body
+      ).fetch();
+      sails.log.info(pedido)
+      res.status(200).json(pedido)
     } catch (error) {
-      
+      sails.log.error(error)
+      res.status(500).json(error)
     }
   },
   ChangeState: async function(req, res){
