@@ -84,11 +84,10 @@ module.exports = {
     if (req.headers['access-token']) {
       const currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
-        if (currentUser.Ip == req.ip) {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'Delete', req.ip, res)) {
             var data = req.body;
             try {
-              if (data.id) {
+              if (data.id && data.id != 1) {
                 var destruido = await Categoria.update({
                     id: data.id
                   })
@@ -111,9 +110,9 @@ module.exports = {
                   });
                 }
               } else {
-                sails.log.info("el usuario " + currentUser.Id + "No ingreso el id para eliminar");
+                sails.log.info("el usuario " + currentUser.Id + "No ingreso el id para eliminar o ese id no se puede eliminar");
                 res.status(401).json({
-                  error: 'Faltan ingresar parametros'
+                  error: 'id invalido'
                 });
               }
             } catch (error) {
@@ -130,12 +129,7 @@ module.exports = {
             });
           }
 
-        } else {
-          sails.log.Info("El usuario  de id : " + currentUser.Id + "quiso acceder desde un ip erroneo.");
-          return res.status(401).json({
-            error: 'Acceso denegado.'
-          });
-        }
+
 
       } else {
         return res.status(401).json({
