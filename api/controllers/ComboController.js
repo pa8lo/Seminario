@@ -13,7 +13,7 @@ module.exports = {
       var data = req.allParams();
       let currentUser = await _validaciones.validarRequest(req,'Producto','View');
       let validacion = await _validaciones.validarRequestIdEntidad(data.id);
-      var combo = await Combo.findOne({id: data.id, Eliminated:false}).populate('ProductosPorCombo');
+      var combo = await Combo.findOne({id: data.id, Eliminated:false}).populate('ProductosPorCombos');
       sails.log.info("se encontro el combo")
       sails.log.info(combo)
       validacion = await _validaciones.ValidarEntidad(combo,"Combo")
@@ -29,20 +29,8 @@ module.exports = {
       let currentUser = await _validaciones.validarRequest(req,'Producto','View');
       var combo = await Combo.find({Eliminated : false})
       .populate('ProductosPorCombo')
-      .then(function(combo) {
-        sails.log.info(combo)
-        return sails.nestedPop(combo, {
-          ProductosPorPedido: [
-            'Product'
-        ]    
-        }).then(function(combos) {
-          sails.log.info(combo)
-            return combos
-        }).catch(function(err) {
-            throw err;
-        })
-      })
-       let respuesta = await AgregarDatosProductos(combo)
+      
+      let respuesta = await AgregarDatosProductos(combo)
       res.status(200).json(combo)
 // }catch(err){
 //       sails.log.error("error" + JSON.stringify(err))
@@ -227,22 +215,29 @@ module.exports = {
 async function AgregarProductosACombo(productosPorCombo){
   sails.log.info("se procede a agregar Productos a combos")
   sails.log.info(productosPorCombo);
-  Promise.all(productosPorCombo.map(async (productoporcombo) => {
-    let producto = await Producto.find({id: productoporcombo.Product})
+  await Promise.all(productosPorCombo.map(async (productoporcombo) => {
+    let producto = await Producto.findOne({id: productoporcombo.Product})
+    sails.log.info("se encontro el siguiente producto")
+    sails.log.info(producto.id)
     productoporcombo.Product = producto
+    sails.log.info("se agrego el siguiente producto")
+    sails.log.info(productoporcombo)
   }))
+  sails.log.info(productosPorCombo);
   return productosPorCombo;
 }
 async function AgregarDatosProductos(combo){
   sails.log.info("se procede a agregar información de los productos")
   sails.log.info(combo)
   await Promise.all(combo.map(async (c) =>{
-     await AgregarProductosACombo(c.ProductosPorCombos);
-  })).catch(err => 
-    sails.log.error("se produjo un error al intentar extraer ids de producto"))
+    await AgregarProductosACombo(c.ProductosPorCombo);
+  })).then(()=> {
     sails.log.info("información agregada")
     sails.log.info(combo)  
-  return combo
+    return combo
+  }
+)
+    
 }
 
 async function  CrearProductoPorCombos(productosPorCombos){
