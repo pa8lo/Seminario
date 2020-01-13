@@ -44,13 +44,13 @@ module.exports = {
         try {
             let currentUser = await _validaciones.validarRequest(req, 'Cliente', 'Edit');
             let  data = req.body;
-            let domicilio = Domicilio.destroyOne({id: data.id});
+            let domicilio =await  Domicilio.destroyOne({id: data.id});
             if(domicilio){
                 res.status(200).json(domicilio);
             }else{
                 res.status(404).json({message:"no existe la dirección que desea eliminar"})
             }
-        } catch (error) {
+        } catch (err) {
             console.log(err)
             sails.log.error("error" + JSON.stringify(err))
             res.status(err.code).json(err.message);
