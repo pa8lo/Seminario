@@ -90,6 +90,8 @@ module.exports.routes = {
 
 'POST /Client/AddAddress' : 'ClienteController.AddAddress',
 
+'POST /Client/DeleteAddress' : 'ClienteController.DeleteAddress',
+
 'PUT /Client/UpdateUser' : 'ClienteController.UpdateClient',
 
 'PATCH /Client/DeleteClient' : 'ClienteController.DeleteClient',
