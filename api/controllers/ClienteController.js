@@ -25,11 +25,7 @@ module.exports = {
     AddAddress : async function (req,res){
         try {
             let currentUser = await _validaciones.validarRequest(req, 'Cliente', 'Create');
-
             var  data = req.body;
-
-    //                   var existeCliente = await Cliente.findOne({id:data.Address.id});
-    //                  if(existeCliente === undefined){
             sails.log.info("[[clienteController-addAddress]] se procede a crear el domicilio");
             if(data.Address.User || data.Address.Client){
                 var domicilio  = await Domicilio.create(data.Address).fetch();
@@ -43,33 +39,22 @@ module.exports = {
             sails.log.error("error" + JSON.stringify(err))
             res.status(err.code).json(err.message);
           }
-        var currentUser = await  base.CheckToken(req.headers['access-token']);              
-                if(currentUser){       
-                    if(await base.CheckAuthorization(currentUser,'Cliente','Create',req.ip,res)){
-                        try {
-                            var  data = req.body;
-         //                   var existeCliente = await Cliente.findOne({id:data.Address.id});
-          //                  if(existeCliente === undefined){
-                            sails.log.info("[[clienteController-addAddress]] se procede a crear el domicilio");
-                            if(data.Address.User || data.Address.Client){
-                                var domicilio  = await Domicilio.create(data.Address).fetch();
-                                sails.log.info("[[clienteController-addAddress]] Domicilio creado con exito");   
-                                res.status(200).json({message:"Domicilio creado con exito"} )
-                            }else{
-                                res.status(400).json({error:" la dirección debe estar asociada a un cliente o usuario"})
-                            }
-                                
-            //              }else{
-              //              res.status(400).json({message:"Error con el id del cliete"} )
-                        //  }  
-                        }
-                        catch (error){
-                            sails.log.debug(error)
-                            res.status(500).json({error : "Existio un error creando el domicilio"})
-                        }
-
-                    }
-                }
+    },
+    DeleteAddress : async function (req,res){
+        try {
+            let currentUser = await _validaciones.validarRequest(req, 'Cliente', 'Edit');
+            let  data = req.body;
+            let domicilio = Domicilio.destroyOne({id: data.id});
+            if(domicilio){
+                res.status(200).json(domicilio);
+            }else{
+                res.status(404).json({message:"no existe la dirección que desea eliminar"})
+            }
+        } catch (error) {
+            console.log(err)
+            sails.log.error("error" + JSON.stringify(err))
+            res.status(err.code).json(err.message);
+        }
     },    
 
     Clients : async function (req,res) {
@@ -105,24 +90,20 @@ module.exports = {
         },
 
         UpdateClient: async function (req,res) {
-            if(req.headers['access-token']){
-                var data = req.body; 
-                var currentUser = base.CheckToken(req.headers['access-token']);
-                if(currentUser){
-                    var ExisteTelefono = Domicilio.findone({id:data.Cliente.Phone})
-                    var cliente = await Cliente.update({id:data.Cliente.id})
-                    .set(data.Cliente).fetch();                                               
-                    if (cliente.length === 0) {
-                     //sails.log.error('Se intento borrar cliente con id :'+data.id+" pero no existia alguno con ese id");
-                    res.status(401).json({ error: 'No existe usuario.' });
-                    } else {
-
-                    res.status(200).json({ message: 'Usuario modificado.' });
-                    }
-                }
-            }else{
-                return res.status(401).json({erros : 'Medidas de seguridad no ingresadas.'})
-            }
+            try {
+                let currentUser = await _validaciones.validarRequest(req, 'Cliente', 'Edit');
+                _validaciones.validarExistenciaEliminar({ id: req.body.id, Eliminated: false }, Cliente)
+                let cliente = await Cliente.update({
+                  id: req.body.id
+                })
+                .set(req.body
+                ).fetch();
+                sails.log.info(cliente)
+                res.status(200).json(cliente)
+              } catch (error) {
+                sails.log.error(error)
+                res.status(500).json(error)
+              }
         },
         DeleteClient: async function (req,res) {
             if(req.headers['access-token']){
