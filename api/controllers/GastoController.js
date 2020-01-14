@@ -27,16 +27,12 @@ module.exports = {
           let currentUser = await _validaciones.validarRequest(req, 'Gasto', 'Create');
           var data = req.body;
           sails.log.info(currentUser)
-          let date = new Date()
+          let date = new Date(data.Date)
           sails.log.info("se procede a crear un gasto con los siguiente datos"+JSON.stringify(req.body))
           validacion = await _validaciones.validarExistenciaEliminar({ id: data.User, Eliminated: false }, User)
-          if(!data.Date){
-            data.Date = fecha;
-          }else{
-            let fecha =  data.date+(date.getUTCHours()-3)+":"+date.getUTCMinutes()+":"+date.getUTCSeconds()
-            data.Date = fecha;
-
-          }
+          let fecha =  data.Date+"T"+(date.getUTCHours()-3)+":"+date.getUTCMinutes()+":"+date.getUTCSeconds()+date.getMilliseconds()+"Z"
+          data.Date = date;
+          data.User = currentUser.Id
           sails.log.info(data)
           var gasto = await Gasto.create(data).fetch();
           sails.log.info(gasto);
