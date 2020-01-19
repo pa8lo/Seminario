@@ -88,11 +88,8 @@ module.exports = {
 
   UserAuthorizations: async function (req, res) {
     try{
-      let currentUser = await _validaciones.validarRequest(req, 'Usuario', 'View');
-      var parametros = req.allParams();
-      let validacion = await _validaciones.validarRequestIdEntidad(parametros.id);
-      var usuario = await User.findOne({id: parametros.id}).populate('Authorizations');
-      validacion = _validaciones.ValidarExistenciaLogin(usuario);
+      var currentUser =await base.CheckToken(req.headers['access-token']);
+      var usuario = await User.findOne({id: currentUser.Id}).populate('Authorizations');
       res.status(200).json({Authorizations: usuario.Authorizations});
     }catch(err){
       sails.log.error("error" + JSON.stringify(err))
