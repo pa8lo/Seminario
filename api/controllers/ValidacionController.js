@@ -233,8 +233,8 @@ async function CheckAuthorization(CurrentUser, CategoriaPermiso, NombrePermiso) 
     Type: CategoriaPermiso
   });
   sails.log.info(existeModelo)
-  if (!existeModelo || existeModelo.length == 0) {
+  if (!existeModelo || existeModelo.Authorizations.length == 0) {
     sails.log.info("acceso denegado")
-    throw _error.GenerateError('acceso denegado', 401)
+    throw _error.GenerateError('credenciales insuficientes', 401)
   }
 }
