@@ -25,17 +25,16 @@ module.exports = {
     }
   },
   Offerts: async function (req, res) {
-    // try{
+    try{
       let currentUser = await _validaciones.validarRequest(req,'Producto','View');
       var combo = await Combo.find({Eliminated : false})
       .populate('ProductosPorCombo')
-      
       let respuesta = await AgregarDatosProductos(combo)
       res.status(200).json(combo)
-// }catch(err){
-//       sails.log.error("error" + JSON.stringify(err))
-//       res.status(err.code).json(err.message);
-//     }
+    }catch(err){
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
+    }
   },
   createOffert: async function (req, res) {
     try {
