@@ -30,7 +30,7 @@ module.exports = {
             if(data.Address.User || data.Address.Client){
                 var domicilio  = await Domicilio.create(data.Address).fetch();
                 sails.log.info("[[clienteController-addAddress]] Domicilio creado con exito");   
-                res.status(200).json({message:"Domicilio creado con exito"} )
+                res.status(200).json(domicilio )
             }else{
                 res.status(400).json({error:" la dirección debe estar asociada a un cliente o usuario"})
             }
