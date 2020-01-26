@@ -12,7 +12,11 @@ var _error = require("./ErrorController");
 module.exports = {
 
 
-
+  ValidarDatoRequest: function(entidad){
+    if(!entidad || entidad.length == 0){
+      throw _error.GenerateError('faltan ingresar parametros', 400)
+      }
+  },
   ValidarEntidad: function (entidad, mensaje) {
     if (!entidad || entidad.length == 0) {
       throw _error.GenerateError('no existe/n ' + mensaje, 404)

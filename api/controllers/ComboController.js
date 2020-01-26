@@ -71,6 +71,7 @@ module.exports = {
     try {
       let data = req.body;
       let currentUser = await _validaciones.validarRequest(req, 'Producto', 'Edit');
+      
       _validaciones.validarRequestIdEntidad(data.Combo.id)
       let validacion = await _validaciones.ValidarProductoxPedido(data.Combo.ProductosPorCombo)
       data.Combo.ProductosPorCombo = await CrearProductoPorCombos(data.Combo.ProductosPorCombo);
