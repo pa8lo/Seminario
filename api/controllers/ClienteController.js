@@ -109,9 +109,10 @@ module.exports = {
             try {
                 let currentUser = await _validaciones.validarRequest(req, 'Cliente', 'Delete');
                 _validaciones.validarExistenciaEliminar({ id: req.body.id, Eliminated: false }, Cliente)
+                let data = req.body;
                 var destruido = await Cliente.update({id:data.id})
                                 .set({Eliminated:true}).fetch();    
-                sails.log.info(cliente)
+                sails.log.info(destruido)
                 res.status(200).json(destruido)
               } catch (error) {
                 sails.log.error(error)

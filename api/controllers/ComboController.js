@@ -54,67 +54,17 @@ module.exports = {
   },
 
   deleteOffert: async function (req, res) {
-    if (req.headers['access-token']) {
-      const currentUser = await base.CheckToken(req.headers['access-token']);
-      if (currentUser) {
-        if (currentUser.Ip == req.ip) {
-          if (await base.CheckAuthorization(currentUser, 'Producto', 'Delete', req.ip, res)) {
-            var data = req.body;
-            try {
-              if (data.id) {
-                var destruido = await Combo.update({
-                    id: data.id
-                  })
-                  .set({
-                    Eliminated: true
-                  }).fetch();
-                if (destruido.length === 0) {
-                  sails.log.info('Se intento borrar combo con id :' + data.id + " pero no existia alguno con ese id");
-                  res.status(401).json({
-                    error: 'No existe combo.'
-                  });
-                } else {
-                  sails.log.info('Se elimino producto con id:' + data.id);
-                  res.status(200).json({
-                    message: 'combo eliminado.'
-                  });
-                }
-              } else {
-                sails.log.info("el usuario " + currentUser.Id + "No ingreso el id para eliminar");
-                res.status(401).json({
-                  error: 'Faltan ingresar parametros'
-                });
-              }
-            } catch (error) {
-              //sails.log.Error("El usuario  de id : "+ currentUser.Id + "quiso acceder desde un ip erroneo.");
-              return res.status(500).json({
-                error: 'Existio un problema al eliminar cliente' + error
-              });
-            }
-          } else {
-            sails.log.info("el usuario " + currentUser.Id + "quiso acceder a un lugar sin permisos");
-            res.status(401).json({
-              error: 'Acceso denegado.'
-            });
-          }
-
-        } else {
-          sails.log.info("El usuario  de id : " + currentUser.Id + "quiso acceder desde un ip erroneo.");
-          return res.status(401).json({
-            error: 'Acceso denegado.'
-          });
-        }
-
-      } else {
-        return res.status(401).json({
-          error: 'Acceso denegado.'
-        });
-      }
-
-    } else {
-      return res.status(401).json({
-        error: 'Medidas de seguridad no ingresadas.'
-      });
+    try {
+      let currentUser = await _validaciones.validarRequest(req, 'Producto', 'Delete');
+      _validaciones.validarExistenciaEliminar({ id: req.body.id, Eliminated: false }, Combo)
+      let data = req.body;
+      var destruido = await Combo.update({id:data.id})
+                      .set({Eliminated:true}).fetch();    
+      sails.log.info(destruido)
+      res.status(200).json(destruido)
+    } catch (error) {
+      sails.log.error(error)
+      res.status(error.code).json(error.message)
     }
   },
   updateOffert: async function (req, res) {
