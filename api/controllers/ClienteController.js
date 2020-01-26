@@ -102,47 +102,21 @@ module.exports = {
                 res.status(200).json(cliente)
               } catch (error) {
                 sails.log.error(error)
-                res.status(500).json(error)
+                res.status(error.code).json(error.message)
               }
         },
         DeleteClient: async function (req,res) {
-            if(req.headers['access-token']){
-                const currentUser = base.CheckToken(req.headers['access-token']);
-                    if(currentUser){
-                        if(currentUser.Ip == req.ip){
-                            var data = req.body;
-                            try{
-                                var destruido = await Cliente.update({id:data.id})
-                                                          .set({Eliminated:true}).fetch();                                               
-                                if (destruido.length === 0) {
-                                   // sails.log.Error('Se intento borrar usuario con id :'+data.id+" pero no existia alguno con ese id");
-                                    res.status(401).json({ error: 'No existe cliente.' });
-                                } else {
-                                  // sails.log.Info('Se elimino usuario con id:'+data.id, destruido[0]);
-                                    res.status(200).json({ message: 'cliente eliminado.' });
-                                    
-                                }
-    
-                            }catch(error){
-                                //sails.log.Error("El usuario  de id : "+ currentUser.Id + "quiso acceder desde un ip erroneo.");
-                                return res.status(500).json({ error: 'Existio un problema al eliminar cliente' +error });
-                            }
-    
-                        }else{
-                            sails.log.Info("El usuario  de id : "+ currentUser.Id + "quiso acceder desde un ip erroneo.");
-                            return res.status(401).json({ error: 'Acceso denegado.' });
-                        } 
-                        
-                    }else{
-                        return res.status(401).json({ error: 'Acceso denegado.' });
-                    } 
-    
-                }else{
-                    return res.status(401).json({ error: 'Medidas de seguridad no ingresadas.' });
-                }
+            try {
+                let currentUser = await _validaciones.validarRequest(req, 'Cliente', 'Delete');
+                _validaciones.validarExistenciaEliminar({ id: req.body.id, Eliminated: false }, Cliente)
+                var destruido = await Cliente.update({id:data.id})
+                                .set({Eliminated:true}).fetch();    
+                sails.log.info(cliente)
+                res.status(200).json(destruido)
+              } catch (error) {
+                sails.log.error(error)
+                res.status(error.code).json(error.message)
+              }
         }
-            
-        
-
 };
 
