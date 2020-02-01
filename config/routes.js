@@ -79,6 +79,8 @@ module.exports.routes = {
 'PUT /User/ChangeRol' : 'UserController.ChangeRol',
 
 'POST /User/ChangePassword' : 'UserController.ChangePassword',
+
+'POST /User/ResetPassword' : 'UserController.ResetPassword',
 //
 // ENDPOINTS CLIENTE
 //
@@ -243,7 +245,11 @@ module.exports.routes = {
 
 'Post /Turn/AssignUser' : 'TurnoController.assignUser',
 
-'Post /Turn/Deallocate' : 'TurnoController.deallocate'
+'Post /Turn/Deallocate' : 'TurnoController.deallocate',
+
+//ENDPOINTS REPORTES
+//
+'Get /Reports/Gasto' : 'ReportesController.Pedidos',
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗

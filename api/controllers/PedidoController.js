@@ -14,7 +14,7 @@ module.exports = {
     try {
       let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
       var pedidos = await Pedido.find({
-        Eliminated: false
+        Eliminated: false,
       }).populate('State')
         .populate('ProductosPorPedido')
         .populate('CombosPorPedido')
@@ -39,7 +39,12 @@ module.exports = {
       }).catch(function(err) {
           throw err;
       })
-      res.status(messages.response.ok).json(pedidos)
+      sails.log.debug(pedidos)
+      let data = req.allParams();
+      let respuesta =data.Validado || data.Validado == 'N' ? pedidos.filter(pedido => pedido.Adress.Validado == false) :pedidos.filter(pedido => pedido.Adress.Validado == true)
+      sails.log.info("pedidos luego del filtro por validado")
+      sails.log.debug(respuesta)
+      res.status(messages.response.ok).json(respuesta)
     } catch (err) {
       console.log(err)
       sails.log.error("error" + JSON.stringify(err))
@@ -54,7 +59,7 @@ module.exports = {
       sails.log.info("se busco este usuario"+JSON.stringify(currentUser))
       let estadoEntregado = await Estado.findOne({Key:'E'})
       let estadoFinalizado = await Estado.findOne({Key:'R'})
-      let pedidos = await Pedido.find({Delivery:currentUser.id,State:{'!=':[estadoEntregado.id,estadoFinalizado.id]}})
+      let pedidos = await Pedido.find({Delivery:currentUser.Id,State:{'!=':[estadoEntregado.id,estadoFinalizado.id]}})
       .populate('Adress')
       .populate('Clients')
       .populate('Users')
@@ -68,7 +73,7 @@ module.exports = {
     }
   },
   createOrder: async function (req, res) {
-      // try {
+      try {
         if (await base.ElementExist(Estado, req.body.State) &&
           await base.ElementExist(User, req.body.Users) &&
           await base.ElementExist(Cliente, req.body.Clients) &&
@@ -102,11 +107,11 @@ module.exports = {
             error: "Alguno de los elementos enviados no existe"
           })
         }
-      // } catch (err) {
-      //   console.log(err)
-      //   sails.log.error("error" + JSON.stringify(err))
-      //   res.status(err.code).json(err.message);
-      // }
+      } catch (err) {
+        console.log(err)
+        sails.log.error("error" + JSON.stringify(err))
+        res.status(err.code).json(err.message);
+      }
   },
   assignDelivery: async function(req,res){
     try {

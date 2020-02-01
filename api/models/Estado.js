@@ -16,10 +16,6 @@ module.exports = {
       type:'string',
       required:true
     },
-    Key:{
-      type:'string',
-      columnType:'char'
-    },
     Eliminated:{
       type: 'boolean',
       defaultsTo: false, 

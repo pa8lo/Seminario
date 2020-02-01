@@ -332,7 +332,7 @@ module.exports = {
         sails.log.info(req.body.Password + "" + usuario.Password)
         if (req.body.Password === usuario.Password) {
           usuario.Password = req.body.NewPassword;
-          await User.update({ id: usuario.id }).set(usuario);
+          await User.update({ id: usuario.id }).set({Password:usuario.Password});
           sails.log.info("Se modifico la contraseña del usuario con id " + currentUser.Id)
           res.status(message.response.ok).json({ message: "Contraseña Modificada" })
         } else {
@@ -345,9 +345,26 @@ module.exports = {
     } else {
       res.status(message.response.Unauthorized).json({ error: "Su cuenta caduco por favor loguearse" })
     }
+  },
+  ResetPassword: async function (req, res)
+  {
+    try {
+      let currentUser = await _validaciones.validarRequest(req, 'Usuario', 'Edit');
+      _validaciones.validarRequestIdEntidad(req.body.id);
+      let data = req.body
+      var usuario = await User.findOne({
+        id: data.id
+      }).decrypt()
+      _validaciones.validarExistenciaEliminar(usuario.id,User);
+      let respuesta = await User.update({ id: usuario.id }).set({Password:usuario.Dni}).fetch();
+      sails.log.info(" se reinicio la contraseña del usuario " + usuario.id);
+      res.status(200).json(respuesta);
+    } catch (err) {
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
+    }
   }
-
-
 
 };
 /**

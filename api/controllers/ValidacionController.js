@@ -136,9 +136,9 @@ module.exports = {
     }
   },
   ValidarEstado: async function (estado) {
-    if (estado.Key.toUpperCase() != 'E' && estado.Key.toUpperCase() != 'R') {
+    if (estado.Description.trim() != 'Entregado' && estado.Description.trim() != 'Rechazado' && estado.Description.trim() != 'EnProceso' ) {
       let estadoExistente = await Estado.find({
-        Key: estado.Key,
+        Description: estado.Description.trim() ,
         Eliminated: false
       })
       sails.log.info(estadoExistente.length)

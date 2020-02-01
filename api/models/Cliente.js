@@ -27,7 +27,6 @@ module.exports = {
     Phone:{
       type:'string',
       description:'Numero de telefono del usuario',
-      unique:true,
       required:true
     },
 

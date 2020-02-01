@@ -43,7 +43,11 @@ module.exports = {
       required:true,
       description:'Codigo postal del cliente'
     },
-
+    Validado:{
+      type:'boolean',
+      columnType:'char',
+      defaultsTo: false, 
+    },
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝
