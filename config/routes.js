@@ -249,7 +249,13 @@ module.exports.routes = {
 
 //ENDPOINTS REPORTES
 //
-'Get /Reports/Gasto' : 'ReportesController.Pedidos',
+'Get /Reports/Pedidos' : 'ReportesController.Pedidos',
+
+'Get /Reports/Gasto' : 'ReportesController.Gastos',
+
+'Get /Reports/Ganancias' : 'ReportesController.Ganancias',
+
+
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗

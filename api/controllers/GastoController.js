@@ -30,7 +30,7 @@ module.exports = {
           let fecha =data.Date.split("/")
           sails.log.debug(fecha)
 
-          let date = new Date(fecha[2],fecha[1],fecha[0])
+          let date = new Date(fecha[2],fecha[1]-1,fecha[0])
           sails.log.debug(data.Date)
           sails.log.info("se procede a crear un gasto con los siguiente datos"+JSON.stringify(req.body))
           validacion = await _validaciones.validarExistenciaEliminar({ id: data.User, Eliminated: false }, User)

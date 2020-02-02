@@ -7,30 +7,101 @@
 
 module.exports = {
   
-    Pedidos:async function(req , res){
-        let prueba = await Gasto.find();
-        Array.prototype.groupBy = function(prop) {
-            return this.reduce(function(groups, item) {
-              const val = item[prop]
-              groups[val] = groups[val] || []
-              groups[val].push(item)
-              return groups
-            }, {})
+    Gastos:async function(req , res){
+        var data = req.allParams();
+        sails.log.debug("se recibieron los siguientes datos")
+        sails.log.debug(data)
+        try{
+            let prueba = await Gasto.find({
+                Date: {'>':data.min,'<':data.max},
+            });
+            let ordenado = [];
+                prueba.forEach(dato => 
+                    dato.Date = sails.moment(dato.Date).format("YYYY-MM-DD"))
+                while(prueba.length >0 ){
+                    let a  = prueba.filter(x => x.Date === prueba[0].Date)
+                    let dinero = 0;
+                    a.forEach(valor => {
+                        dinero += valor.Amount
+                    });
+                 ordenado.push({
+                        day : prueba[0].Date,
+                        datos  :  prueba.filter(x => x.Date === prueba[0].Date),
+                        amount : dinero
+                    })
+                prueba =  prueba.filter(x => x.Date != prueba[0].Date)
+            }
+            sails.log.debug("se devolven lo siguientes datos")
+            sails.log.debug(ordenado)
+            res.status(200).json(ordenado);
         }
-        res.status(200).json(prueba.groupBy(prueba.date))
+        catch(err){
+            sails.log.debug(err)
+            res.status(500).json("error en la busqueda de datos")
+        }
+    },
+    Pedidos: async function(req , res){
+        
+        var data = req.allParams();
+        try {
+            let ordenado = []
+            let pedidos = await Pedido.find();
+            pedidos.forEach(dato =>  
+            dato.Date = sails.moment(dato.Date).format("hA"))
+            sails.log.debug(pedidos)
+            while(pedidos.length >0 ){
+                let a  = pedidos.filter(x => x.Date === pedidos[0].Date)
+                let dinero = 0;
+                a.forEach(valor => {
+                    dinero += valor.Amount
+                });
+             ordenado.push({
+                    day : pedidos[0].Date,
+                    datos  :  pedidos.filter(x => x.Date === pedidos[0].Date),
+                    amount : dinero
+                })
+            pedidos =  pedidos.filter(x => x.Date != pedidos[0].Date)
 
-        // sails.log.info(a)
-        // Gasto.getDatastore().sendNativeQuery('SELECT * FROM gasto ' ,function(err, rawResult) {
-        //     if (err) { return sails.log.info("err"); }
-            
-        //     // sails.log(rawResult.rows);
-        //     // (result format depends on the SQL query that was passed in, and the adapter you're using)
-          
-        //     // Then parse the raw result and do whatever you like with it.
-        //     res.status(200).json(rawResult.rows)
-        //     // return res.status(200).json(rawResult);
-        //     })
-
+        }
+        sails.log.debug("se devolven lo siguientes datos")
+        sails.log.debug(ordenado)
+        res.status(200).json(ordenado);
+        } catch (error) {
+            res.status(500).json(error)
+        }
+    },
+    Ganancias:async function(req, res){
+        var data = req.allParams();
+        sails.log.debug("se recibieron los siguientes datos")
+        sails.log.debug(data)
+        try{
+            let pedido = await Pedido.find({
+                Date: {'>':data.min,'<':data.max},
+            });
+            let ordenado = [];
+                pedido.forEach(dato => 
+                    dato.Date = sails.moment(dato.Date).format("YYYY-MM-DD"))
+                while(pedido.length >0 ){
+                    let a  = pedido.filter(x => x.Date === pedido[0].Date)
+                    let dinero = 0;
+                    a.forEach(valor => {
+                        dinero += valor.Amount
+                    });
+                 ordenado.push({
+                        day : pedido[0].Date,
+                        datos  :  pedido.filter(x => x.Date === pedido[0].Date),
+                        amount : dinero
+                    })
+                pedido =  pedido.filter(x => x.Date != pedido[0].Date)
+            }
+            sails.log.debug("se devolven lo siguientes datos")
+            sails.log.debug(ordenado)
+            res.status(200).json(ordenado);
+        }
+        catch(err){
+            sails.log.debug(err)
+            res.status(500).json("error en la busqueda de datos")
+        }
     }
 };
 
