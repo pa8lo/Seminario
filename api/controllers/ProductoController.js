@@ -93,7 +93,6 @@ module.exports = {
     if (req.headers['access-token']) {
       const currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
-        if (currentUser.Ip == req.ip) {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'Delete', req.ip, res)) {
             var data = req.body;
             try {
@@ -129,7 +128,7 @@ module.exports = {
             }
           } else {
             sails.log.info("el usuario " + currentUser.Id + "quiso acceder a un lugar sin permisos");
-            res.status(401).json({
+            res.status(403).json({
               error: 'Acceso denegado.'
             });
           }
@@ -141,14 +140,8 @@ module.exports = {
           });
         }
 
-      } else {
-        return res.status(401).json({
-          error: 'Acceso denegado.'
-        });
-      }
-
     } else {
-      return res.status(401).json({
+      return res.status(403).json({
         error: 'Medidas de seguridad no ingresadas.'
       });
     }

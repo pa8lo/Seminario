@@ -52,10 +52,10 @@ module.exports.datastores = {
     // url: 'postgres://nhugaulg:exJ3FY7-OSmS8c7WcaLUmymAgX0P1TLw@raja.db.elephantsql.com:5432/nhugaulg', 
     adapter: 'sails-mysql',
    //  url: 'mysql://sql10254732:I3SeRawNqU@sql10.freemysqlhosting.net:3306/sql10254732', //Online
-     url: 'mysql://E9FBwOknS0:Em6wc60zbg@remotemysql.com:3306/E9FBwOknS0', //Online Produccipon
+     //url: 'mysql://E9FBwOknS0:Em6wc60zbg@remotemysql.com:3306/E9FBwOknS0', //Online pruebas
    //url: 'mysql://fJI1aUfvRB:P3I3MQUACw@remotemysql.com:3306/fJI1aUfvRB' ,//ide
     //url: 'mysql://X8oE9dua0u:PR8awkGyw9@remotemysql.com:3306/X8oE9dua0u', //desa
-   //url: 'mysql://PoSuHIi0BP:CAeF6XT13v@remotemysql.com:3306/PoSuHIi0BP', //Online Produccipon
+   url: 'mysql://PoSuHIi0BP:CAeF6XT13v@remotemysql.com:3306/PoSuHIi0BP', //Online Produccipon
 
 //url: 'mysql://root@127.0.0.1:3308/seminario',//Facultad
      //url: 'mysql://root@127.0.0.1:14864/seminario',//Casa
