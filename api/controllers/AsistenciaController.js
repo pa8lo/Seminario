@@ -93,11 +93,16 @@ module.exports = {
         var data = req.body;
         var usuario = await User.findOne({id: data.Asistencia.User});
         let validaciones = _validaciones.ValidarExistenciaLogin(usuario);
-        validaciones = _validaciones.ValidarRequestCrearAsistencia(data)
+        // validaciones = _validaciones.ValidarRequestCrearAsistencia(data)
         sails.log.info("[[asistenciaController.createassist]]se procede a crear asistencia")
+        let fecha =data.Asistencia.InTime.split("/")
+        let hora = fecha[2].split(" ");
+        let horaParseada = hora[1].split(":")
+        let fechacompleta = new Date(hora[0],fecha[1],fecha[0],horaParseada[0].trim(),horaParseada[1],horaParseada[2],horaParseada[3])
+        sails.log.info(fechacompleta);
         var datos = {
-          OutTime:data.Asistencia.InTime,
-          InTime:data.Asistencia.InTime,
+          OutTime:fechacompleta,
+          InTime:fechacompleta,
           User: data.Asistencia.User
         }
         var asistencia = await Asistencia.create(datos).fetch()
