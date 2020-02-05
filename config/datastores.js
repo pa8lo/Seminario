@@ -57,6 +57,7 @@ module.exports.datastores = {
    // url: 'mysql://X8oE9dua0u:PR8awkGyw9@remotemysql.com:3306/X8oE9dua0u', //desa
    //url: 'mysql://PoSuHIi0BP:CAeF6XT13v@remotemysql.com:3306/PoSuHIi0BP', //Online Produccipon
     //url: 'mysql://id11472528_roraso:roraso@000webhost.com:3306/id11472528_roraso' ,//ide
+
     
   //  INSERT INTO `permiso_Users__user_Authorizations` (`id`, `permiso_Users`, `user_Authorizations`) VALUES (NULL, '1', '4'), (NULL, '1', '5'), (NULL, '1', '6'), (NULL, '1', '7'), (NULL, '1', '8'), (NULL, '1', '9'), (NULL, '1', '10'), (NULL, '1', '11'), (NULL, '1', '12'), (NULL, '1', '13'), (NULL, '1', '14'), (NULL, '1', '15'), (NULL, '1', '16'), (NULL, '1', '17'), (NULL, '1', '18'), (NULL, '1', '19'), (NULL, '1', '20'), (NULL, '1', '21'), (NULL, '1', '22'), (NULL, '1', '23');
 
