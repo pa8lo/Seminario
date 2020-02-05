@@ -25,7 +25,6 @@ module.exports = {
                         dinero += valor.Amount
                     });
                  ordenado.push({
-                        day : prueba[0].Date,
                         datos  :  prueba.filter(x => x.Date === prueba[0].Date),
                         amount : dinero
                     })
@@ -53,6 +52,7 @@ module.exports = {
                 let a  = pedidos.filter(x => x.Date === pedidos[0].Date)
                 let dinero = 0;
                 a.forEach(valor => {
+                    
                     dinero += valor.Amount
                 });
              ordenado.push({

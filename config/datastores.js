@@ -50,12 +50,14 @@ module.exports.datastores = {
     ***************************************************************************/
     // adapter: 'sails-postgresql',
     // url: 'postgres://nhugaulg:exJ3FY7-OSmS8c7WcaLUmymAgX0P1TLw@raja.db.elephantsql.com:5432/nhugaulg', 
-    adapter: 'sails-mysql',
-   //  url: 'mysql://sql10254732:I3SeRawNqU@sql10.freemysqlhosting.net:3306/sql10254732', //Online
+    //adapter: 'sails-mysql',
+     //url: 'mysql://sql10254732:I3SeRawNqU@sql10.freemysqlhosting.net:3306/sql10254732', //Online
      //url: 'mysql://E9FBwOknS0:Em6wc60zbg@remotemysql.com:3306/E9FBwOknS0', //Online pruebas
    //url: 'mysql://fJI1aUfvRB:P3I3MQUACw@remotemysql.com:3306/fJI1aUfvRB' ,//ide
     //url: 'mysql://X8oE9dua0u:PR8awkGyw9@remotemysql.com:3306/X8oE9dua0u', //desa
-   url: 'mysql://PoSuHIi0BP:CAeF6XT13v@remotemysql.com:3306/PoSuHIi0BP', //Online Produccipon
+   //url: 'mysql://PoSuHIi0BP:CAeF6XT13v@remotemysql.com:3306/PoSuHIi0BP', //Online Produccipon
+   // url: 'mysql://LYl5hRBBLZ:TMqP31ZPWj@remotemysql.com:3306/LYl5hRBBLZ' ,//ide
+  //  INSERT INTO `permiso_Users__user_Authorizations` (`id`, `permiso_Users`, `user_Authorizations`) VALUES (NULL, '1', '4'), (NULL, '1', '5'), (NULL, '1', '6'), (NULL, '1', '7'), (NULL, '1', '8'), (NULL, '1', '9'), (NULL, '1', '10'), (NULL, '1', '11'), (NULL, '1', '12'), (NULL, '1', '13'), (NULL, '1', '14'), (NULL, '1', '15'), (NULL, '1', '16'), (NULL, '1', '17'), (NULL, '1', '18'), (NULL, '1', '19'), (NULL, '1', '20'), (NULL, '1', '21'), (NULL, '1', '22'), (NULL, '1', '23');
 
 //url: 'mysql://root@127.0.0.1:3308/seminario',//Facultad
      //url: 'mysql://root@127.0.0.1:14864/seminario',//Casa
