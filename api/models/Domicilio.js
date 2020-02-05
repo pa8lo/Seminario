@@ -46,7 +46,7 @@ module.exports = {
     Validado:{
       type:'boolean',
       columnType:'char',
-      defaultsTo: false, 
+      defaultsTo: true, 
     },
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
