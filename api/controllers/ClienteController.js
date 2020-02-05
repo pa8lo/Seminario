@@ -59,7 +59,7 @@ module.exports = {
 
     Clients : async function (req,res) {
         try {
-            let currentUser = await _validaciones.validarRequest(req, 'Usuario', 'View');
+            let currentUser = await _validaciones.validarRequest(req, 'Cliente', 'View');
             let clientes = await Cliente.find({Eliminated: false}).populate('Adress');
             let validaciones  =await _validaciones.ValidarEntidad(clientes,"cliente");
             res.json(clientes)
