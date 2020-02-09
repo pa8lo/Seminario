@@ -51,7 +51,9 @@ module.exports.datastores = {
     // adapter: 'sails-postgresql',
     // url: 'postgres://nhugaulg:exJ3FY7-OSmS8c7WcaLUmymAgX0P1TLw@raja.db.elephantsql.com:5432/nhugaulg', 
     adapter: 'sails-mysql',
-    url: 'mysql://sql10321819:p9q6wfk7xE@sql10.freemysqlhosting.net:3306/sql10321819', //Online
+    //url: 'mysql://sql10321819:p9q6wfk7xE@sql10.freemysqlhosting.net:3306/sql10321819', //Online en internet
+    url: 'mysql://sql10322044:G9aUSSH4r5@sql10.freemysqlhosting.net:3306/sql10322044', //Online nueva
+
     // url: 'mysql://E9FBwOknS0:Em6wc60zbg@remotemysql.com:3306/E9FBwOknS0', //Online pruebas
    //url: 'mysql://fJI1aUfvRB:P3I3MQUACw@remotemysql.com:3306/fJI1aUfvRB' ,//ide
    // url: 'mysql://X8oE9dua0u:PR8awkGyw9@remotemysql.com:3306/X8oE9dua0u', //desa

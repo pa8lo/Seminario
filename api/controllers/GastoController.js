@@ -77,10 +77,28 @@ module.exports = {
           }
         }
       },
-
       updateExpense: async function (req,res) {
-          await base.updateElement(req,res,"Gasto","Edit",Gasto,req.body.id,req.body.Gasto);
+        try {
+          let currentUser = await _validaciones.validarRequest(req, 'Gasto', 'Edit');
+          _validaciones.ValidarDatoRequest(req.body.Gasto.Date);
+          var data = req.body;
+          validacion = await _validaciones.validarExistenciaEliminar({ id: data.User, Eliminated: false }, Gasto)
+          sails.log.debug(data)
+          let fecha =data.Gasto.Date.split("/")
+          data.Gasto.Date = new Date(fecha[2],fecha[1]-1,fecha[0])
+          let gasto = await Gasto.update({
+            id: req.body.id
+          })
+          .set(data.Gasto
+          ).fetch();
+          sails.log.debug("gasto modificado")
+          sails.log.debug(gasto)
+          res.status(200).json(gasto);
+        } catch (err) {
+          sails.log.error("error" + JSON.stringify(err))
+          res.status(err.code).json(err.message);
         }
+      }
 
 };
 

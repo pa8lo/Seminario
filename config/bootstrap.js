@@ -29,12 +29,20 @@ module.exports.bootstrap = async function(done) {
    *
    */
   await Estado.create({
-    Description:'Entregado',
-    Key:'E'
+    id:1,
+    Description:'Recibido'
   })
   await Estado.create({
-    Description:'Rechazado',
-    Key:'R'
+    id:2,
+    Description:'EnProceso'
+  })
+  await Estado.create({
+    id:3,
+    Description:'Entregado'
+  })
+  await Estado.create({
+    id:4,
+    Description:'Rechazado'
   })
    /*
    *

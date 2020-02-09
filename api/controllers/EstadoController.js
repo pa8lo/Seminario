@@ -33,7 +33,7 @@ module.exports = {
   },
 
   deleteState: async function (req, res) {
-    if (await base.validator(req, res, "Producto", "Delete")) {
+    if (await base.validator(req, res, "Pedido", "Delete")) {
       var data = req.body;
       try {
         if (data.id) {
@@ -65,30 +65,20 @@ module.exports = {
   },
 
   updateState: async function (req, res) {
-    if (await base.validator(req, res, "Producto", "View")) {
-        var data = req.body
-        if (data.Estado.id) {
-            var estado = await Estado.update({
-                id: data.Estado.id
-              })
-              .set(data.Estado).fetch();
-            if (estado.length === 0) {
-              sails.log.info('Se intento modificar el estado con id :' + estado.id + " pero no existia alguno con ese id");
-              res.status(messages.response.noFound).json({
-                error: 'No existe estado.'
-              });
-            } else {
-              sails.log.info('Se modifico el estado con id :' + estado.id);
-              res.status(messages.response.ok).json({
-                message: 'Estado modificada.'
-              });
-            }
-          } else {
-            sails.log.info("el usuario " + currentUser.Id + "No ingreso el id ");
-            res.status(messages.response.wrongSintexis).json({
-              error: 'Faltan ingresar parametros'
-            });
-          }
+    try {
+      let data = req.body;
+      sails.log.debug(data)
+      let validaciones =await  _validaciones.ValidarEditarEliminarEstado(data.Estado);
+      let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'Edit');
+      var estado = await Estado.update({
+        id: data.Estado.id
+      })
+      .set(data.Estado).fetch();
+      res.status(200).json(estado)
+    } catch (err) {
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
     }
   },
 

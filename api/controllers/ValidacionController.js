@@ -136,7 +136,7 @@ module.exports = {
     }
   },
   ValidarEstado: async function (estado) {
-    if (estado.Description.trim() != 'Entregado' && estado.Description.trim() != 'Rechazado' && estado.Description.trim() != 'EnProceso' ) {
+    if (estado.Description.trim() != 'Entregado' && estado.Description.trim() != 'Rechazado' && estado.Description.trim() != 'EnProceso' && estado.Description.trim() != 'Recibido'  ) {
       let estadoExistente = await Estado.find({
         Description: estado.Description.trim() ,
         Eliminated: false
@@ -147,6 +147,14 @@ module.exports = {
       }
     } else {
       throw _error.GenerateError("ya existe el estado que quiere crearse", 400)
+    }
+  },
+  ValidarEditarEliminarEstado: async function (estado){
+    sails.log.debug("se procede a validar estado")
+    sails.log.debug(estado)
+    if (estado.Description.trim() == 'Entregado' || estado.Description.trim() == 'Rechazado' || estado.Description.trim() == 'EnProceso' || estado.Description.trim() == 'Recibido'  ) {
+      sails.log.error("se intento crear estado no modificable")
+      throw _error.GenerateError("este estado no se puede eliminar ni editar", 400)
     }
   },
   validarRequestIdEntidad: function (id) {

@@ -12,8 +12,12 @@ var _comboController = require('./ComboController');
 module.exports = {
   Orders: async function (req, res) {
     try {
+      let today = new Date();
+      let date = new Date(today.setDate(today.getDate() - 2))
+      sails.log.info(date)
       let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
       var pedidos = await Pedido.find({
+        Date: {'>':date},
         Eliminated: false,
       }).populate('State')
         .populate('ProductosPorPedido')
@@ -39,12 +43,7 @@ module.exports = {
       }).catch(function(err) {
           throw err;
       })
-      sails.log.debug(pedidos)
-      let data = req.allParams();
-      let respuesta =data.Validado || data.Validado == 'N' ? pedidos.filter(pedido => pedido.Adress.Validado == false) :pedidos.filter(pedido => pedido.Adress.Validado == true)
-      sails.log.info("pedidos luego del filtro por validado")
-      sails.log.debug(respuesta)
-      res.status(messages.response.ok).json(respuesta)
+      res.status(messages.response.ok).json(pedidos)
     } catch (err) {
       console.log(err)
       sails.log.error("error" + JSON.stringify(err))
@@ -57,8 +56,8 @@ module.exports = {
       var data = req.allParams();
       let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
       sails.log.info("se busco este usuario"+JSON.stringify(currentUser))
-      let estadoEntregado = await Estado.findOne({Key:'E'})
-      let estadoFinalizado = await Estado.findOne({Key:'R'})
+      let estadoEntregado = await Estado.findOne({Description:'Entregado'})
+      let estadoFinalizado = await Estado.findOne({Description:'Rechazado'})
       let pedidos = await Pedido.find({Delivery:currentUser.Id,State:{'!=':[estadoEntregado.id,estadoFinalizado.id]}})
       .populate('Adress')
       .populate('Clients')
@@ -80,9 +79,9 @@ module.exports = {
           await base.ElementExist(Domicilio, req.body.Adress)) {
           let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
           let date = new Date()
-          let fecha =  date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDay()+1)+" "+(date.getUTCHours()-3)+":"+date.getUTCMinutes()+":"+date.getUTCSeconds()
-          sails.log.info(fecha)
-          req.body.Date = fecha
+          // let fecha =  date.getUTCFullYear()+"-"+(date.getUTCMonth()+1)+"-"+(date.getUTCDate())+" "+(date.getUTCHours())+":"+date.getUTCMinutes()+":"+date.getUTCSeconds()
+          // sails.log.info(fecha)
+          req.body.Date = date
           sails.log.info(req.body.Date)
           let validaciones = await _validaciones.ValidarProductoxPedido(req.body.ProductosPorPedido);
           validaciones = await _validaciones.ValidarComboxPedido(req.body.CombosPorPedido);
@@ -204,7 +203,7 @@ module.exports = {
   PedidoEntregadoDelivery: async function(req,res){
     try {
       let data = req.body
-      var ExisteEstado = await Estado.findOne({Key:'E'})
+      var ExisteEstado = await Estado.findOne({Description:'Entregado'})
       sails.log.info("se va a actualizar el estado:")
       sails.log.info(ExisteEstado)
       _validaciones.ValidarEntidad(ExisteEstado)
@@ -221,7 +220,7 @@ module.exports = {
   PedidoRechazadoDelivery: async function(req,res){
     try {
       let data = req.body
-      var ExisteEstado = await Estado.findOne({Key:'R'})
+      var ExisteEstado = await Estado.findOne({Description:'Rechazado'})
       sails.log.info("se va a actualizar el pedido con el id :" +data.id)
       _validaciones.ValidarEntidad(ExisteEstado)
       var pedido = await Pedido.update({id:data.id}).set({State:ExisteEstado.id}).fetch()

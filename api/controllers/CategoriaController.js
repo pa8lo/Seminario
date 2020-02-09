@@ -150,7 +150,7 @@ module.exports = {
       var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         if (await base.CheckAuthorization(currentUser, 'Producto', 'Edit', req.ip, res)) {
-          if (data.Categoria.id) {
+          if (data.Categoria.id && data.Categoria.id != 1) {
             var categoria = await Categoria.update({
                 id: data.Categoria.id
               })
@@ -169,7 +169,7 @@ module.exports = {
           } else {
             sails.log.info("el usuario " + currentUser.Id + "No ingreso el id ");
             res.status(401).json({
-              error: 'Faltan ingresar parametros'
+              error: 'Faltan ingresar parametros o intento editar categoria 1 '
             });
           }
 
