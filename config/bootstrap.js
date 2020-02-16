@@ -54,13 +54,7 @@ module.exports.bootstrap = async function(done) {
           id:1,
           Name:'Admin',
           Description:'Administrador de usuarios de la aplicación',
-          Authorizations:[1,2,3,5]
-        });
-  await Rol
-        .create({
-          id:2,
-          Name:'Usuario',
-          Description:'Administrador de usuarios de la aplicación'
+          Authorizations:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
         });
   /*
    *
@@ -128,7 +122,16 @@ module.exports.bootstrap = async function(done) {
    * Creación de categorias
    *
    */ 
+   await Cliente.create({Name: 'test',LastName:'Test',email:'texs@test.com',Phone:'123445',Adress:[1],Orders:[1]});
+   await Domicilio.create({Adress:'test',Cp:1406,Client:1,User:1,LatLong:"-34.6325883,-58.4686851"});
+
    await Categoria.create({id:1,Name:'Sin Categoria', Description:'Productos sin categoria'})
+   await Producto.create({id:1,Name:'Prueba', Description:'Producto prueba',Amount:123,Category:1})
+   await Combo.create({id:1,Name:'Combo', Description:'Producto prueba',Amount:223})
+   await ProductosPorCombos.create({Offer:1,Product:1,Count:2})
+   await CombosPorPedido.create({Count:1,Order:1,Offer:1})
+   await ProductosPorPedido.create({Count:1,Order:1,Product:1})
+   await Pedido.create({id:1,Amount:123,Users:1,Delivery:1,Clients:1,Adress:1,Products:1,ProductosPorPedido:1,CombosPorPedido:1,Offers:1,State:1})
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.
   // (otherwise your server will never lift, since it's waiting on the bootstrap)
   return done();
