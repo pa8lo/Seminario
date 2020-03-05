@@ -50,6 +50,49 @@ module.exports = {
       res.status(err.code).json(err.message);
     }
   },
+  OrdersHere: async function (req, res) {
+    try {
+      let today = new Date();
+      let date = new Date(today.setDate(today.getDate() - 2))
+      sails.log.info(date)
+      let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
+      var pedidos = await Pedido.find({
+        State: {
+          '!=':'Enviado',
+          '!=':'Rechazado',
+          '!=':'Entregado'},
+        Eliminated: false,
+      }).populate('State')
+        .populate('ProductosPorPedido')
+        .populate('CombosPorPedido')
+        .populate('Products')
+        .populate('Users')
+        .populate('Clients')
+        .populate('Adress')
+        .populate('Delivery')
+        .then(function(pedidos) {
+          return sails.nestedPop(pedidos, {
+            CombosPorPedido: [
+                  'Offer'
+              ],
+            ProductosPorPedido: [
+                  'Product'
+            ]  
+          }).then(function(users) {
+              return users
+          }).catch(function(err) {
+              throw err;
+          });
+      }).catch(function(err) {
+          throw err;
+      })
+      res.status(messages.response.ok).json(pedidos)
+    } catch (err) {
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
+    }
+  },
   OrdersByDelivery: async function (req,res){
     try{
       sails.log.info("se inicia la busqueda de los pedidos para el delivery")

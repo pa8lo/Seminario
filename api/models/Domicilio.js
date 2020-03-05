@@ -27,9 +27,8 @@ module.exports = {
     },
 
     Floor:{
-      type:'number',
+      type:'String',
       description:'piso del departamento',
-      allowNull:true,
       columnName: 'Piso',
     },
     

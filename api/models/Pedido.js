@@ -21,6 +21,9 @@ module.exports = {
       type:'number',
       columnType:'double'
     },
+    Observaciones:{
+      type:'string',
+    },
     Eliminated:{
       type: 'boolean',
       defaultsTo: false, 
