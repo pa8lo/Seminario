@@ -56,7 +56,7 @@ module.exports.datastores = {
 
     // url: 'mysql://E9FBwOknS0:Em6wc60zbg@remotemysql.com:3306/E9FBwOknS0', //Online pruebas
    //url: 'mysql://fJI1aUfvRB:P3I3MQUACw@remotemysql.com:3306/fJI1aUfvRB' ,//ide
-   // url: 'mysql://X8oE9dua0u:PR8awkGyw9@remotemysql.com:3306/X8oE9dua0u', //desa
+    //url: 'mysql://X8oE9dua0u:PR8awkGyw9@remotemysql.com:3306/X8oE9dua0u', //desa
    //url: 'mysql://PoSuHIi0BP:CAeF6XT13v@remotemysql.com:3306/PoSuHIi0BP', //Online Produccipon
     //url: 'mysql://id11472528_roraso:roraso@000webhost.com:3306/id11472528_roraso' ,//ide
 
