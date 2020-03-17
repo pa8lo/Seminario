@@ -52,7 +52,7 @@ module.exports.datastores = {
     // url: 'postgres://nhugaulg:exJ3FY7-OSmS8c7WcaLUmymAgX0P1TLw@raja.db.elephantsql.com:5432/nhugaulg', 
      adapter: 'sails-mysql',
     url: 'mysql://sql10327705:8mIEwhUxJs@sql10.freemysqlhosting.net:3306/sql10327705', //Online en internet
-    // url: 'mysql://sql10322044:G9aUSSH4r5@sql10.freemysqlhosting.net:3306/sql10322044', //Online nueva
+    // url: 'mysql://sql10328334:8l4Zb45h7Q@sql10.freemysqlhosting.net:3306/sql10328334', //Online nueva
 
     // url: 'mysql://E9FBwOknS0:Em6wc60zbg@remotemysql.com:3306/E9FBwOknS0', //Online pruebas
    //url: 'mysql://fJI1aUfvRB:P3I3MQUACw@remotemysql.com:3306/fJI1aUfvRB' ,//ide

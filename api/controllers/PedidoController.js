@@ -122,9 +122,10 @@ module.exports = {
           await base.ElementExist(Domicilio, req.body.Adress)) {
           let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
           let date = new Date()
+          let dateBuenosAires = new Date(date.getFullYear(),date.getMonth(),date.getDate(),date.getHours()-3,date.getMinutes(),date.getSeconds(),date.getMilliseconds())
           // let fecha =  date.getUTCFullYear()+"-"+(date.getUTCMonth()+1)+"-"+(date.getUTCDate())+" "+(date.getUTCHours())+":"+date.getUTCMinutes()+":"+date.getUTCSeconds()
           // sails.log.info(fecha)
-          req.body.Date = date
+          req.body.Date = dateBuenosAires
           sails.log.info(req.body.Date)
           let validaciones = await _validaciones.ValidarProductoxPedido(req.body.ProductosPorPedido);
           validaciones = await _validaciones.ValidarComboxPedido(req.body.CombosPorPedido);
@@ -213,9 +214,8 @@ module.exports = {
         req.body.CombosPorPedido =[]
       }
       let date = new Date()
-      let fecha =  date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDay()+1)+" "+(date.getUTCHours()-3)+":"+date.getUTCMinutes()+":"+date.getUTCSeconds()
-      sails.log.info(fecha)
-      req.body.Date = fecha
+      let dateBuenosAires = new Date(date.getFullYear(),date.getMonth(),date.getDate(),date.getHours()-3,date.getMinutes(),date.getSeconds(),date.getMilliseconds())
+      req.body.Date = dateBuenosAires
       sails.log.info("se procede a actualizar el pedido")
       let pedido = await Pedido.update({
         id: req.body.id

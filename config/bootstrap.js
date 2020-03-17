@@ -34,7 +34,7 @@ module.exports.bootstrap = async function(done) {
   })
   await Estado.create({
     id:2,
-    Description:'EnProceso'
+    Description:'En Preparación'
   })
   await Estado.create({
     id:3,

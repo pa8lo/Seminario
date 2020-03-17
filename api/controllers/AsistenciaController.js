@@ -126,16 +126,27 @@ module.exports = {
         let validaciones = _validaciones.ValidarExistenciaLogin(asistenciaExistente);
         let diferencia = _validaciones.ValidarFechaAsistencia(data.Asistencia,asistenciaExistente);
         sails.log.info("[[asistenciaController.createassist]]se procede a crear asistencia") 
-        data.Asistencia.Hours = diferencia.horas;
-        data.Asistencia.Minutes = diferencia.minutos;
+        let fecha =data.Asistencia.InTime.split("/")
+        let hora = fecha[2].split(" ");
+        let horaParseada = hora[1].split(":")
+        let fechacompleta = new Date(hora[0],fecha[1]-1,fecha[0],horaParseada[0].trim()-3,horaParseada[1],horaParseada[2],horaParseada[3])
 
-        var asistencia = await Asistencia.update({
+        let fechasalida =data.Asistencia.OutTime.split("/")
+        let horasalida = fechasalida[2].split(" ");
+        let horaParseadasalida = horasalida[1].split(":")
+        let fechacompletasalida = new Date(hora[0],fecha[1]-1,fecha[0],horaParseadasalida[0].trim()-3,horaParseadasalida[1],horaParseadasalida[2],horaParseadasalida[3])
+        sails.log.info(fechacompleta);
+        let datos = {
+          OutTime:fechacompletasalida,
+          InTime:fechacompleta,
+        }
+        let asistencia = await Asistencia.update({
           id: data.Asistencia.id
         })
-          .set(data.Asistencia).fetch();
+          .set(datos).fetch();
         sails.log.info("[[asistenciaController.createassist]]asistencia modificada ")
         res.status(200).json({
-          message: "asistencia modificada"
+          message: asistencia
         })
       } catch (err) {
         sails.log.error("error" + JSON.stringify(err))
@@ -188,4 +199,5 @@ module.exports = {
       }
       },
 };
+
 

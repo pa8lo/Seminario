@@ -14,7 +14,7 @@ module.exports = {
         try{
             let prueba = await Gasto.find({
                 Date: {'>':data.min,'<':data.max},
-            });
+            }).sort('date DESC');;
             let ordenado = [];
                 prueba.forEach(dato => 
                     dato.Date = sails.moment(dato.Date).format("YYYY-MM-DD"))
