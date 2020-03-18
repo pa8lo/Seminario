@@ -273,8 +273,42 @@ module.exports = {
       sails.log.error("error" + JSON.stringify(err))
       res.status(err.code).json(err.message);
     }
+  },
+  PedidosPorCliente: async function (req,res){
+    let data = req.allParams();
+    let cliente =await Cliente
+              .findOne({Phone: data.Phone})
+              var pedidos = await Pedido.find({
+                Clients: cliente.id,
+                Eliminated: false,
+              }).populate('State')
+                .populate('ProductosPorPedido')
+                .populate('CombosPorPedido')
+                .populate('Products')
+                .populate('Users')
+                .populate('Clients')
+                .populate('Adress')
+                .populate('Delivery')
+                .then(function(pedidos) {
+                  return sails.nestedPop(pedidos, {
+                    CombosPorPedido: [
+                          'Offer'
+                      ],
+                    ProductosPorPedido: [
+                          'Product'
+                    ]  
+                  }).then(function(users) {
+                      return users
+                  }).catch(function(err) {
+                      throw err;
+                  });
+              }).catch(function(err) {
+                  throw err;
+              })
+    res.status(200).json({pedidos})          
   }
-};
+              
+}
 async function  CrearProductoPorPedidos(productosPorPedido){
   sails.log.info("se proceden a crear los productos por pedido"+JSON.stringify(productosPorPedido))
   let idsProductoPorPedido = []
