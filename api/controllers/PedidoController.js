@@ -275,15 +275,17 @@ module.exports = {
     }
   },
   PedidosPorCliente: async function (req,res){
-    let data = req.allParams();
+    try{
+      let data = req.allParams();
     let cliente =await Cliente
               .findOne({Phone: data.Phone})
-              var pedidos = await Pedido.find({
+    _validaciones.ValidarEntidad(cliente)
+    let pedidos = await Pedido.find({
                 Clients: cliente.id,
                 Eliminated: false,
               }).populate('State')
                 .populate('ProductosPorPedido')
-                .populate('CombosPorPedido')
+                .populate('CombosPorPedido')   
                 .populate('Products')
                 .populate('Users')
                 .populate('Clients')
@@ -305,7 +307,13 @@ module.exports = {
               }).catch(function(err) {
                   throw err;
               })
-    res.status(200).json({pedidos})          
+    res.status(200).json({pedidos})     
+    }catch(err){
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
+    }
+         
   }
               
 }
