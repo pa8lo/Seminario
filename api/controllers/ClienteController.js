@@ -81,7 +81,7 @@ module.exports = {
                     if(currentUser){
                         if(true){
                         var cliente =await Cliente.find({Phone: data.Phone}).limit(1).populate('Adress');   
-                        res.status(200).json({Cliente:cliente})             
+                        res.status(200).json({Cliente:cliente[0]})             
                         }
                     }
                 }else{
