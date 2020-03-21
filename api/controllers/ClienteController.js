@@ -80,7 +80,7 @@ module.exports = {
                 var currentUser = base.CheckToken(req.headers['access-token']);
                     if(currentUser){
                         if(true){
-                        var cliente =await Cliente.findOne({Phone: data.Phone}).populate('Adress');   
+                        var cliente =await Cliente.find({Phone: data.Phone}).limit(1).populate('Adress');   
                         res.status(200).json({Cliente:cliente})             
                         }
                     }
