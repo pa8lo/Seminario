@@ -114,6 +114,25 @@ module.exports = {
       res.status(err.code).json(err);
     }
   },
+  ReportsByDelivery: async function (req,res){
+    try{
+      sails.log.info("se inicia la busqueda de los pedidos para el delivery")
+      var data = req.allParams();
+      let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
+      sails.log.info("se busco este usuario"+JSON.stringify(currentUser))
+      let pedidos = await Pedido.find({Delivery:currentUser.Id})
+      .populate('Adress')
+      .populate('Clients')
+      .populate('Users')
+      .populate('State')
+      sails.log.debug("se devuelven los pedidos"+JSON.stringify(pedidos))
+      res.status(200).json(pedidos)
+    }catch(err){
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err);
+    }
+  },
   createOrder: async function (req, res) {
       try {
         if (await base.ElementExist(Estado, req.body.State) &&

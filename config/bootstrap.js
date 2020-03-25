@@ -123,7 +123,7 @@ module.exports.bootstrap = async function(done) {
    *
    */ 
    await Cliente.create({Name: 'test',LastName:'Test',email:'texs@test.com',Phone:'123445',Adress:[1],Orders:[1]});
-   await Domicilio.create({Adress:'test',Cp:1406,Client:1,User:1,LatLong:"-34.6325883,-58.4686851"});
+   await Domicilio.create({Adress:'test',Cp:1406,Client:1,User:1,LatLong:"-34.6325883;-58.4686851"});
 
    await Categoria.create({id:1,Name:'Sin Categoria', Description:'Productos sin categoria'})
    await Producto.create({id:1,Name:'Prueba', Description:'Producto prueba',Amount:123,Category:1})
