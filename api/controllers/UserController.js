@@ -216,6 +216,8 @@ module.exports = {
     if (req.headers['access-token']) {
       var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
+        sails.log.debug("se ingresaron los siguientes datos")
+        sails.log.debug(req.body)
         var data = req.body;
         if (await base.CheckAuthorization(currentUser, 'Usuario', 'Edit', req.ip, res)) {
           await Checkrol(data.User.Rols, data.User.id)
@@ -372,12 +374,14 @@ module.exports = {
 */
 async function UpdateRol(idNewRol, idUsuario) {
   try {
-    await User.update({
+    let user = await User.update({
       id: idUsuario
     })
       .set({
         Rols: idNewRol
       }).fetch();
+    sails.log.debug("se acutalizo el rol al usuario")
+    sails.log.debug(user)
     await rol.UpdateAuthorizations(idUsuario, idNewRol);
   } catch (err) {
     sails.log.debug("Existio un error cuando se quiso modificar el rol del usuario " + err);
@@ -388,10 +392,12 @@ async function UpdateRol(idNewRol, idUsuario) {
 * Controla si el id del rol es igual que el id del rol que se quiere modificar
 */
 async function Checkrol(idNewRol, idUsuario) {
+  sails.log.debug("se procede a chequear el rol")
+  sails.log.debug("rol nuevo: "+idNewRol+ "rol Antiguo: "+idUsuario)
   try {
     var usuario = await User.findOne({ id: idUsuario })
     if (idNewRol !== usuario.rols) {
-      console.log("AD")
+      sails.log.debug("roles distintos se procede a actualizar")
       await UpdateRol(idNewRol, idUsuario)
     } else {
       return false

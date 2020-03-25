@@ -121,6 +121,8 @@ module.exports = {
     updateAsisst: async function (req, res) {
       try {
         let currentUser = await _validaciones.validarRequest(req,'Turno','Edit');
+        sails.log.debug("se ingresaron los siguientes datos ")
+        sails.log.debug(req.body)
         var data = req.body;
         var asistenciaExistente = await Asistencia.findOne({id: data.Asistencia.id});
         let validaciones = _validaciones.ValidarExistenciaLogin(asistenciaExistente);
