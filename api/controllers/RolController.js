@@ -13,7 +13,7 @@ module.exports = {
       var currentUser =await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         try {
-          if (await base.CheckAuthorization(currentUser, 'Usuario', 'View', req.ip, res)) {
+          if (await base.CheckAuthorization(currentUser, 'Rol', 'View', req.ip, res)) {
             var roles = await Rol.find({Eliminated : false}).populate('Authorizations')
             res.status(200).json(
                 roles

@@ -21,7 +21,10 @@ module.exports = {
                 })
               .populate('Assistance',{where : {
                 Eliminated:false
-              }});
+                },
+                sort: 'InTime DESC',
+
+            });
                 res.status(200).json({
                     User: usuarios
                 })
@@ -93,7 +96,6 @@ module.exports = {
         var data = req.body;
         var usuario = await User.findOne({id: data.Asistencia.User});
         let validaciones = _validaciones.ValidarExistenciaLogin(usuario);
-        // validaciones = _validaciones.ValidarRequestCrearAsistencia(data)
         sails.log.info("[[asistenciaController.createassist]]se procede a crear asistencia")
         let fecha =data.Asistencia.InTime.split("/")
         let hora = fecha[2].split(" ");
@@ -126,13 +128,11 @@ module.exports = {
         var data = req.body;
         var asistenciaExistente = await Asistencia.findOne({id: data.Asistencia.id});
         let validaciones = _validaciones.ValidarExistenciaLogin(asistenciaExistente);
-        let diferencia = _validaciones.ValidarFechaAsistencia(data.Asistencia,asistenciaExistente);
         sails.log.info("[[asistenciaController.createassist]]se procede a crear asistencia") 
         let fecha =data.Asistencia.InTime.split("/")
         let hora = fecha[2].split(" ");
         let horaParseada = hora[1].split(":")
         let fechacompleta = new Date(hora[0],fecha[1]-1,fecha[0],horaParseada[0].trim()-3,horaParseada[1],horaParseada[2],horaParseada[3])
-
         let fechasalida =data.Asistencia.OutTime.split("/")
         let horasalida = fechasalida[2].split(" ");
         let horaParseadasalida = horasalida[1].split(":")
