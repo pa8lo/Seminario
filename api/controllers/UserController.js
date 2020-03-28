@@ -77,7 +77,8 @@ module.exports = {
         user: {
           Name: user.Name,
           LastName: user.LastName,
-          Rol: user.Rol
+          Rol: user.Rol,
+          id:user.id
         },
         token: userToken
       })
