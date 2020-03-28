@@ -76,6 +76,7 @@ module.exports = {
       res.status(200).json({
         user: {
           Name: user.Name,
+          LastName: user.LastName,
           Rol: user.Rol
         },
         token: userToken
