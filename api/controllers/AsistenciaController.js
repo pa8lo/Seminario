@@ -92,6 +92,26 @@ module.exports = {
           });
         }
       },
+    AssistByJwT: async function (req,res){
+      try {
+        let currentUser = await CheckToken(req.headers['access-token']);
+        let asistencias = await User
+        .find({
+          select: ['id','Name','LastName'],
+          where:{id: currentUser.Id}
+        })
+      .populate('Assistance',{where : {
+        Eliminated:false
+        },
+        sort: 'InTime DESC'
+      });
+      res.status(200).json(asistencias)
+    }catch(err){
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err);
+    }
+
+    }, 
     createAssist: async function (req, res) {
       try {
         let currentUser = await _validaciones.validarRequest(req,'Turno','Create');
@@ -201,7 +221,7 @@ module.exports = {
           error: 'Medidas de seguridad no ingresadas.'
           });
       }
-      },
+      },  
 };
 
 

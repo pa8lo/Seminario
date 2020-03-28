@@ -228,6 +228,8 @@ module.exports.routes = {
 
 'GET /Asisstance/Asisst' : 'AsistenciaController.Assist',
 
+'GET /Asisstance/Asisst' : 'AsistenciaController.AssistByJwT',
+
 'POST /Asisstance/Create' : 'AsistenciaController.createAssist',
 
 'POST /Asisstance/Update' : 'AsistenciaController.updateAsisst',
