@@ -121,10 +121,30 @@ module.exports = {
       let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'View');
       sails.log.info("se busco este usuario"+JSON.stringify(currentUser))
       let pedidos = await Pedido.find({Delivery:currentUser.Id})
-      .populate('Adress')
-      .populate('Clients')
-      .populate('Users')
       .populate('State')
+      .populate('ProductosPorPedido')
+      .populate('CombosPorPedido')
+      .populate('Products')
+      .populate('Users')
+      .populate('Clients')
+      .populate('Adress')
+      .populate('Delivery')
+      .then(function(pedidos) {
+        return sails.nestedPop(pedidos, {
+          CombosPorPedido: [
+                'Offer'
+            ],
+          ProductosPorPedido: [
+                'Product'
+          ]  
+        }).then(function(users) {
+            return users
+        }).catch(function(err) {
+            throw err;
+        });
+    }).catch(function(err) {
+        throw err;
+    })
       sails.log.debug("se devuelven los pedidos"+JSON.stringify(pedidos))
       res.status(200).json(pedidos)
     }catch(err){

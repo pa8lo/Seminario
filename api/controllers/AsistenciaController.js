@@ -64,7 +64,9 @@ module.exports = {
                 })
               .populate('Assistance',{where : {
                 Eliminated:false
-              }});
+                },
+                sort: 'InTime DESC'
+              });
                 res.status(200).json({
                     User: usuarios
                 })
