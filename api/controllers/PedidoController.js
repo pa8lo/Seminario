@@ -97,7 +97,7 @@ module.exports = {
     try{
       sails.log.info("se inicia la busqueda de los pedidos para el delivery")
       var data = req.allParams();
-      let currentUser = await CheckToken(req.headers['access-token']);
+      let currentUser = await _validaciones.CheckToken(req.headers['access-token']);
       sails.log.info("se busco este usuario"+JSON.stringify(currentUser))
       let estadoEntregado = await Estado.findOne({Description:'Entregado'})
       let estadoFinalizado = await Estado.findOne({Description:'Rechazado'})
@@ -118,7 +118,7 @@ module.exports = {
     try{
       sails.log.info("se inicia la busqueda de los pedidos para el delivery")
       var data = req.allParams();
-      let currentUser = await CheckToken(req.headers['access-token']);
+      let currentUser = await _validaciones.CheckToken(req.headers['access-token']);
       sails.log.info("se busco este usuario"+JSON.stringify(currentUser))
       let pedidos = await Pedido.find({Delivery:currentUser.Id})
       .populate('State')

@@ -183,7 +183,22 @@ module.exports = {
     if (entidad.length == 0) {
       throw _error.GenerateError('no existe el elemento :  ' + JSON.stringify(_campo), 400)
     }
+  },
+  CheckToken(token) {
+    sails.log.info("se procede a chequear el token " + token)
+    var accessToken = token;
+    var tokenDecode = jwt.verify(accessToken, secretMessage.jwtSecret, (err, decoded) => {
+      if (err) {
+        throw _error.GenerateError('jwt invalido', 403)
+      } else {
+        var user = decoded;
+        sails.log.info("se devuelve la informacion : " + JSON.stringify(user));
+        return user;
+      }
+    });
+    return tokenDecode;
   }
+  
 
 
 };
