@@ -107,8 +107,8 @@ module.exports = {
       });
       res.status(200).json(asistencias)
     }catch(err){
-      sails.log.error("error" + JSON.stringify(err))
-      res.status(err.code).json(err);
+      sails.log.error(JSON.stringify(err))
+      res.status(200).json(err);
     }
 
     }, 
