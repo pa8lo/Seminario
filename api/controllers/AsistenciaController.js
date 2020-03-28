@@ -93,8 +93,10 @@ module.exports = {
         }
       },
     AssistByJwT: async function (req,res){
-      try {
+      // try {
         let currentUser = await CheckToken(req.headers['access-token']);
+        sails.log.debug("se proceden a buscar las asistencias del siguiente token ")
+        sails.log.debug(currentUser)
         let asistencias = await User
         .find({
           select: ['id','Name','LastName'],
@@ -105,11 +107,13 @@ module.exports = {
         },
         sort: 'InTime DESC'
       });
+      sails.log.debug("se encontraron lassiguientes asistencias")
+      sails.log.debug(asistencias)
       res.status(200).json(asistencias)
-    }catch(err){
-      sails.log.error(JSON.stringify(err))
-      res.status(200).json(err);
-    }
+    // }catch(err){
+    //   sails.log.error(JSON.stringify(err))
+    //   res.status(200).json(err);
+    // }
 
     }, 
     createAssist: async function (req, res) {
