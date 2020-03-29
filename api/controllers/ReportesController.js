@@ -44,7 +44,9 @@ module.exports = {
         var data = req.allParams();
         try {
             let ordenado = []
-            let pedidos = await Pedido.find();
+            let pedidos = await Pedido.find({
+                Date: {'>':data.min,'<':data.max},
+            });
             pedidos.forEach(dato =>  
             dato.Date = sails.moment(dato.Date).format("hA"))
             sails.log.debug(pedidos)
