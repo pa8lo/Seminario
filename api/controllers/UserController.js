@@ -88,6 +88,22 @@ module.exports = {
     }
   },
 
+  DeleteAddress : async function (req,res){
+    try {
+        let currentUser = await _validaciones.validarRequest(req, 'Usuario', 'Edit');
+        let  data = req.body;
+        let domicilio =await  Domicilio.destroyOne({id: data.id});
+        if(domicilio){
+            res.status(200).json(domicilio);
+        }else{
+            res.status(404).json({message:"no existe la dirección que desea eliminar"})
+        }
+    } catch (err) {
+        console.log(err)
+        sails.log.error("error" + JSON.stringify(err))
+        res.status(err.code).json(err.message);
+    }
+},  
   UserAuthorizations: async function (req, res) {
     try{
       var currentUser =await base.CheckToken(req.headers['access-token']);

@@ -64,6 +64,8 @@ module.exports.routes = {
 
 'POST /User/AddAddress' : 'ClienteController.AddAddress',
 
+'POST /User/DeleteAddress' : 'UserController.DeleteAddress',
+
 'POST /User/Login': 'UserController.Login',
 
 'PUT /User/UpdateUser' : 'UserController.UpdateUser',
