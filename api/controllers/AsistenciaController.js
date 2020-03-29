@@ -147,7 +147,7 @@ module.exports = {
     },
 
     updateAsisst: async function (req, res) {
-      // try {
+      try {
         let currentUser = await _validaciones.validarRequest(req,'Turno','Edit');
         sails.log.debug("se ingresaron los siguientes datos ")
         sails.log.debug(req.body)
@@ -162,7 +162,7 @@ module.exports = {
         let fechasalida =data.Asistencia.OutTime.split("/")
         let horasalida = fechasalida[2].split(" ");
         let horaParseadasalida = horasalida[1].split(":")
-        let fechacompletasalida = new Date(horasalida[0],fechasalida[1]-1,fecfechasalidaha[0],horaParseadasalida[0].trim()-3,horaParseadasalida[1],horaParseadasalida[2],horaParseadasalida[3])
+        let fechacompletasalida = new Date(horasalida[0],fechasalida[1]-1,fechasalidaha[0],horaParseadasalida[0].trim()-3,horaParseadasalida[1],horaParseadasalida[2],horaParseadasalida[3])
         sails.log.info(fechacompleta);
         let datos = {
           OutTime:fechacompletasalida,
@@ -176,10 +176,10 @@ module.exports = {
         res.status(200).json({
           message: asistencia
         })
-      // } catch (err) {
-      //   sails.log.error("error" + JSON.stringify(err))
-      //   res.status(err.code).json(err.message);
-      // }  
+      } catch (err) {
+        sails.log.error("error" + JSON.stringify(err))
+        res.status(err.code).json(err.message);
+      }  
     },
     deleteAssist: async function (req, res) {
       if (req.headers['access-token']) {
