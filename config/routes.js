@@ -263,7 +263,13 @@ module.exports.routes = {
 'Get /Reports/Gasto' : 'ReportesController.Gastos',
 
 'Get /Reports/Ganancias' : 'ReportesController.Ganancias',
+//ENDPOINTS REPORTES
+//
+'GET /Local' : 'LocalController.getLocal',
 
+'POST /Local' : 'LocalControler.setLocals',
+
+'Put /Local' : 'LocalController.updateLocal'
 
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
