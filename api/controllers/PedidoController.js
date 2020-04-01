@@ -99,9 +99,8 @@ module.exports = {
       var data = req.allParams();
       let currentUser = await _validaciones.CheckToken(req.headers['access-token']);
       sails.log.info("se busco este usuario"+JSON.stringify(currentUser))
-      let estadoEntregado = await Estado.findOne({Description:'Entregado'})
-      let estadoFinalizado = await Estado.findOne({Description:'Rechazado'})
-      let pedidos = await Pedido.find({Delivery:currentUser.Id,State:{'!=':[estadoEntregado.id,estadoFinalizado.id]}})
+      let estadoEnviado = await Estado.findOne({Description:'Enviado'})
+      let pedidos = await Pedido.find({Delivery:currentUser.Id,State:estadoEnviado.id})
       .populate('Adress')
       .populate('Clients')
       .populate('Users')

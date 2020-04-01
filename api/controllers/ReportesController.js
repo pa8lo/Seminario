@@ -14,6 +14,7 @@ module.exports = {
         try{
             let prueba = await Gasto.find({
                 Date: {'>':data.min,'<':data.max},
+                Eliminated:false
             }).sort('Date ASC');;
             let ordenado = [];
                 prueba.forEach(dato => 
@@ -46,6 +47,7 @@ module.exports = {
             let ordenado = []
             let pedidos = await Pedido.find({
                 Date: {'>':data.min,'<':data.max},
+                Eliminated:false
             });
             pedidos.forEach(dato =>  
             dato.Date = sails.moment(dato.Date).format("hA"))
@@ -79,6 +81,7 @@ module.exports = {
         try{
             let pedido = await Pedido.find({
                 Date: {'>':data.min,'<':data.max},
+                Eliminated:false
             }).sort('Date ASC');
             let ordenado = [];
                 pedido.forEach(dato => 

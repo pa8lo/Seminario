@@ -44,6 +44,10 @@ module.exports.bootstrap = async function(done) {
     id:4,
     Description:'Rechazado'
   })
+  await Estado.create({
+    id:5,
+    Description:'Enviado'
+  })
    /*
    *
    * Creación de permisos
@@ -131,7 +135,7 @@ module.exports.bootstrap = async function(done) {
    await ProductosPorCombos.create({Offer:1,Product:1,Count:2})
    await CombosPorPedido.create({Count:1,Order:1,Offer:1})
    await ProductosPorPedido.create({Count:1,Order:1,Product:1})
-   await Pedido.create({id:1,Amount:123,Users:1,Delivery:1,Clients:1,Adress:1,Products:1,ProductosPorPedido:1,CombosPorPedido:1,Offers:1,State:1})
+   await Pedido.create({id:1,Amount:123,Users:1,Delivery:1,Clients:1,Adress:1,Products:1,ProductosPorPedido:1,CombosPorPedido:1,Offers:1,State:1,Date:new Date()})
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.
   // (otherwise your server will never lift, since it's waiting on the bootstrap)
   return done();

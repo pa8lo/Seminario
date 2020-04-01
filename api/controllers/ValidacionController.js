@@ -152,7 +152,7 @@ module.exports = {
   ValidarEditarEliminarEstado: async function (estado){
     sails.log.debug("se procede a validar estado")
     sails.log.debug(estado)
-    if (estado.Description.trim() == 'Entregado' || estado.Description.trim() == 'Rechazado' || estado.Description.trim() == 'EnProceso' || estado.Description.trim() == 'Recibido'  ) {
+    if (estado.Description.trim() == 'Entregado' || estado.Description.trim() == 'Rechazado' || estado.Description.trim() == 'En Proceso' || estado.Description.trim() == 'Recibido' ||  estado.Description.trim() == 'Enviado' ) {
       sails.log.error("se intento crear estado no modificable")
       throw _error.GenerateError("este estado no se puede eliminar ni editar", 400)
     }
