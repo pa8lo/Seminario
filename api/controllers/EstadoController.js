@@ -70,7 +70,7 @@ module.exports = {
     try {
       let data = req.body;
       sails.log.debug(data)
-      let estadoExistente =await Estado.findOne(data.estado.id);
+      let estadoExistente =await Estado.findOne(data.Estado.id);
       let validaciones = await _validaciones.ValidarEditarEliminarEstado(estadoExistente);
       validaciones =await  _validaciones.ValidarEditarEliminarEstado(data.Estado);
 
