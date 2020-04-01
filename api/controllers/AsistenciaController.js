@@ -126,7 +126,7 @@ module.exports = {
         let fecha =data.Asistencia.InTime.split("/")
         let hora = fecha[2].split(" ");
         let horaParseada = hora[1].split(":")
-        let fechacompleta = new Date(hora[0],fecha[1],fecha[0],horaParseada[0].trim(),horaParseada[1],horaParseada[2],horaParseada[3])
+        let fechacompleta = new Date(hora[0],fecha[1]-1,fecha[0],horaParseada[0].trim(),horaParseada[1],horaParseada[2],horaParseada[3])
         sails.log.info(fechacompleta);
         var datos = {
           OutTime:fechacompleta,
@@ -158,11 +158,11 @@ module.exports = {
         let fecha =data.Asistencia.InTime.split("/")
         let hora = fecha[2].split(" ");
         let horaParseada = hora[1].split(":")
-        let fechacompleta = new Date(hora[0],fecha[1],fecha[0],horaParseada[0],horaParseada[1],horaParseada[2],00)
+        let fechacompleta = new Date(hora[0],fecha[1]-1,fecha[0],horaParseada[0],horaParseada[1],horaParseada[2],00)
         let fechasalida =data.Asistencia.OutTime.split("/")
         let horasalida = fechasalida[2].split(" ");
         let horaParseadasalida = horasalida[1].split(":")
-        let fechacompletasalida = new Date(horasalida[0],fechasalida[1],fechasalida[0],horaParseadasalida[0].trim(),horaParseadasalida[1],horaParseadasalida[2],00)
+        let fechacompletasalida = new Date(horasalida[0],fechasalida[1]-1,fechasalida[0],horaParseadasalida[0],horaParseadasalida[1],horaParseadasalida[2],00)
         sails.log.info(fechacompleta);
         let datos = {
           OutTime:fechacompletasalida,
