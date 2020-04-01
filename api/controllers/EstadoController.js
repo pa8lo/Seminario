@@ -37,6 +37,8 @@ module.exports = {
       var data = req.body;
       try {
         if (data.id) {
+          let estado =await Estado.findOne(data.id);
+          let validaciones = await _validaciones.ValidarEditarEliminarEstado(estado);    
           var destruido = await Estado.update({id: data.id}).set({Eliminated: true}).fetch();
           if (destruido.length === 0) {
             sails.log.info('Se intento borrar el estado  con id :' + data.id + " pero no existia alguno con ese id");
@@ -68,7 +70,10 @@ module.exports = {
     try {
       let data = req.body;
       sails.log.debug(data)
-      let validaciones =await  _validaciones.ValidarEditarEliminarEstado(data.Estado);
+      let estado =await Estado.findOne(data.estado.id);
+      let validaciones = await _validaciones.ValidarEditarEliminarEstado(estado);
+      validaciones =await  _validaciones.ValidarEditarEliminarEstado(data.Estado);
+
       let currentUser = await _validaciones.validarRequest(req, 'Pedido', 'Edit');
       var estado = await Estado.update({
         id: data.Estado.id
