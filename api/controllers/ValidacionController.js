@@ -197,8 +197,25 @@ module.exports = {
       }
     });
     return tokenDecode;
+  },
+  ValidarExpireDate(ExpireDate) {
+    let diferencia = sails.moment().diff(ExpireDate, 'minutes')
+    sails.log.debug("Tiempo de validez del token")
+    sails.log.debug(diferencia);
+    if (diferencia >= 0){
+      throw _error.GenerateError('Sesión Expirada', 403);
+    }
+  },
+  ValidarConexion: async function(id,dateConnection){
+    let user = await User.findOne({id: id})
+    sails.log.debug("ultima conexión en BD")
+    sails.log.debug(user.DateConnection)
+    sails.log.debug("ultima conexión en jwt")
+    sails.log.debug(dateConnection)
+    if (user.DateConnection != dateConnection){
+      throw _error.GenerateError('Conflicto de usuario, se inicio sesión en otro lado', 403);
+    }
   }
-  
 
 
 };
@@ -214,14 +231,23 @@ function DevolverDiferencia(_fechaIngreso, _fechaSalida) {
   }
   return diferencia;
 }
-
+  async function ValidarConexion (id,dateConnection){
+    let user = await User.findOne({id: id})
+    sails.log.debug("ultima conexión en BD")
+    sails.log.debug(user.DateConnection)
+    sails.log.debug("ultima conexión en jwt")
+    sails.log.debug(dateConnection)
+    if (user.DateConnection != dateConnection){
+      throw _error.GenerateError('Conflicto de usuario, se inicio sesión en otro lado', 403);
+    }
+}
 function ValidarFecha(fecha) {
   if (!fecha.isValid()) {
     throw _error.GenerateError("fecha invalida se espera DD/MM/YYYY HH:MM:SS:MS", 400)
   }
 }
 
-function CheckToken(token) {
+async function CheckToken(token) {
   sails.log.info("se procede a chequear el token " + token)
   var accessToken = token;
   var tokenDecode = jwt.verify(accessToken, secretMessage.jwtSecret, (err, decoded) => {
@@ -233,9 +259,21 @@ function CheckToken(token) {
       return user;
     }
   });
+  ValidarExpireDate(tokenDecode.expireDate)
+  await ValidarConexion(tokenDecode.Id,tokenDecode.LastConnection);
+  sails.log.debug("[[Validation controller :236]]jwt decoded: ")
+  sails.log.debug(tokenDecode)
+
   return tokenDecode;
 }
-
+function ValidarExpireDate(ExpireDate) {
+  let diferencia = sails.moment().diff(ExpireDate, 'minutes')
+  sails.log.debug("Tiempo de validez del token")
+  sails.log.debug(diferencia);
+  if (diferencia >= 0){
+    throw _error.GenerateError('Sesión Expirada', 403);
+  }
+}
 function ValidarIp(ipToken, ipRequest) {
   if (ipToken !== ipRequest) {
 

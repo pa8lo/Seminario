@@ -15,7 +15,17 @@ module.exports = {
             let prueba = await Gasto.find({
                 Date: {'>':data.min,'<':data.max},
                 Eliminated:false
-            }).sort('Date ASC');;
+            }).sort('Date ASC');
+            let pruebaToday = await Gasto.find({
+                Date: data.min,
+                Eliminated:false
+            })
+            sails.log.info(prueba)
+            sails.log.info(pruebaToday)
+            pruebaToday.forEach(dato => {
+                prueba.push(dato)
+            })
+            sails.log.info(prueba)
             let ordenado = [];
                 prueba.forEach(dato => 
                     dato.Date = sails.moment(dato.Date).format("YYYY-MM-DD"))
@@ -26,6 +36,7 @@ module.exports = {
                         dinero += valor.Amount
                     });
                  ordenado.push({
+                        day : prueba[0].Date,
                         datos  :  prueba.filter(x => x.Date === prueba[0].Date),
                         amount : dinero
                     })

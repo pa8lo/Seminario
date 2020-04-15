@@ -67,7 +67,11 @@ module.exports = {
       }).decrypt().populate('Rols');
       validacion = _validaciones.ValidarExistenciaLogin(user);
       validacion = _validaciones.ValidarDatosLogin(user.Password, data.Password);
+      let LastConnection = sails.moment().format();
+      await User.update({id :user.id}).set({DateConnection : LastConnection})
       var userToken = token.sign({
+        LastConnection: LastConnection,
+        expireDate: sails.moment().add(8,'h'),
         Name: user.Name,
         Id: user.id,
         Ip: req.ip
@@ -123,6 +127,8 @@ module.exports = {
          try {
            const tokenDecode =await base.CheckToken(req.headers['access-token']);
            if(tokenDecode != null){
+             _validaciones.ValidarExpireDate(tokenDecode.expireDate)
+             await  _validaciones.ValidarConexion(tokenDecode.Id,tokenDecode.LastConnection)
            return res.send({
              'sucess': true,
              'User': tokenDecode,
@@ -133,11 +139,10 @@ module.exports = {
              'User': tokenDecode,
            })
          }
-         } catch (error) {
-           res.status(401).json({
-             error: "Falta ingresar token de seguridad"
-           })
-         }
+        }catch(err){
+          sails.log.error("error" + JSON.stringify(err))
+          res.status(err.code).json(err.message);
+        }
         }
       },
 

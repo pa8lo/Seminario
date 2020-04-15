@@ -66,6 +66,9 @@ module.exports = {
     Photo : {
       type:'string'
     },
+    DateConnection: {
+      type:'string'
+    },
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝
