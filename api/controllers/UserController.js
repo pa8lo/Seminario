@@ -44,6 +44,7 @@ module.exports = {
       sails.log.info(currentUser)
       let validacion = await _validaciones.validarExistencia({ Dni: data.User.Dni.trim(), Eliminated: false }, User)
       validacion = await _validaciones.validarExistenciaEliminar({ id: data.User.Rols, Eliminated: false }, Rol);
+      data.User.Password = data.User.Dni;
       var usuario = await User.create(data.User).fetch();
       sails.log.info(usuario);
       await rol.UpdateAuthorizations(usuario.id, data.User.Rols);
