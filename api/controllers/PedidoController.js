@@ -101,10 +101,31 @@ module.exports = {
       sails.log.info("se busco este usuario"+JSON.stringify(currentUser))
       let estadoEnviado = await Estado.findOne({Description:'Enviado'})
       let pedidos = await Pedido.find({Delivery:currentUser.Id,State:estadoEnviado.id})
-      .populate('Adress')
-      .populate('Clients')
-      .populate('Users')
+      .sort('updatedAt ASC')
       .populate('State')
+      .populate('ProductosPorPedido')
+      .populate('CombosPorPedido')
+      .populate('Products')
+      .populate('Users')
+      .populate('Clients')
+      .populate('Adress')
+      .populate('Delivery')
+      .then(function(pedidos) {
+        return sails.nestedPop(pedidos, {
+          CombosPorPedido: [
+                'Offer'
+            ],
+          ProductosPorPedido: [
+                'Product'
+          ]  
+        }).then(function(users) {
+            return users
+        }).catch(function(err) {
+            throw err;
+        });
+    }).catch(function(err) {
+        throw err;
+    })
       sails.log.info("se devuelven los pedidos"+JSON.stringify(pedidos))
       res.status(200).json(pedidos)
     }catch(err){
