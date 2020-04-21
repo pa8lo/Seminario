@@ -378,7 +378,7 @@ module.exports = {
       // try {
         var ExisteEstado = await Estado.findOne({Description:'Entregado'})
         var EstadoRechazado = await Estado.findOne({Description:'Rechazado'})
-        let pedidos = await sails.sendNativeQuery('SELECT id FROM pedido WHERE pedido.Date < ( (now()) - INTERVAL 1 MINUTE ) AND pedido.state != 5 AND pedido.state != 4')
+        let pedidos = await sails.sendNativeQuery('SELECT id FROM pedido WHERE pedido.Date < ( (now()) - INTERVAL 1440 MINUTE ) AND pedido.state != 5 AND pedido.state != 4')
         let id = []
         console.log(pedidos.rows)
         pedidos.rows.forEach(thisid => {
