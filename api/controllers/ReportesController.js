@@ -97,9 +97,11 @@ module.exports = {
         sails.log.debug("se recibieron los siguientes datos")
         sails.log.debug(data)
         try{
+            let estadoEnviado = await Estado.findOne({Description:'Enviado'})
             let pedido = await Pedido.find({
                 Date: {'>':data.min,'<':data.max},
-                Eliminated:false
+                Eliminated:false,
+                State:estadoEnviado.id
             }).sort('Date ASC');
             let ordenado = [];
                 pedido.forEach(dato => 

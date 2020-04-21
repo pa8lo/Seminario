@@ -12,6 +12,10 @@
 module.exports.bootstrap = async function(done) {
   sails.moment = require('moment');
   sails.nestedPop = require('nested-pop');
+  setInterval(() => {
+    await Pedido.getDatastore().sendNativeQuery('CALL proc_actualizar_estado') 
+  }, 60000);
+
   // By convention, this is a good place to set up fake data during development.
   //
   // For example:
