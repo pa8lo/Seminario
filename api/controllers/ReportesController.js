@@ -20,18 +20,21 @@ module.exports = {
                 Date: data.min,
                 Eliminated:false
             })
-            let lastDate= await Gasto.find({
-                Date: data.max,
-                Eliminated:false
-            })
+
             sails.log.info(prueba)
             sails.log.info(pruebaToday)
             pruebaToday.forEach(dato => {
                 prueba.push(dato)
             })
-            lastDate.forEach(dato => {
-                prueba.push(dato)
-            })
+            if(data.min == data.max){
+                let lastDate= await Gasto.find({
+                    Date: data.max,
+                    Eliminated:false
+                })
+                lastDate.forEach(dato => {
+                    prueba.push(dato)
+                })
+            }
             sails.log.info(prueba)
             let ordenado = [];
                 prueba.forEach(dato => 
