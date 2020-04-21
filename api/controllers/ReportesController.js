@@ -26,7 +26,7 @@ module.exports = {
             pruebaToday.forEach(dato => {
                 prueba.push(dato)
             })
-            if(data.min == data.max){
+            if(data.min != data.max){
                 let lastDate= await Gasto.find({
                     Date: data.max,
                     Eliminated:false
