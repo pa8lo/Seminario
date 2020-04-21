@@ -49,6 +49,8 @@ module.exports.routes = {
 // MANTENER APLICACIÓN  
 //
 'GET /State': 'BaseController.state',
+
+'GET /States' : 'PedicoController.UpdatePedidos',
 //
 // ENDPOINTS USUARIO
 //
@@ -186,6 +188,7 @@ module.exports.routes = {
 'POST /Pedido/Entregado' : 'PedidoController.PedidoEntregadoDelivery',
 
 'Get /Pedido/Cliente' : 'PedidoController.PedidosPorCliente',
+
 
 
 

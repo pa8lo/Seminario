@@ -373,7 +373,25 @@ module.exports = {
       res.status(err.code).json(err.message);
     }
          
-  }
+  },
+  UpdatePedidos: async function(req,res){
+      // try {
+        var ExisteEstado = await Estado.findOne({Description:'Entregado'})
+        var EstadoRechazado = await Estado.findOne({Description:'Rechazado'})
+        let pedidos = await sails.sendNativeQuery('SELECT id FROM pedido WHERE pedido.Date < ( (now()) - INTERVAL 1 MINUTE ) AND pedido.state != 5 AND pedido.state != 4')
+        let id = []
+        console.log(pedidos.rows)
+        pedidos.rows.forEach(thisid => {
+          console.log(thisid)
+          id.push(thisid.id)
+        });
+        var actualizados = await Pedido.update({id:id}).set({State:EstadoRechazado.id}).fetch()
+        res.status(200).json(actualizados)
+      // } catch (error) {
+      //   sails.log.error(error)
+      //   res.status(500).json(error)
+      // }
+  },
               
 }
 async function  CrearProductoPorPedidos(productosPorPedido){
