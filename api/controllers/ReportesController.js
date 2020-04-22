@@ -70,6 +70,22 @@ module.exports = {
                 Date: {'>':data.min,'<':data.max},
                 Eliminated:false
             });
+            let diaMinimo = await Gasto.find({
+                Date: data.min,
+                Eliminated:false
+            })
+            diaMinimo.forEach(dato => {
+                pedidos.push(dato)
+            })
+            if(data.min != data.max){
+                let lastDate= await Gasto.find({
+                    Date: data.max,
+                    Eliminated:false
+                })
+                lastDate.forEach(dato => {
+                    pedidos.push(dato)
+                })
+            }
             pedidos.forEach(dato =>  
             dato.Date = sails.moment(dato.Date).format("hA"))
             sails.log.debug(pedidos)
@@ -106,6 +122,22 @@ module.exports = {
                 Eliminated:false,
                 State:estadoEnviado.id
             }).sort('Date ASC');
+            let diaMinimo = await Gasto.find({
+                Date: data.min,
+                Eliminated:false
+            })
+            diaMinimo.forEach(dato => {
+                pedidos.push(dato)
+            })
+            if(data.min != data.max){
+                let lastDate= await Gasto.find({
+                    Date: data.max,
+                    Eliminated:false
+                })
+                lastDate.forEach(dato => {
+                    pedidos.push(dato)
+                })
+            }
             let ordenado = [];
                 pedido.forEach(dato => 
                     dato.Date = sails.moment(dato.Date).format("YYYY-MM-DD"))
