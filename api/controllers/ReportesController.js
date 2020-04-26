@@ -66,26 +66,9 @@ module.exports = {
         var data = req.allParams();
         try {
             let ordenado = []
-            let pedidos = await Pedido.find({
-                Date: {'>':data.min,'<':data.max},
-                Eliminated:false
-            });
-            let diaMinimo = await Gasto.find({
-                Date: data.min,
-                Eliminated:false
-            })
-            diaMinimo.forEach(dato => {
-                pedidos.push(dato)
-            })
-            if(data.min != data.max){
-                let lastDate= await Gasto.find({
-                    Date: data.max,
-                    Eliminated:false
-                })
-                lastDate.forEach(dato => {
-                    pedidos.push(dato)
-                })
-            }
+            let pedido = await sails.sendNativeQuery
+            ("SELECT * FROM pedido WHERE pedido.Date BETWEEN CAST('"+data.min+"' AS DATE) AND DATE_ADD('"+data.max+"', INTERVAL 1 DAY) ORDER BY TIME(pedido.Date) ASC")
+            let pedidos = pedido.rows 
             pedidos.forEach(dato =>  
             dato.Date = sails.moment(dato.Date).format("hA"))
             sails.log.debug(pedidos)
@@ -116,28 +99,9 @@ module.exports = {
         sails.log.debug("se recibieron los siguientes datos")
         sails.log.debug(data)
         try{
-            let estadoEnviado = await Estado.findOne({Description:'Enviado'})
-            let pedido = await Pedido.find({
-                Date: {'>':data.min,'<':data.max},
-                Eliminated:false,
-                State:estadoEnviado.id
-            }).sort('Date ASC');
-            let diaMinimo = await Gasto.find({
-                Date: data.min,
-                Eliminated:false
-            })
-            diaMinimo.forEach(dato => {
-                pedidos.push(dato)
-            })
-            if(data.min != data.max){
-                let lastDate= await Gasto.find({
-                    Date: data.max,
-                    Eliminated:false
-                })
-                lastDate.forEach(dato => {
-                    pedidos.push(dato)
-                })
-            }
+            let pedidos = await sails.sendNativeQuery
+            ("SELECT * FROM pedido WHERE pedido.Date BETWEEN CAST('"+data.min+"' AS DATE) AND DATE_ADD('"+data.max+"', INTERVAL 1 DAY)and pedido.State = 5 ORDER BY TIME(pedido.Date) ASC")
+            let pedido = pedidos.rows
             let ordenado = [];
                 pedido.forEach(dato => 
                     dato.Date = sails.moment(dato.Date).format("YYYY-MM-DD"))

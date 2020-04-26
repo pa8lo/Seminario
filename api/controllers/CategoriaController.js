@@ -87,7 +87,6 @@ module.exports = {
           if (await base.CheckAuthorization(currentUser, 'Producto', 'Delete', req.ip, res)) {
             var data = req.body;
             try {
-              if (data.id && data.id != 1) {
                 var destruido = await Categoria.update({
                     id: data.id
                   })
@@ -96,8 +95,8 @@ module.exports = {
                   }).fetch();
                 var products = await seeproducts(data.id)
                 var items = await seeItem(data.id)
-                await deleteProductsFromCategory(products);
-                await deleteItemsFromCategory(items)
+                // await deleteProductsFromCategory(products);
+                // await deleteItemsFromCategory(items)
                 if (destruido.length === 0) {
                   sails.log.info('Se intento borrar la categoria con id :' + data.id + " pero no existia alguno con ese id");
                   res.status(401).json({
@@ -109,12 +108,8 @@ module.exports = {
                     message: 'Categoria eliminado.'
                   });
                 }
-              } else {
-                sails.log.info("el usuario " + currentUser.Id + "No ingreso el id para eliminar o ese id no se puede eliminar");
-                res.status(401).json({
-                  error: 'id invalido'
-                });
-              }
+
+              
             } catch (error) {
 
               sails.log.error("existio un error al eliminar categoria : " + error);
@@ -150,7 +145,6 @@ module.exports = {
       var currentUser = await base.CheckToken(req.headers['access-token']);
       if (currentUser) {
         if (await base.CheckAuthorization(currentUser, 'Producto', 'Edit', req.ip, res)) {
-          if (data.Categoria.id && data.Categoria.id != 1) {
             var categoria = await Categoria.update({
                 id: data.Categoria.id
               })
@@ -166,12 +160,7 @@ module.exports = {
                 message: 'categoria modificada.'
               });
             }
-          } else {
-            sails.log.info("el usuario " + currentUser.Id + "No ingreso el id ");
-            res.status(401).json({
-              error: 'Faltan ingresar parametros o intento editar categoria 1 '
-            });
-          }
+
 
         } else {
           sails.log.info("el usuario " + currentUser.Id + "quiso acceder a un lugar sin permisos");
