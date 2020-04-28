@@ -100,7 +100,7 @@ module.exports = {
         sails.log.debug(data)
         try{
             let pedidos = await sails.sendNativeQuery
-            ("SELECT * FROM pedido WHERE pedido.Date BETWEEN CAST('"+data.min+"' AS DATE) AND DATE_ADD('"+data.max+"', INTERVAL 1 DAY)and pedido.State = 5 ORDER BY TIME(pedido.Date) ASC")
+            ("SELECT * FROM pedido WHERE pedido.Date BETWEEN CAST('"+data.min+"' AS DATE) AND DATE_ADD('"+data.max+"', INTERVAL 1 DAY)and pedido.State = 5 ORDER BY pedido.Date ASC")
             let pedido = pedidos.rows
             let ordenado = [];
                 pedido.forEach(dato => 
