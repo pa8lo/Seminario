@@ -109,6 +109,24 @@ module.exports = {
         res.status(err.code).json(err.message);
     }
 },  
+ AddAddress : async function (req,res){
+  try {
+      let currentUser = await _validaciones.validarRequest(req, 'Usuario', 'Create');
+      var  data = req.body;
+      sails.log.debug("[[UserController-addAddress]] se procede a crear el domicilio");
+      if(data.Address.User || data.Address.Client){
+          var domicilio  = await Domicilio.create(data.Address).fetch();
+          sails.log.debug("[[clienteController-addAddress]] Domicilio creado con exito");   
+          res.status(200).json(domicilio )
+      }else{
+          res.status(400).json({error:" la dirección debe estar asociada a un cliente o usuario"})
+      }
+    } catch (err) {
+      console.log(err)
+      sails.log.error("error" + JSON.stringify(err))
+      res.status(err.code).json(err.message);
+    }
+},
   UserAuthorizations: async function (req, res) {
     try{
       var currentUser =await base.CheckToken(req.headers['access-token']);

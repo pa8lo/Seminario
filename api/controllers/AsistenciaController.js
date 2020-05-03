@@ -18,6 +18,7 @@ module.exports = {
                 let usuarios = await User
                 .find({
                   select: ['id','Name','LastName'],
+                  where: {Eliminated :false}
                 })
               .populate('Assistance',{where : {
                 Eliminated:false
