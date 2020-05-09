@@ -95,7 +95,7 @@ module.exports = {
                   }).fetch();
                 var products = await seeproducts(data.id)
                 var items = await seeItem(data.id)
-                // await deleteProductsFromCategory(products);
+                await deleteProductsFromCategory(products);
                 // await deleteItemsFromCategory(items)
                 if (destruido.length === 0) {
                   sails.log.info('Se intento borrar la categoria con id :' + data.id + " pero no existia alguno con ese id");
@@ -298,7 +298,7 @@ async function deleteProductsFromCategory(Productos) {
         id: Product.id
       })
       .set({
-        Category: 1
+        Eliminated: true
       }).fetch();
     sails.log.info("Se cambio la categoria" + producto.id + " del  a " + producto.Category)
   })
