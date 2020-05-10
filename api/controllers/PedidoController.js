@@ -342,7 +342,8 @@ module.exports = {
     let pedidos = await Pedido.find({
                 Clients: cliente.id,
                 Eliminated: false,
-              }).populate('State')
+              }).sort('Date DESC')
+                .populate('State')
                 .populate('ProductosPorPedido')
                 .populate('CombosPorPedido')   
                 .populate('Products')
