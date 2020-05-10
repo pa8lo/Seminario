@@ -157,7 +157,7 @@ module.exports = {
                 id: data.Producto.id
               })
               .set({Name:data.Producto.Name,
-                Description:data.Producto.Description}).fetch();
+                Description:data.Producto.Description,Amount:data.Producto.Amount}).fetch();
             if (producto.length === 0) {
               sails.log.info('Se intento modificar el producto con id :' + producto.id + " pero no existia alguno con ese id");
               res.status(401).json({
