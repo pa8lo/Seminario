@@ -71,7 +71,7 @@ module.exports = {
             
 
         },
-        Client : async function (req,res){
+    Client : async function (req,res){
             var data = req.allParams();
             sails.log.info(req.allParams())
             sails.log.info("llega la siguiente información en request:")
@@ -80,7 +80,7 @@ module.exports = {
                 var currentUser = base.CheckToken(req.headers['access-token']);
                     if(currentUser){
                         if(true){
-                        var cliente =await Cliente.find({Phone: data.Phone}).limit(1).populate('Adress');   
+                        var cliente =await Cliente.find({Phone: data.Phone,Eliminated:false}).limit(1).populate('Adress');   
                         res.status(200).json({Cliente:cliente[0]})             
                         }
                     }
