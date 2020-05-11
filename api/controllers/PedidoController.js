@@ -141,6 +141,7 @@ module.exports = {
       let currentUser = await _validaciones.CheckToken(req.headers['access-token']);
       sails.log.info("se busco este usuario"+JSON.stringify(currentUser))
       let pedidos = await Pedido.find({Delivery:currentUser.Id})
+      .sort('Date DESC')
       .populate('State')
       .populate('ProductosPorPedido')
       .populate('CombosPorPedido')
