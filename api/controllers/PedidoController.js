@@ -337,7 +337,8 @@ module.exports = {
     try{
       let data = req.allParams();
     let cliente =await Cliente
-              .findOne({Phone: data.Phone})
+              .findOne({Phone: data.Phone,
+              Eliminated:false})
     _validaciones.ValidarEntidad(cliente)
     let pedidos = await Pedido.find({
                 Clients: cliente.id,
